@@ -1,33 +1,29 @@
-import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import InfoIcon from '@mui/icons-material/Info';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import { VisibilityOff, Visibility } from '@mui/icons-material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
+  Alert,
   Avatar,
   Box,
   Button,
+  Checkbox,
   Container,
   CssBaseline,
+  FormControlLabel,
   Grid,
+  IconButton,
+  InputAdornment,
   Link,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
+  Snackbar,
   TextField,
   Typography,
-  InputAdornment,
-  IconButton,
-  FormControlLabel,
-  Checkbox,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { setUser, setUserToken } from '../actions';
 import AuthService from '../services/AuthService';
+import ErrorAlert from '../components/ErrorAlert'
+import SnackAlert from '../components/SnackAlert';
 
 function Register() {
   const navigate = useNavigate();
@@ -41,8 +37,6 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [snackbarError, setSnackbarError] = useState(false);
-
-  const whatYouCanDo = ['Add products to favorites', 'Buy exclusive products', 'Receive special offers'];
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,29 +54,34 @@ function Register() {
 
     const data = new FormData(event.currentTarget);
 
-    AuthService.register({
-      username: data.get('username'),
-      email: data.get('email'),
-      password: data.get('password'),
-      confirmPassword: data.get('confirmPassword'),
-      termsAccepted,
-    })
-               .then((res) => {
-                 dispatch(setUser(res.data.user));
-                 dispatch(setUserToken(res.data.token));
+    AuthService
+      .register({
+        username: data.get('username'),
+        fullName: data.get('fullName'),
+        email: data.get('email'),
+        password: data.get('password'),
+        confirmPassword: data.get('confirmPassword'),
+        agreeTerms: termsAccepted,
+      })
+      .then((res) => {
+        // console.log(res);
+        // dispatch(setUser(res.data.user));
+        // dispatch(setUserToken(res.data.token));
 
-                 navigate('/home');
-               })
-               .catch((e) => {
-                 setRegisterError(e.response.data.error);
-               });
+        console.log(process.env.NODE_ENV)
+        navigate('/home');
+      })
+      .catch((e) => {
+        // console.log(e.response.data);
+        setRegisterError(e.response.data.error);
+      });
   };
 
   const checkUsername = (event) => {
     const len = event.target.value.length;
 
-    if (len < 3 || len > 25) {
-      setUsernameError('Username must be between 3 and 25 characters');
+    if (len < 5 || len > 15) {
+      setUsernameError('Username must be between 5 and 15 characters');
     } else {
       setUsernameError('');
     }
@@ -181,6 +180,19 @@ function Register() {
                 <Grid item xs={12}>
                   <TextField
                     required
+                    name='fullName'
+                    fullWidth
+                    id='fullName'
+                    label='Full name'
+                    onChange={() => setRegisterError('')}
+                    variant='standard'
+                    color='secondary'
+                  />
+                </Grid>
+
+                <Grid item xs={12}>
+                  <TextField
+                    required
                     fullWidth
                     name='password'
                     label='Password'
@@ -254,11 +266,9 @@ function Register() {
         </Grid>
       </Grid>
 
-      <Snackbar open={snackbarError} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert severity='error' variant='filled'>
-          You must accept the terms and conditions to register.
-        </Alert>
-      </Snackbar>
+      <SnackAlert open={snackbarError} severity='error'>
+        You must accept the terms and conditions to register.
+      </SnackAlert>
     </Container>
   );
 }
