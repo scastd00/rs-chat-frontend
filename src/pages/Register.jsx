@@ -64,15 +64,12 @@ function Register() {
         agreeTerms: termsAccepted,
       })
       .then((res) => {
-        // console.log(res);
         // dispatch(setUser(res.data.user));
         // dispatch(setUserToken(res.data.token));
 
-        console.log(process.env.NODE_ENV)
         navigate('/home');
       })
       .catch((e) => {
-        // console.log(e.response.data);
         setRegisterError(e.response.data.error);
       });
   };
