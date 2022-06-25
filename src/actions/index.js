@@ -5,8 +5,8 @@ export const setUser = createAction(SET_USER, (user) => {
   return { payload: user };
 });
 
-export const setUserToken = createAction(SET_USER_TOKEN, (token) => {
-  return { payload: token };
+export const setTokens = createAction(SET_USER_TOKEN, (tokens) => {
+  return { payload: tokens };
 });
 
 export const logOut = createAction(LOG_OUT);

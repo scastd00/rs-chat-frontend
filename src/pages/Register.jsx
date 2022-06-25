@@ -1,7 +1,6 @@
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  Alert,
   Avatar,
   Box,
   Button,
@@ -13,16 +12,15 @@ import {
   IconButton,
   InputAdornment,
   Link,
-  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { setUser, setUserToken } from '../actions';
+import { setTokens, setUser } from '../actions';
 import AuthService from '../services/AuthService';
-import ErrorAlert from '../components/ErrorAlert'
+import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
 
 function Register() {
@@ -64,8 +62,11 @@ function Register() {
         agreeTerms: termsAccepted,
       })
       .then((res) => {
-        // dispatch(setUser(res.data.user));
-        // dispatch(setUserToken(res.data.token));
+        dispatch(setUser(res.data.session.user));
+        dispatch(setTokens({
+          accessToken: res.data.session.accessToken,
+          refreshToken: res.data.session.refreshToken,
+        }));
 
         navigate('/home');
       })

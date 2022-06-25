@@ -10,6 +10,9 @@ import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { darkTheme as dark, lightTheme as light } from './themes';
 import ToolBar from './layouts/ToolBar';
+import PrivateRoute from './routes/PrivateRoute';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
@@ -33,6 +36,9 @@ function App(props) {
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={<PublicRoute component={Login} restricted />} />
             <Route path='/register' element={<PublicRoute component={Register} restricted />} />
+
+            <Route path='/home' element={<PrivateRoute component={Home} />} />
+            <Route path='/profile' element={<PrivateRoute component={Profile} />} />
 
             <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
             <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />
