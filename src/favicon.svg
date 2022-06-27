@@ -1,20 +1,25 @@
-<svg width="410" height="404" viewBox="0 0 410 404" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path
-    d="M399.641 59.5246L215.643 388.545C211.844 395.338 202.084 395.378 198.228 388.618L10.5817 59.5563C6.38087 52.1896 12.6802 43.2665 21.0281 44.7586L205.223 77.6824C206.398 77.8924 207.601 77.8904 208.776 77.6763L389.119 44.8058C397.439 43.2894 403.768 52.1434 399.641 59.5246Z"
-    fill="url(#paint0_linear)"/>
-  <path
-    d="M292.965 1.5744L156.801 28.2552C154.563 28.6937 152.906 30.5903 152.771 32.8664L144.395 174.33C144.198 177.662 147.258 180.248 150.51 179.498L188.42 170.749C191.967 169.931 195.172 173.055 194.443 176.622L183.18 231.775C182.422 235.487 185.907 238.661 189.532 237.56L212.947 230.446C216.577 229.344 220.065 232.527 219.297 236.242L201.398 322.875C200.278 328.294 207.486 331.249 210.492 326.603L212.5 323.5L323.454 102.072C325.312 98.3645 322.108 94.137 318.036 94.9228L279.014 102.454C275.347 103.161 272.227 99.746 273.262 96.1583L298.731 7.86689C299.767 4.27314 296.636 0.855181 292.965 1.5744Z"
-    fill="url(#paint1_linear)"/>
-  <defs>
-    <linearGradient id="paint0_linear" x1="6.00017" y1="32.9999" x2="235" y2="344" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#41D1FF"/>
-      <stop offset="1" stop-color="#BD34FE"/>
-    </linearGradient>
-    <linearGradient id="paint1_linear" x1="194.651" y1="8.81818" x2="236.076" y2="292.989"
-                    gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFEA83"/>
-      <stop offset="0.0833333" stop-color="#FFDD35"/>
-      <stop offset="1" stop-color="#FFA800"/>
-    </linearGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300" height="300" viewBox="0 0 300 300">
+	<g transform="matrix(0.32 0 0 0.32 150 150)">
+		<g transform="matrix(36.08 0 0 36.08 0 0)">
+			<ellipse
+					style="stroke: rgb(97,218,251); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+					vector-effect="non-scaling-stroke" cx="0" cy="0" rx="11" ry="4.2"/>
+		</g>
+		<g transform="matrix(18.04 31.38 -31.38 18.04 0.02 -0.06)">
+			<ellipse
+					style="stroke: rgb(97,218,251); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+					vector-effect="non-scaling-stroke" cx="0" cy="0" rx="11" ry="4.2"/>
+		</g>
+		<g transform="matrix(-18.04 31.38 -31.38 -18.04 0.02 -0.05)">
+			<ellipse
+					style="stroke: rgb(97,218,251); stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: none; fill-rule: nonzero; opacity: 1;"
+					vector-effect="non-scaling-stroke" cx="0" cy="0" rx="11" ry="4.2"/>
+		</g>
+		<g transform="matrix(0.28 0 0 0.28 0 0)">
+			<path style="stroke: rgb(0,0,0); stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-dashoffset: 0; stroke-linejoin: miter; stroke-miterlimit: 4; fill: rgb(119,188,31); fill-rule: nonzero; opacity: 1;"
+			      vector-effect="non-scaling-stroke" transform=" translate(-383.93, -384.05)"
+			      d="M 698.3 40 C 687.5 65.8 673.8 90.3 657.3 112.8 C 585.1 40.6 487.1 0 385 0 C 173.8 0 0 174 0 385.5 C 0 491 43.2 592 119.6 664.8 L 133.79999999999998 677.4 C 203.2 735.9 291.1 768.1 381.79999999999995 768.1 C 582.5999999999999 768.1 751.4 610.7 765.6999999999999 410.1 C 776.1999999999999 311.90000000000003 747.4 187.70000000000002 698.3 40 z M 174.29999999999995 667 C 168.09999999999997 674.7 158.59999999999997 679.2 148.69999999999996 679.2 C 130.59999999999997 679.2 115.79999999999995 664.3000000000001 115.79999999999995 646.2 C 115.79999999999995 628.1 130.69999999999996 613.2 148.69999999999996 613.2 C 156.19999999999996 613.2 163.59999999999997 615.8000000000001 169.39999999999995 620.6 C 183.49999999999994 632 185.69999999999996 652.9 174.29999999999995 667 z M 696.6999999999999 551.6 C 601.6999999999999 678.3000000000001 398.79999999999995 635.6 268.69999999999993 641.7 C 268.69999999999993 641.7 245.59999999999994 643.1 222.39999999999992 646.9000000000001 C 222.39999999999992 646.9000000000001 231.0999999999999 643.2 242.39999999999992 638.9000000000001 C 333.69999999999993 607.1000000000001 376.8999999999999 600.9000000000001 432.3999999999999 572.4000000000001 C 536.8999999999999 519.2 640.1999999999999 402.80000000000007 661.6999999999999 281.7000000000001 C 621.9 398.2 501.3 498.3 391.4 539 C 316.09999999999997 566.8 180.09999999999997 593.8 180.09999999999997 593.8 L 174.59999999999997 590.9 C 82 545.8 79.2 345.1 247.5 280.3 C 321.2 251.9 391.7 267.5 471.3 248.5 C 556.3 228.3 654.6 164.5 694.6 81.30000000000001 C 739.4 214.4 793.3000000000001 422.8 696.7 551.6 z"
+			      stroke-linecap="round"/>
+		</g>
+	</g>
 </svg>
