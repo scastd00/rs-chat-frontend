@@ -13,6 +13,7 @@ import ToolBar from './layouts/ToolBar';
 import PrivateRoute from './routes/PrivateRoute';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import Chat from './pages/Chat';
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
@@ -31,7 +32,6 @@ function App(props) {
           <ToolBar />
 
           <Routes>
-
             {/* If not logged in, go to log in */}
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={<PublicRoute component={Login} restricted />} />
@@ -42,6 +42,8 @@ function App(props) {
 
             <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
             <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />
+
+            <Route path='/chat/:id' element={<PrivateRoute component={Chat} />} />
           </Routes>
         </Router>
       </div>

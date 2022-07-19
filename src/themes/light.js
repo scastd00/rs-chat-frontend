@@ -37,6 +37,9 @@ export default createTheme({
       paper: '#fafbf3',
       default: '#fafbf3',
     },
+    chatBackground: {
+      main: '#ede8e0',
+    },
     modifiable: {
       main: '#e6ffe3',
     },
