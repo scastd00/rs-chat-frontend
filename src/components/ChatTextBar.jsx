@@ -5,7 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 function ChatTextBar(props) {
   const [message, setMessage] = useState('');
 
-  function handleSend(evt) {
+  function handleSendButton(evt) {
     if (message !== '') {
       evt.currentTarget
          .parentElement
@@ -18,6 +18,13 @@ function ChatTextBar(props) {
     setMessage('');
   }
 
+  function handleSendEnter(evt) {
+    if (evt.code === 'Enter') {
+      props.addMessage(message);
+      setMessage('');
+    }
+  }
+
   return (
     <CssBaseline>
       <TextField
@@ -27,13 +34,14 @@ function ChatTextBar(props) {
         id='Text'
         label='Text'
         name='text'
+        onKeyDown={handleSendEnter}
         onChange={(evt) => setMessage(evt.target.value)}
         autoFocus
         value={message}
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
-              <IconButton onClick={handleSend}>
+              <IconButton onClick={handleSendButton}>
                 <SendIcon />
               </IconButton>
             </InputAdornment>

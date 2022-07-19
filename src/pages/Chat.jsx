@@ -63,8 +63,8 @@ function Chat(props) {
           <ChatTextBar addMessage={addMessage} />
         </Grid>
 
-        {totalMessages.map(m => (
-          <Grid item>
+        {totalMessages.map((m, index) => (
+          <Grid item key={index}>
             {m}
           </Grid>
         ))}
