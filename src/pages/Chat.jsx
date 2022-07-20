@@ -3,51 +3,21 @@ import { useParams } from 'react-router-dom';
 import { Container, CssBaseline, Grid } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
+import { DEFAULT_MESSAGES } from '../utils/constants';
 
 function Chat(props) {
   const { id } = useParams();
   const chatType = id.split('-')[0];
   const chatId = id.split('-')[1];
 
-  const [totalMessages, setTotalMessages] = useState([
-    { text: 'Hello 1' },
-    { text: 'Hello 2' },
-    { text: 'Hello 3' },
-    { text: 'Hello 4' },
-    { text: 'Hello 5' },
-    { text: 'Hello 6' },
-    { text: 'Hello 1' },
-    { text: 'Hello 2' },
-    { text: 'Hello 3' },
-    { text: 'Hello 4' },
-    { text: 'Hello 5' },
-    { text: 'Hello 6' },
-    { text: 'Hello 1' },
-    { text: 'Hello 2' },
-    { text: 'Hello 3' },
-    { text: 'Hello 4' },
-    { text: 'Hello 5' },
-    { text: 'Hello 6' },
-    { text: 'Hello 1' },
-    { text: 'Hello 2' },
-    { text: 'Hello 3' },
-    { text: 'Hello 4' },
-    { text: 'Hello 5' },
-    { text: 'Hello 6' },
-    { text: 'Hello 1' },
-    { text: 'Hello 2' },
-    { text: 'Hello 3' },
-    { text: 'Hello 4' },
-    { text: 'Hello 5' },
-    { text: 'Hello 6' },
-  ].reverse());
+  const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
 
   function checkUserAccessToCourseAndGroupChats() {
 
   }
 
   function addMessage(message) {
-    setTotalMessages([message, ...totalMessages]);
+    setTotalMessages([{ data: { text: message } }, ...totalMessages]);
   }
 
   useEffect(checkUserAccessToCourseAndGroupChats, []);
@@ -56,7 +26,7 @@ function Chat(props) {
     <Container component='main'>
       <CssBaseline />
 
-      <Grid container direction='column' >
+      <Grid container direction='column'>
         <Grid item sx={{ mt: 4 }}>
           <ChatBox messages={totalMessages} />
         </Grid>

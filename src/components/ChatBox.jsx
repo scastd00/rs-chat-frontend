@@ -34,7 +34,7 @@ function ChatBox(props) {
       >
         {props.messages.map((m, index) => (
           <Grid item key={index} sx={{ my: 0.2 }}>
-            <ChatMessage data={m} type={MT.TEXT} />
+            <ChatMessage data={m.data} type={MT.TEXT} />
           </Grid>
         ))}
       </Grid>

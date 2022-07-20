@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { CssBaseline, IconButton, InputAdornment, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-function ChatTextBar(props) {
+function ChatTextBar({ addMessage }) {
   const [message, setMessage] = useState('');
 
   function handleSendButton(evt) {
@@ -14,13 +14,13 @@ function ChatTextBar(props) {
         .focus({ preventScroll: true });
     }
 
-    props.addMessage(message);
+    addMessage(message);
     setMessage('');
   }
 
   function handleSendEnter(evt) {
-    if (evt.code === 'Enter') {
-      props.addMessage(message);
+    if (evt.code === 'Enter' && message.trim().length !== 0) {
+      addMessage(message);
       setMessage('');
     }
   }
