@@ -34,6 +34,7 @@ function ChatTextBar(props) {
         id='Text'
         label='Text'
         name='text'
+        color='secondary'
         onKeyDown={handleSendEnter}
         onChange={(evt) => setMessage(evt.target.value)}
         autoFocus
