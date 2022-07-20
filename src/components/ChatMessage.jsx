@@ -9,7 +9,7 @@ import ErrorChatCard from './cards/ErrorChatCard';
 function ChatMessage({ data, type }) {
   switch (type) {
     case MT.TEXT:
-      return <TextChatCard text={data.text} />;
+      return <TextChatCard text={data.text} username={data.username} date={data.date} />;
 
     case MT.IMAGE:
       return <ImageChatCard />;

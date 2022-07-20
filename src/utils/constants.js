@@ -12,9 +12,9 @@ export const DEFAULT_MESSAGES = (() => {
     result.push({
       data: {
         text: `Message ${i}`,
-        date: Date.now(),
-        username: 'Samuel'
-      }
+        date: new Date(),
+        username: 'Samuel',
+      },
     });
   }
 

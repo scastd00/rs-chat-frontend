@@ -17,7 +17,13 @@ function Chat(props) {
   }
 
   function addMessage(message) {
-    setTotalMessages([{ data: { text: message } }, ...totalMessages]);
+    setTotalMessages([{
+      data: {
+        text: message,
+        date: new Date(),
+        username: 'Samuel',
+      },
+    }, ...totalMessages]);
   }
 
   useEffect(checkUserAccessToCourseAndGroupChats, []);

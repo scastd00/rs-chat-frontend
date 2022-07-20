@@ -1,11 +1,32 @@
 import React from 'react';
-import { Card } from '@mui/material';
+import { Avatar, Grid, Paper, Typography } from '@mui/material';
+import { prettyDate } from '../../utils';
 
-function TextChatCard(props) {
+function TextChatCard({ text, date, username }) {
   return (
-    <Card sx={{ my: 0.2 }}>
-      {props.text}
-    </Card>
+    <Paper sx={{ px: 2, py: 0.5 }} elevation={5}>
+      <Grid container direction='row'>
+        <Grid item mr={1.5}>
+          <Typography>
+            {username}
+          </Typography>
+        </Grid>
+
+        <Grid item>
+          <Typography variant='text' component='span' fontSize={11}>
+            {prettyDate(date)}
+          </Typography>
+        </Grid>
+      </Grid>
+
+      <Grid container mt={0.5}>
+        <Grid item xs zeroMinWidth>
+          <Typography style={{overflowWrap: 'break-word'}}>
+            {text}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Paper>
   );
 }
 
