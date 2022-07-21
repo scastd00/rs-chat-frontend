@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CssBaseline, IconButton, InputAdornment, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import AttachmentIcon from '@mui/icons-material/Attachment';
 
 function ChatTextBar({ addMessage }) {
   const [message, setMessage] = useState('');
@@ -12,10 +13,10 @@ function ChatTextBar({ addMessage }) {
          .parentElement
          .getElementsByTagName('input')[0]
         .focus({ preventScroll: true });
-    }
 
-    addMessage(message);
-    setMessage('');
+      addMessage(message);
+      setMessage('');
+    }
   }
 
   function handleSendEnter(evt) {
@@ -23,6 +24,10 @@ function ChatTextBar({ addMessage }) {
       addMessage(message);
       setMessage('');
     }
+  }
+
+  function handleAttachments(evt) {
+
   }
 
   return (
@@ -42,6 +47,9 @@ function ChatTextBar({ addMessage }) {
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
+              <IconButton onClick={handleAttachments}>
+                <AttachmentIcon sx={{ transform: 'rotate(-45deg)' }} />
+              </IconButton>
               <IconButton onClick={handleSendButton}>
                 <SendIcon />
               </IconButton>

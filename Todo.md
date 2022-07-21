@@ -1,0 +1,4 @@
+- [x] Move header of message one component up.
+- [ ] Font size selector.
+- [ ] When hovering date of message, show full date (millisecond precision).
+- [ ] Division of messages by day.
