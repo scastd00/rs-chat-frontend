@@ -12,7 +12,7 @@ function Chat(props) {
   const [chatType, chatId] = id.split('-');
   const state = useStore().getState();
   const userState = state.user;
-  const socket = useWebSocket().getSocket();
+  const client = useWebSocket().getClient();
 
   const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
 
@@ -33,7 +33,7 @@ function Chat(props) {
   useEffect(checkUserAccessToCourseAndGroupChats, []);
 
   function sendTextMessage(textMessage) {
-    socket.send({
+    client.send({
       headers: {
         username: userState.user.username,
         chatId,
