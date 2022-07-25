@@ -12,9 +12,15 @@ function Chat(props) {
   const [chatType, chatId] = id.split('-');
   const state = useStore().getState();
   const userState = state.user;
-  const client = useWebSocket().getClient();
+  const webSocket = useWebSocket();
+  const client = webSocket.getClient();
+  const connectedWS = webSocket.isConnected();
 
   const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
+
+  useEffect(() => {
+    console.log('Connected');
+  }, [connectedWS]);
 
   function checkUserAccessToCourseAndGroupChats() {
 

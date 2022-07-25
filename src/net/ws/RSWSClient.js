@@ -4,6 +4,27 @@ function RSWSClient() {
     : 'ws://localhost:9090';
 
   this.socket = new WebSocket(url);
+  this.messageQueue = [];
+
+  this.init();
+}
+
+RSWSClient.prototype.init = function() {
+  // Todo: function to parse messages (base64 -> binary)
+  this.socket.onmessage = (message) => {
+    this.messageQueue.push(message);
+    // console.log(message);
+  }
+}
+
+RSWSClient.prototype.getMessageQueue = function() {
+  return this.messageQueue;
+}
+
+RSWSClient.prototype.consume = function() {
+  const rev = [...this.messageQueue.reverse()];
+  this.messageQueue = [];
+  return rev;
 }
 
 /**

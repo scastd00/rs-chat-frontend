@@ -6,18 +6,22 @@ import RSWSClient from '../net/ws/RSWSClient';
  * an instance of the WebSocket and if the page is refreshed, the
  * session is closed and reopened.
  *
- * @returns {{getClient: (function(): RSWSClient)}}
+ * @returns {{isConnected: (function(): boolean), getClient: (function(): RSWSClient)}}
  */
 export const useWebSocket = () => {
   const [socket, setSocket] = useState(null);
+  const [connected, setConnected] = useState(false);
 
   const getClient = () => {
     if (socket === null) {
       setSocket(new RSWSClient());
+      setConnected(true);
     }
 
     return socket;
   };
 
-  return { getClient };
+  const isConnected = () => connected;
+
+  return { getClient, isConnected };
 };
