@@ -12,7 +12,7 @@ function Chat(props) {
   const [chatType, chatId] = id.split('-');
   const state = useStore().getState();
   const userState = state.user;
-  const webSocket = useWebSocket();
+  const webSocket = useWebSocket(userState.user.username, id, userState.tokens.accessToken);
   const client = webSocket.getClient();
   const connectedWS = webSocket.isConnected();
 
@@ -42,9 +42,9 @@ function Chat(props) {
     client.send({
       headers: {
         username: userState.user.username,
-        chatId,
+        chatId: id, // Complete id
         dateSignIn: 0, // Todo: take from session of the state of the user
-        type: chatType,
+        type: 'TEXT_MESSAGE',
         Authentication: userState.tokens.accessToken,
       },
       body: {

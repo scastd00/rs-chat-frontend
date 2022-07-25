@@ -2,7 +2,7 @@ let WebSocketClient = require('websocket').client;
 
 let socket = new WebSocketClient();
 let firstMessage = true;
-let counter = 4;
+let counter = 10;
 
 socket.on('connectFailed', function(error) {
   console.log('Connect Error: ' + error.toString());
@@ -78,7 +78,7 @@ socket.on('connect', function(connection) {
       firstMessage = false;
       // console.log('I sent: ', json);
       connection.sendUTF(json);
-      setTimeout(sendNumber, 4000);
+      setTimeout(sendNumber, 1000);
     }
   }
 
