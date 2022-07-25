@@ -41,12 +41,13 @@ export function parseDateForInput(date) {
 
 /**
  *
- * @param response - response from the server
+ * @param error - full error from the server
  * @param navigate - function to navigate to a new page
  * @param dispatch - function to dispatch an action
  */
-export function checkResponse(response, navigate, dispatch) {
+export function checkResponse(error, navigate, dispatch) {
   console.log('checkResponse');
+  const response = error.response;
 
   if (response.status === 403) {
     // FORBIDDEN
