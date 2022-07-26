@@ -13,25 +13,27 @@ function Chat(props) {
   const [chatType, chatId] = id.split('-');
   const state = useStore().getState();
   const userState = state.user;
-  const webSocket = useWebSocket(
+  const client = useWebSocket(
     userState.user.username,
     id,
     userState.sessionId,
     userState.tokens.accessToken,
-  );
-  const client = webSocket.getClient();
-  const connectedWS = webSocket.isConnected();
+  ).getClient();
   const [s, setS] = useState(true);
 
   const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
 
   useEffect(() => {
-    console.log('Connected');
-
+    // On component mount
     window.addEventListener('beforeunload', function() {
-      client.disconnect();
+      client.disconnect(); // Executed when the page is reloaded
     })
-  }, [connectedWS]);
+
+    return () => {
+      // On component unmount
+      client.disconnect(); // Executed when the page is changed
+    };
+  }, []);
 
   function checkUserAccessToCourseAndGroupChats() {
 
