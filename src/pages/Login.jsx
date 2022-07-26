@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setTokens, setUser } from '../actions';
+import { setSessionId, setTokens, setUser } from '../actions';
 
 function Login() {
   const navigate = useNavigate();
@@ -29,11 +29,16 @@ function Login() {
         password: data.get('password'),
       })
       .then((res) => {
-        dispatch(setUser(res.data.session.user));
-        dispatch(setTokens({
-          accessToken: res.data.session.accessToken,
-          refreshToken: res.data.session.refreshToken,
-        }));
+        const {
+          user,
+          accessToken,
+          refreshToken,
+          id,
+        } = res.data.session;
+
+        dispatch(setUser(user));
+        dispatch(setTokens({ accessToken, refreshToken }));
+        dispatch(setSessionId(id));
 
         navigate('/home');
       })
