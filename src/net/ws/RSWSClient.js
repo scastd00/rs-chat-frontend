@@ -1,4 +1,6 @@
-function RSWSClient(username, chatId, __token__) {
+import { USER_CONNECTED, USER_DISCONNECTED } from './MessageType';
+
+function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
     ? 'ws://spring-chat-backend.herokuapp.com:9090'
     : 'ws://localhost:9090';
@@ -7,39 +9,44 @@ function RSWSClient(username, chatId, __token__) {
   this.socket = new WebSocket(url);
   this.username = username;
   this.chatId = chatId;
+  this.sessionId = sessionId;
   this.__token__ = __token__;
 
+  this.messageQueue = [];
+
   this.init();
-}
-
-RSWSClient.prototype.sendInitialMessage = function() {
-  if (!this.hasSentFirstMessage) {
-    this.send({
-      headers: {
-        username: this.username,
-        chatId: this.chatId,
-        dateSignIn: 0,
-        type: 'NEW_USER',
-        Authentication: null,
-      },
-      body: {
-        encoding: 'UTF-8',
-        content: 'Hi',
-      },
-    });
-
-    this.hasSentFirstMessage = true;
-  }
 }
 
 RSWSClient.prototype.init = function() {
   // Todo: function to parse messages (base64 -> binary)
   this.socket.onmessage = (message) => {
-    console.log(message);
+    this.messageQueue.push(message);
+    for (const m of this.messageQueue) {
+      if (m.data.startsWith('W')) {
+        continue;
+      }
+      console.log(JSON.parse(m.data));
+    }
   };
 
   this.socket.onopen = () => {
-    this.sendInitialMessage();
+    if (!this.hasSentFirstMessage) {
+      this.send({
+        headers: {
+          username: this.username,
+          chatId: this.chatId,
+          sessionId: this.sessionId,
+          type: USER_CONNECTED,
+          token: this.__token__,
+        },
+        body: {
+          encoding: 'UTF-8',
+          content: 'Hi',
+        },
+      });
+
+      this.hasSentFirstMessage = true;
+    }
   };
 };
 
@@ -57,5 +64,24 @@ RSWSClient.prototype.send = function(message) {
     alert('Could not send message (type must be a string or an object)');
   }
 };
+
+RSWSClient.prototype.disconnect = function() {
+  this.send({
+    headers: {
+      username: this.username,
+      chatId: this.chatId,
+      sessionId: this.sessionId,
+      type: USER_DISCONNECTED,
+      token: this.__token__,
+      // date: null,
+    },
+    body: {
+      encoding: 'UTF-8',
+      content: 'Bye',
+    },
+  });
+
+  this.socket.close(1000, "Disconnected"); // Todo: send more detailed message
+}
 
 export default RSWSClient;

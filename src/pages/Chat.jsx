@@ -6,20 +6,31 @@ import ChatBox from '../components/ChatBox';
 import { DEFAULT_MESSAGES } from '../utils/constants';
 import { useStore } from 'react-redux';
 import { useWebSocket } from '../hooks/useWebSocket';
+import { TEXT_MESSAGE } from '../net/ws/MessageType';
 
 function Chat(props) {
   const { id } = useParams();
   const [chatType, chatId] = id.split('-');
   const state = useStore().getState();
   const userState = state.user;
-  const webSocket = useWebSocket(userState.user.username, id, userState.tokens.accessToken);
+  const webSocket = useWebSocket(
+    userState.user.username,
+    id,
+    userState.sessionId,
+    userState.tokens.accessToken,
+  );
   const client = webSocket.getClient();
   const connectedWS = webSocket.isConnected();
+  const [s, setS] = useState(true);
 
   const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
 
   useEffect(() => {
     console.log('Connected');
+
+    window.addEventListener('beforeunload', function() {
+      client.disconnect();
+    })
   }, [connectedWS]);
 
   function checkUserAccessToCourseAndGroupChats() {
@@ -43,9 +54,9 @@ function Chat(props) {
       headers: {
         username: userState.user.username,
         chatId: id, // Complete id
-        dateSignIn: 0, // Todo: take from session of the state of the user
-        type: 'TEXT_MESSAGE',
-        Authentication: userState.tokens.accessToken,
+        sessionId: userState.sessionId,
+        type: TEXT_MESSAGE,
+        token: userState.tokens.accessToken,
       },
       body: {
         encoding: 'UTF-8',
