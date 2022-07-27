@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { Container, CssBaseline, Grid } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
-import { DEFAULT_MESSAGES } from '../utils/constants';
 import { useStore } from 'react-redux';
 import { TEXT_MESSAGE } from '../net/ws/MessageType';
 import RSWSClient from '../net/ws/RSWSClient';
+import { createMessage } from '../utils';
 
 function Chat() {
   const { id } = useParams();
@@ -20,21 +20,40 @@ function Chat() {
     ),
   );
 
-  const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
+  // My problem -> https://www.youtube.com/watch?v=ekAZndDRnwg
+  // Minute 31:00
+  // Conclusion: utilization of useRef() hook.
+
+  const [totalMessages, setTotalMessages] = useState([]);
+  // const [interval] = useState(() => setInterval(() => {
+  //     if (client.isReady()) {
+  //       console.log(client.getMessageQueue());
+  //
+  //       // client.getMessageQueue().forEach(addMessage);
+  //       // client.clearMessageQueue();
+  //     }
+  // }, 500));
+
+  // useEffect(() => {
+  //   console.log(client.getMessageQueue());
+  //   setTotalMessages(client.getMessageQueue());
+  // }, [client.getMessageQueue()]);
 
   useEffect(() => {
     // On component mount
     window.addEventListener('beforeunload', function() {
+      // clearInterval(interval);
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    client.onMessage((message) => {
-      // Todo: functionality to show messages in the box
-      console.log('Logging message: ', message); // Removeme
-    });
+    // client.onMessage((message) => {
+    //   // console.log(totalMessages); // Empty
+    //   addMessage(message);
+    // });
 
     return () => {
       // On component unmount
+      // clearInterval(interval);
       client.disconnect(); // Executed when the page is changed
     };
   }, []);
@@ -43,31 +62,24 @@ function Chat() {
 
   }
 
-  function addMessage(message) {
-    setTotalMessages([{
-      data: {
-        text: message,
-        date: new Date(),
-        username: 'Samuel',
-      },
-    }, ...totalMessages]);
+  const addMessage = (message) => {
+    // console.log('addMessage', message);
+    setTotalMessages([message, ...totalMessages]);
   }
 
   function sendTextMessage(textMessage) {
+    const message = createMessage(
+      userState.user.username,
+      id,
+      userState.sessionId,
+      TEXT_MESSAGE,
+      userState.tokens.accessToken,
+      'UTF-8',
+      textMessage,
+    );
 
-    client.send({
-      headers: {
-        username: userState.user.username,
-        chatId: id, // Complete id
-        sessionId: userState.sessionId,
-        type: TEXT_MESSAGE,
-        token: userState.tokens.accessToken,
-      },
-      body: {
-        encoding: 'UTF-8',
-        content: textMessage,
-      },
-    });
+    addMessage(message);
+    client.send(message);
   }
 
   useEffect(checkUserAccessToCourseAndGroupChats, []);

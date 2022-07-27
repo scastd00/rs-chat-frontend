@@ -15,7 +15,7 @@ function dateParams(date) {
   // Get the current date if parameter is null or undefined
   if (date === null || date === undefined) {
     dateObj = new Date();
-  } else if (typeof date === 'string') {
+  } else if (typeof date === 'string' || typeof date === 'number') {
     dateObj = new Date(date);
   }
 
@@ -61,4 +61,33 @@ export function checkResponse(error, navigate, dispatch) {
 
     navigate('/error');
   }
+}
+
+/**
+ *
+ * @param {string} username
+ * @param {string} chatId
+ * @param {number} sessionId
+ * @param {string} type
+ * @param {string} token
+ * @param {string} encoding
+ * @param {string} content
+ * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {encoding: string, content: string}}}
+ */
+export function createMessage(username, chatId, sessionId,
+                              type, token, encoding, content) {
+  return {
+    headers: {
+      username,
+      chatId,
+      sessionId,
+      type,
+      date: Date.now(),
+      token,
+    },
+    body: {
+      encoding,
+      content,
+    },
+  };
 }

@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { CssBaseline, IconButton, InputAdornment, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
-import { useStore } from 'react-redux';
 
 function ChatTextBar({ addMessage, sendTextMessage }) {
   const [message, setMessage] = useState('');
-  const userState = useStore().getState().user;
 
   function handleSendButton(evt) {
     if (message !== '') {
@@ -27,7 +25,7 @@ function ChatTextBar({ addMessage, sendTextMessage }) {
   }
 
   function performMessageSend() {
-    addMessage(message);
+    // addMessage(message);
     setMessage('');
     sendTextMessage(message);
   }

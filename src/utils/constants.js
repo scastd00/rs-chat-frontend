@@ -1,10 +1,3 @@
-export const MESSAGE_TYPES = {
-  TEXT: 'TEXT',
-  IMAGE: 'IMAGE',
-  AUDIO: 'AUDIO',
-  VIDEO: 'VIDEO',
-};
-
 export const DEFAULT_MESSAGES = (() => {
   const result = [];
 

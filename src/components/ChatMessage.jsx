@@ -1,5 +1,5 @@
 import React from 'react';
-import { MESSAGE_TYPES as MT } from '../utils/constants';
+import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageType';
 import TextChatCard from './cards/TextChatCard';
 import ImageChatCard from './cards/ImageChatCard';
 import AudioChatCard from './cards/AudioChatCard';
@@ -8,19 +8,19 @@ import ErrorChatCard from './cards/ErrorChatCard';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
 
-function ChatMessage({ data, type }) {
+function ChatMessage({ message }) {
   return (
     <Paper sx={{ px: 2, py: 0.5 }} elevation={5}>
       <Grid container direction='row'>
         <Grid item mr={1.5}>
           <Typography>
-            {data.username}
+            {message.headers.username}
           </Typography>
         </Grid>
 
         <Grid item>
           <Typography variant='text' component='span' fontSize={11}>
-            {prettyDate(data.date)}
+            {prettyDate(message.headers.date)}
           </Typography>
         </Grid>
       </Grid>
@@ -28,17 +28,17 @@ function ChatMessage({ data, type }) {
       <Grid container mt={0.5}>
         <Grid item xs>
           {(() => {
-            switch (type) {
-              case MT.TEXT:
-                return <TextChatCard text={data.text} />;
+            switch (message.headers.type) {
+              case TEXT_MESSAGE:
+                return <TextChatCard text={message.body.content} />;
 
-              case MT.IMAGE:
+              case IMAGE_MESSAGE:
                 return <ImageChatCard />;
 
-              case MT.AUDIO:
+              case AUDIO_MESSAGE:
                 return <AudioChatCard />;
 
-              case MT.VIDEO:
+              case VIDEO_MESSAGE:
                 return <VideoChatCard />;
 
               default:

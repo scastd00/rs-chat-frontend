@@ -1,9 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Container, Grid } from '@mui/material';
 import ChatMessage from './ChatMessage';
-import { MESSAGE_TYPES as MT } from '../utils/constants';
 
-function ChatBox(props) {
+function ChatBox({ messages }) {
   const divRef = useRef(null);
 
   useEffect(() => {
@@ -32,9 +31,9 @@ function ChatBox(props) {
           px: 2,
         }}
       >
-        {props.messages.map((message, index) => (
+        {messages.map((m, index) => (
           <Grid item key={index} sx={{ my: 0.6 }}>
-            <ChatMessage data={message.data} type={MT.TEXT} />
+            <ChatMessage message={m} />
           </Grid>
         ))}
       </Grid>

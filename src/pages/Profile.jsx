@@ -45,7 +45,7 @@ function Profile() {
         setSessions(res.data.sessions);
       })
       .catch((err) => {
-        checkResponse(err.response, navigate, dispatch);
+        checkResponse(err, navigate, dispatch);
       });
   }, []);
 
