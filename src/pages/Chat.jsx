@@ -5,21 +5,20 @@ import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { DEFAULT_MESSAGES } from '../utils/constants';
 import { useStore } from 'react-redux';
-import { useWebSocket } from '../hooks/useWebSocket';
 import { TEXT_MESSAGE } from '../net/ws/MessageType';
+import RSWSClient from '../net/ws/RSWSClient';
 
-function Chat(props) {
+function Chat() {
   const { id } = useParams();
   const [chatType, chatId] = id.split('-');
-  const state = useStore().getState();
-  const userState = state.user;
-  const client = useWebSocket(
-    userState.user.username,
-    id,
-    userState.sessionId,
-    userState.tokens.accessToken,
-  ).getClient();
-  const [s, setS] = useState(true);
+  const userState = useStore().getState().user;
+  const [client] = useState(() => new RSWSClient(
+      userState.user.username,
+      id,
+      userState.sessionId,
+      userState.tokens.accessToken,
+    ),
+  );
 
   const [totalMessages, setTotalMessages] = useState(DEFAULT_MESSAGES.reverse());
 
@@ -27,7 +26,12 @@ function Chat(props) {
     // On component mount
     window.addEventListener('beforeunload', function() {
       client.disconnect(); // Executed when the page is reloaded
-    })
+    });
+
+    client.onMessage((message) => {
+      // Todo: functionality to show messages in the box
+      console.log('Logging message: ', message); // Removeme
+    });
 
     return () => {
       // On component unmount
@@ -49,9 +53,8 @@ function Chat(props) {
     }, ...totalMessages]);
   }
 
-  useEffect(checkUserAccessToCourseAndGroupChats, []);
-
   function sendTextMessage(textMessage) {
+
     client.send({
       headers: {
         username: userState.user.username,
@@ -66,6 +69,14 @@ function Chat(props) {
       },
     });
   }
+
+  useEffect(checkUserAccessToCourseAndGroupChats, []);
+
+  // useEffect(() => {
+  //   client.onMessage((message) => {
+  //     console.log(message);
+  //   });
+  // }, [client.isReady()]);
 
   return (
     <Container component='main'>

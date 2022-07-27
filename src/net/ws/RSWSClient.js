@@ -11,6 +11,7 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.chatId = chatId;
   this.sessionId = sessionId;
   this.__token__ = __token__;
+  this.ready = false;
 
   this.messageQueue = [];
 
@@ -18,18 +19,9 @@ function RSWSClient(username, chatId, sessionId, __token__) {
 }
 
 RSWSClient.prototype.init = function() {
-  // Todo: function to parse messages (base64 -> binary)
-  this.socket.onmessage = (message) => {
-    this.messageQueue.push(message);
-    for (const m of this.messageQueue) {
-      if (m.data.startsWith('W')) {
-        continue;
-      }
-      console.log(JSON.parse(m.data));
-    }
-  };
-
   this.socket.onopen = () => {
+    this.ready = true;
+
     if (!this.hasSentFirstMessage) {
       this.send({
         headers: {
@@ -81,7 +73,25 @@ RSWSClient.prototype.disconnect = function() {
     },
   });
 
-  this.socket.close(1000, "Disconnected"); // Todo: send more detailed message
-}
+  this.socket.close(1000, 'Disconnected'); // Todo: send more detailed message
+};
+
+/**
+ * Establishes a function that will be executed each time the socket
+ * receives a message.
+ *
+ * @param {function(string): void} callback function to execute when
+ * receiving a message.
+ */
+RSWSClient.prototype.onMessage = function(callback) {
+  // Todo: function to parse messages (base64 -> binary)
+  this.socket.onmessage = function(message) {
+    callback(message.data);
+  };
+};
+
+RSWSClient.prototype.isReady = function() {
+  return this.ready;
+};
 
 export default RSWSClient;
