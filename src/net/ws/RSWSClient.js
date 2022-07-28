@@ -27,6 +27,7 @@ RSWSClient.prototype.init = function() {
           chatId: this.chatId,
           sessionId: this.sessionId,
           type: USER_CONNECTED,
+          date: Date.now(),
           token: this.__token__,
         },
         body: {
@@ -64,8 +65,8 @@ RSWSClient.prototype.disconnect = function() {
       chatId: this.chatId,
       sessionId: this.sessionId,
       type: USER_DISCONNECTED,
+      date: Date.now(),
       token: this.__token__,
-      // date: null,
     },
     body: {
       encoding: 'UTF-8',
