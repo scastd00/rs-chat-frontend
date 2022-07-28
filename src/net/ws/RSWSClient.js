@@ -13,8 +13,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
   this.ready = false;
 
-  this.messageQueue = [];
-
   this.init();
 }
 
@@ -40,10 +38,6 @@ RSWSClient.prototype.init = function() {
       this.hasSentFirstMessage = true;
     }
   };
-
-  this.socket.onmessage = (message) => {
-    this.messageQueue.push(JSON.parse(message.data));
-  }
 };
 
 /**
@@ -91,8 +85,8 @@ RSWSClient.prototype.disconnect = function() {
  */
 RSWSClient.prototype.onMessage = function(callback) {
   // Todo: function to parse messages (base64 -> binary)
+
   this.socket.onmessage = function(message) {
-    console.log("On message web socket:", message.data);
     callback(JSON.parse(message.data));
   };
 };
@@ -100,13 +94,5 @@ RSWSClient.prototype.onMessage = function(callback) {
 RSWSClient.prototype.isReady = function() {
   return this.ready;
 };
-
-RSWSClient.prototype.getMessageQueue = function() {
-  return this.messageQueue;
-}
-
-RSWSClient.prototype.clearMessageQueue = function() {
-  this.messageQueue = [];
-}
 
 export default RSWSClient;

@@ -11,60 +11,37 @@ import { createMessage } from '../utils';
 function Chat() {
   const { id } = useParams();
   const [chatType, chatId] = id.split('-');
+
   const userState = useStore().getState().user;
   const [client] = useState(() => new RSWSClient(
-      userState.user.username,
-      id,
-      userState.sessionId,
-      userState.tokens.accessToken,
-    ),
-  );
+    userState.user.username,
+    id,
+    userState.sessionId,
+    userState.tokens.accessToken,
+  ));
+  const [queue, setQueue] = useState([]);
 
-  // My problem -> https://www.youtube.com/watch?v=ekAZndDRnwg
-  // Minute 31:00
-  // Conclusion: utilization of useRef() hook.
-
-  const [totalMessages, setTotalMessages] = useState([]);
-  // const [interval] = useState(() => setInterval(() => {
-  //     if (client.isReady()) {
-  //       console.log(client.getMessageQueue());
-  //
-  //       // client.getMessageQueue().forEach(addMessage);
-  //       // client.clearMessageQueue();
-  //     }
-  // }, 500));
-
-  // useEffect(() => {
-  //   console.log(client.getMessageQueue());
-  //   setTotalMessages(client.getMessageQueue());
-  // }, [client.getMessageQueue()]);
+  const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
   useEffect(() => {
     // On component mount
     window.addEventListener('beforeunload', function() {
-      // clearInterval(interval);
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    // client.onMessage((message) => {
-    //   // console.log(totalMessages); // Empty
-    //   addMessage(message);
-    // });
+    client.onMessage((message) => {
+      console.log('Use effect & onMessage', message);
+      addMessageToQueue(message);
+    });
 
     return () => {
       // On component unmount
-      // clearInterval(interval);
       client.disconnect(); // Executed when the page is changed
     };
   }, []);
 
   function checkUserAccessToCourseAndGroupChats() {
 
-  }
-
-  const addMessage = (message) => {
-    // console.log('addMessage', message);
-    setTotalMessages([message, ...totalMessages]);
   }
 
   function sendTextMessage(textMessage) {
@@ -78,17 +55,11 @@ function Chat() {
       textMessage,
     );
 
-    addMessage(message);
-    client.send(message);
+    addMessageToQueue(message); // Add the message to my queue
+    client.send(message); // Send the message to other clients
   }
 
   useEffect(checkUserAccessToCourseAndGroupChats, []);
-
-  // useEffect(() => {
-  //   client.onMessage((message) => {
-  //     console.log(message);
-  //   });
-  // }, [client.isReady()]);
 
   return (
     <Container component='main'>
@@ -96,11 +67,11 @@ function Chat() {
 
       <Grid container direction='column'>
         <Grid item sx={{ mt: 4 }}>
-          <ChatBox messages={totalMessages} />
+          <ChatBox messages={queue} />
         </Grid>
 
         <Grid item>
-          <ChatTextBar addMessage={addMessage} sendTextMessage={sendTextMessage} />
+          <ChatTextBar addMessage={addMessageToQueue} sendTextMessage={sendTextMessage} />
         </Grid>
       </Grid>
     </Container>
