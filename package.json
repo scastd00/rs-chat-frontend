@@ -45,7 +45,8 @@
     "jest": "^27.5.1",
     "jest-transform-css": "^4.0.0",
     "react-test-renderer": "^18.0.0",
-    "svg-jest": "^1.0.1"
+    "svg-jest": "^1.0.1",
+    "ws": "^8.8.1"
   },
   "jest": {
     "moduleFileExtensions": [
