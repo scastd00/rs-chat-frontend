@@ -1,5 +1,5 @@
 import { logOut } from '../actions';
-import { UTF_8 } from '../net/ws/MessageProps';
+import { USER_MESSAGES, UTF_8 } from '../net/ws/MessageProps';
 
 export function headers(__token__) {
   return {
@@ -91,4 +91,8 @@ export function createMessage(username, chatId, sessionId,
       content,
     },
   };
+}
+
+export function isUserMessage(type) {
+  return USER_MESSAGES.includes(type);
 }

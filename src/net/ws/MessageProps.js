@@ -7,5 +7,7 @@ export const VIDEO_MESSAGE = "VIDEO_MESSAGE";
 export const ACTIVE_USERS_MESSAGE = "ACTIVE_USERS";
 export const SERVER_INFO_MESSAGE = "SERVER_INFO";
 
+export const USER_MESSAGES = [TEXT_MESSAGE, IMAGE_MESSAGE, AUDIO_MESSAGE, VIDEO_MESSAGE];
+
 export const UTF_8 = 'UTF-8';
 export const BASE_64 = 'base64';

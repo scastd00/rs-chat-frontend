@@ -7,6 +7,7 @@ import { useStore } from 'react-redux';
 import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import RSWSClient from '../net/ws/RSWSClient';
 import { createMessage } from '../utils';
+import { connect_message, disconnect_message, normal_message, server_info_message } from '../utils/constants';
 
 function Chat() {
   const { id } = useParams();
@@ -19,7 +20,12 @@ function Chat() {
     userState.sessionId,
     userState.tokens.accessToken,
   ));
-  const [queue, setQueue] = useState([]);
+  const [queue, setQueue] = useState([
+    disconnect_message,
+    normal_message,
+    server_info_message,
+    connect_message,
+  ]);
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 

@@ -1,14 +1,12 @@
 import React from 'react';
-import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageProps';
-import TextChatCard from './cards/TextChatCard';
-import ImageChatCard from './cards/ImageChatCard';
-import AudioChatCard from './cards/AudioChatCard';
-import VideoChatCard from './cards/VideoChatCard';
-import ErrorChatCard from './cards/ErrorChatCard';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
+import { SERVER_INFO_MESSAGE, USER_CONNECTED, USER_DISCONNECTED } from '../net/ws/MessageProps';
+import ErrorChatCard from './cards/ErrorChatCard';
+import UserEventChatCard from './cards/UserEventChatCard';
+import ServerInfoChatCard from './cards/ServerInfoChatCard';
 
-function ChatMessage({ message }) {
+function ServerMessage({ message }) {
   return (
     <Paper sx={{ px: 2, py: 0.5 }} elevation={5}>
       <Grid container direction='row'>
@@ -29,17 +27,12 @@ function ChatMessage({ message }) {
         <Grid item xs>
           {(() => {
             switch (message.headers.type) {
-              case TEXT_MESSAGE:
-                return <TextChatCard text={message.body.content} />;
+              case USER_CONNECTED:
+              case USER_DISCONNECTED:
+                return <UserEventChatCard text={message.body.content} />;
 
-              case IMAGE_MESSAGE:
-                return <ImageChatCard />;
-
-              case AUDIO_MESSAGE:
-                return <AudioChatCard />;
-
-              case VIDEO_MESSAGE:
-                return <VideoChatCard />;
+              case SERVER_INFO_MESSAGE:
+                return <ServerInfoChatCard text={message.body.content} />;
 
               default:
                 return <ErrorChatCard />;
@@ -51,4 +44,4 @@ function ChatMessage({ message }) {
   );
 }
 
-export default ChatMessage;
+export default ServerMessage;
