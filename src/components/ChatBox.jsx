@@ -33,15 +33,17 @@ function ChatBox({ messages }) {
           px: 2,
         }}
       >
-        {messages.map((m, index) => (
-          <Grid item key={index} sx={{ my: 0.6 }}>
-            {
-              isUserMessage(m.headers.type)
-                ? <UserMessage message={m} />
-                : <ServerMessage message={m} />
-            }
-          </Grid>
-        ))}
+        {
+          messages.map((m, index) => (
+            <Grid item key={index} sx={{ my: 0.6 }}>
+              {
+                isUserMessage(m.headers.type)
+                  ? <UserMessage message={m} />
+                  : <ServerMessage message={m} />
+              }
+            </Grid>
+          ))
+        }
       </Grid>
 
       <div style={{ float: 'left', clear: 'both' }} ref={divRef} />

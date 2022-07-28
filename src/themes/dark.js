@@ -49,5 +49,10 @@ export default createTheme({
     footer: {
       main: '#66a4a4',
     },
+    message: {
+      joined: '#00be1f',
+      left: '#f44336',
+      info: '#03a9f4',
+    },
   },
 });

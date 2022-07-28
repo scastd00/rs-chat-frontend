@@ -4,8 +4,11 @@ import { Grid, Typography } from '@mui/material';
 function ServerInfoChatCard({ text }) {
   return (
     <Grid container>
-      <Grid item xs zeroMinWidth sx={{ textAlign: 'center' }}>
-        <Typography style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}>
+      <Grid item xs zeroMinWidth>
+        <Typography
+          style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
+          sx={{ color: 'message.info' }}
+        >
           {text}
         </Typography>
       </Grid>

@@ -8,26 +8,26 @@ import ServerInfoChatCard from './cards/ServerInfoChatCard';
 
 function ServerMessage({ message }) {
   return (
-    <Paper sx={{ px: 2, py: 0.5 }} elevation={5}>
-      <Grid container direction='row'>
-        <Grid item mr={1.5}>
-          <Typography>
-            {message.headers.username}
-          </Typography>
-        </Grid>
-
-        <Grid item>
-          <Typography variant='text' component='span' fontSize={11}>
+    <Paper sx={{ px: 2, py: 0.5, background: 'transparent', textAlign: 'center' }} elevation={0}>
+      <Grid container direction='column'>
+        <Grid item xs>
+          <Typography
+            variant='text'
+            component='span'
+            fontSize={11}
+            fontWeight='bold'
+            sx={{ opacity: 0.5 }}
+          >
             {prettyDate(message.headers.date)}
           </Typography>
         </Grid>
-      </Grid>
 
-      <Grid container mt={0.5}>
         <Grid item xs>
           {(() => {
             switch (message.headers.type) {
               case USER_CONNECTED:
+                return <UserEventChatCard text={message.body.content} connected />;
+
               case USER_DISCONNECTED:
                 return <UserEventChatCard text={message.body.content} />;
 
