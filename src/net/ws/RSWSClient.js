@@ -3,7 +3,7 @@ import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
-    ? 'ws://spring-chat-backend.herokuapp.com:9090'
+    ? 'ws://rschat-ws-back.herokuapp.com:80'
     : 'ws://localhost:9090';
 
   this.hasSentFirstMessage = false;
