@@ -4,7 +4,7 @@ import { Container, CssBaseline, Grid } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useStore } from 'react-redux';
-import { TEXT_MESSAGE } from '../net/ws/MessageType';
+import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import RSWSClient from '../net/ws/RSWSClient';
 import { createMessage } from '../utils';
 
@@ -29,10 +29,7 @@ function Chat() {
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    client.onMessage((message) => {
-      console.log('Use effect & onMessage', message);
-      addMessageToQueue(message);
-    });
+    client.onMessage(addMessageToQueue);
 
     return () => {
       // On component unmount
@@ -51,7 +48,6 @@ function Chat() {
       userState.sessionId,
       TEXT_MESSAGE,
       userState.tokens.accessToken,
-      'UTF-8',
       textMessage,
     );
 

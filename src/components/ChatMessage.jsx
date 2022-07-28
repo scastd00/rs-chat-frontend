@@ -1,5 +1,5 @@
 import React from 'react';
-import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageType';
+import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageProps';
 import TextChatCard from './cards/TextChatCard';
 import ImageChatCard from './cards/ImageChatCard';
 import AudioChatCard from './cards/AudioChatCard';

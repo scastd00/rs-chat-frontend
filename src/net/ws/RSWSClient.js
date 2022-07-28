@@ -1,4 +1,5 @@
-import { USER_CONNECTED, USER_DISCONNECTED } from './MessageType';
+import { USER_CONNECTED, USER_DISCONNECTED, UTF_8 } from './MessageProps';
+import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
@@ -6,12 +7,23 @@ function RSWSClient(username, chatId, sessionId, __token__) {
     : 'ws://localhost:9090';
 
   this.hasSentFirstMessage = false;
+  this.ready = false;
   this.socket = new WebSocket(url);
   this.username = username;
   this.chatId = chatId;
   this.sessionId = sessionId;
   this.__token__ = __token__;
-  this.ready = false;
+
+  /**
+   *
+   * @param type
+   * @param message
+   * @param encoding
+   * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {encoding: string, content: string}}}
+   */
+  this.defaultServerMessage = (type, message, encoding = UTF_8) => {
+    return createMessage(this.username, this.chatId, this.sessionId, type, this.__token__, message, encoding);
+  };
 
   this.init();
 }
@@ -21,20 +33,7 @@ RSWSClient.prototype.init = function() {
     this.ready = true;
 
     if (!this.hasSentFirstMessage) {
-      this.send({
-        headers: {
-          username: this.username,
-          chatId: this.chatId,
-          sessionId: this.sessionId,
-          type: USER_CONNECTED,
-          date: Date.now(),
-          token: this.__token__,
-        },
-        body: {
-          encoding: 'UTF-8',
-          content: 'Hi',
-        },
-      });
+      this.send(this.defaultServerMessage(USER_CONNECTED, 'Hi'));
 
       this.hasSentFirstMessage = true;
     }
@@ -56,23 +55,13 @@ RSWSClient.prototype.send = function(message) {
   }
 };
 
+/**
+ * Disconnects the user from the server sending a message
+ */
 RSWSClient.prototype.disconnect = function() {
   this.ready = false;
 
-  this.send({
-    headers: {
-      username: this.username,
-      chatId: this.chatId,
-      sessionId: this.sessionId,
-      type: USER_DISCONNECTED,
-      date: Date.now(),
-      token: this.__token__,
-    },
-    body: {
-      encoding: 'UTF-8',
-      content: 'Bye',
-    },
-  });
+  this.send(this.defaultServerMessage(USER_DISCONNECTED, 'Bye'));
 
   this.socket.close(1000, 'Disconnected'); // Todo: send more detailed message
 };

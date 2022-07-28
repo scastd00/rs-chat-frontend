@@ -1,4 +1,5 @@
 import { logOut } from '../actions';
+import { UTF_8 } from '../net/ws/MessageProps';
 
 export function headers(__token__) {
   return {
@@ -70,12 +71,12 @@ export function checkResponse(error, navigate, dispatch) {
  * @param {number} sessionId
  * @param {string} type
  * @param {string} token
- * @param {string} encoding
  * @param {string} content
+ * @param {string} encoding
  * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {encoding: string, content: string}}}
  */
 export function createMessage(username, chatId, sessionId,
-                              type, token, encoding, content) {
+                              type, token, content, encoding = UTF_8) {
   return {
     headers: {
       username,
