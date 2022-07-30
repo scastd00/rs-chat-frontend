@@ -1,9 +1,9 @@
-import { USER_CONNECTED, USER_DISCONNECTED, UTF_8 } from './MessageProps';
+import { USER_CONNECTED, USER_DISCONNECTED } from './MessageProps';
 import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
-    ? 'wss://rschat-ws-back.herokuapp.com/chat/'
+    ? 'wss://rschat-ws-back.herokuapp.com:80/rschat/'
     : 'ws://localhost:9090/rschat/';
 
   this.hasSentFirstMessage = false;
@@ -14,31 +14,25 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.sessionId = sessionId;
   this.__token__ = __token__;
 
-  /**
-   *
-   * @param type
-   * @param message
-   * @param encoding
-   * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {encoding: string, content: string}}}
-   */
-  this.defaultServerMessage = (type, message, encoding = UTF_8) => {
-    return createMessage(this.username, this.chatId, this.sessionId, type, this.__token__, message, encoding);
-  };
-
-  this.init();
-}
-
-RSWSClient.prototype.init = function() {
   this.socket.onopen = () => {
     this.ready = true;
 
     if (!this.hasSentFirstMessage) {
-      this.send(this.defaultServerMessage(USER_CONNECTED, 'Hi'));
+      this.send(
+        createMessage(
+          this.username,
+          this.chatId,
+          this.sessionId,
+          USER_CONNECTED,
+          this.__token__,
+          'Hi',
+        ),
+      );
 
       this.hasSentFirstMessage = true;
     }
   };
-};
+}
 
 /**
  * Sends a message to the connected server (string or JSON).
@@ -61,7 +55,16 @@ RSWSClient.prototype.send = function(message) {
 RSWSClient.prototype.disconnect = function() {
   this.ready = false;
 
-  this.send(this.defaultServerMessage(USER_DISCONNECTED, 'Bye'));
+  this.send(
+    createMessage(
+      this.username,
+      this.chatId,
+      this.sessionId,
+      USER_DISCONNECTED,
+      this.__token__,
+      'Bye',
+    ),
+  );
 
   this.socket.close(1000, 'Disconnected'); // Todo: send more detailed message
 };
