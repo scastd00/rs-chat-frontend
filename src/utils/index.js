@@ -84,7 +84,7 @@ export function createMessage(username, chatId, sessionId,
       sessionId,
       type,
       date: Date.now(),
-      token,
+      token: `Bearer ${token}`,
     },
     body: {
       encoding,
