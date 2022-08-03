@@ -1,4 +1,4 @@
-import { USER_CONNECTED, USER_DISCONNECTED } from './MessageProps';
+import { USER_CONNECTED, USER_DISCONNECTED, WAITING_CHAT_ID } from './MessageProps';
 import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
@@ -21,7 +21,7 @@ function RSWSClient(username, chatId, sessionId, __token__) {
       this.send(
         createMessage(
           this.username,
-          this.chatId,
+          WAITING_CHAT_ID,
           this.sessionId,
           USER_CONNECTED,
           this.__token__,
