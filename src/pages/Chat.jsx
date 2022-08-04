@@ -19,12 +19,7 @@ function Chat() {
     userState.sessionId,
     userState.tokens.accessToken,
   ));
-  const [queue, setQueue] = useState([
-    // disconnect_message,
-    // normal_message,
-    // server_info_message,
-    // connect_message,
-  ]);
+  const [queue, setQueue] = useState([]);
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 

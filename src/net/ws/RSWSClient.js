@@ -1,4 +1,4 @@
-import { USER_CONNECTED, USER_DISCONNECTED, WAITING_CHAT_ID } from './MessageProps';
+import { TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
 import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
@@ -6,8 +6,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
     ? 'wss://rschat-ws-back.herokuapp.com/ws/rschat'
     : 'ws://localhost:8080/ws/rschat';
 
-  this.hasSentFirstMessage = false;
-  this.ready = false;
   this.socket = new WebSocket(url);
   this.username = username;
   this.chatId = chatId;
@@ -15,22 +13,17 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
 
   this.socket.onopen = () => {
-    this.ready = true;
-
-    if (!this.hasSentFirstMessage) {
-      this.send(
-        createMessage(
-          this.username,
-          WAITING_CHAT_ID,
-          this.sessionId,
-          USER_CONNECTED,
-          this.__token__,
-          'Hi',
-        ),
-      );
-
-      this.hasSentFirstMessage = true;
-    }
+    // Only executed one time
+    this.send(
+      createMessage(
+        this.username,
+        this.chatId,
+        this.sessionId,
+        USER_JOINED,
+        this.__token__,
+        'Hi',
+      ),
+    );
   };
 }
 
@@ -41,7 +34,11 @@ function RSWSClient(username, chatId, sessionId, __token__) {
  */
 RSWSClient.prototype.send = function(message) {
   if (typeof message === 'string') {
-    this.socket.send(message);
+    this.socket.send(
+      JSON.stringify(
+        createMessage(this.username, this.chatId, this.sessionId, TEXT_MESSAGE, this.__token__, message),
+      ),
+    );
   } else if (typeof message === 'object') {
     this.socket.send(JSON.stringify(message));
   } else {
@@ -50,17 +47,15 @@ RSWSClient.prototype.send = function(message) {
 };
 
 /**
- * Disconnects the user from the server sending a message
+ * Disconnects the user from the server sending a message.
  */
 RSWSClient.prototype.disconnect = function() {
-  this.ready = false;
-
   this.send(
     createMessage(
       this.username,
       this.chatId,
       this.sessionId,
-      USER_DISCONNECTED,
+      USER_LEFT,
       this.__token__,
       'Bye',
     ),
@@ -82,10 +77,6 @@ RSWSClient.prototype.onMessage = function(callback) {
   this.socket.onmessage = function(message) {
     callback(JSON.parse(message.data));
   };
-};
-
-RSWSClient.prototype.isReady = function() {
-  return this.ready;
 };
 
 export default RSWSClient;

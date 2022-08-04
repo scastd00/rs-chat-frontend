@@ -39,11 +39,10 @@ function App(props) {
 
             <Route path='/home' element={<PrivateRoute component={Home} />} />
             <Route path='/profile' element={<PrivateRoute component={Profile} />} />
+            <Route path='/chat/:id' element={<PrivateRoute component={Chat} />} />
 
             <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
             <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />
-
-            <Route path='/chat/:id' element={<PrivateRoute component={Chat} />} />
           </Routes>
         </Router>
       </div>
