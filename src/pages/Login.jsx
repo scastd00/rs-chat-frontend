@@ -31,14 +31,15 @@ function Login() {
       .then((res) => {
         const {
           user,
-          accessToken,
-          refreshToken,
-          id,
-        } = res.data.session;
+          session,
+        } = res.data;
 
         dispatch(setUser(user));
-        dispatch(setTokens({ accessToken, refreshToken }));
-        dispatch(setSessionId(id));
+        dispatch(setTokens({
+          accessToken: session.accessToken,
+          refreshToken: session.refreshToken,
+        }));
+        dispatch(setSessionId(session.id));
 
         navigate('/home');
       })

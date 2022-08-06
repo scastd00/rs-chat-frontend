@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { CssBaseline, Typography, IconButton, Grid } from '@mui/material';
+import { CssBaseline, Typography, IconButton, Grid, Button } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-function DropDown({ title, children, component, variant, drop }) {
+function DropDown({ title, children, drop, button }) {
   const [dropped, setDropped] = useState(drop);
 
   return (
     <CssBaseline>
-      <Typography component={component} variant={variant}>
+      <Typography component='main' variant='h5'>
         <IconButton sx={{ mr: 1 }} onClick={() => setDropped(!dropped)}>
           {dropped ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
         </IconButton>
         {title}
+
+        {button}
       </Typography>
 
       {!dropped ? (

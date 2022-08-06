@@ -14,6 +14,7 @@ import PrivateRoute from './routes/PrivateRoute';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
+import Administration from './pages/Administration';
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
@@ -40,6 +41,7 @@ function App(props) {
             <Route path='/home' element={<PrivateRoute component={Home} />} />
             <Route path='/profile' element={<PrivateRoute component={Profile} />} />
             <Route path='/chat/:id' element={<PrivateRoute component={Chat} />} />
+            <Route path='/administration' element={<PrivateRoute component={Administration} />} />
 
             <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
             <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />

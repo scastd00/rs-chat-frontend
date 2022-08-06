@@ -187,7 +187,7 @@ function Profile() {
 
         <Divider sx={dividerSx} />
 
-        <DropDown title='Opened sessions' variant='h5'>
+        <DropDown title='Opened sessions'>
           {
             sessions.map((session, index) => (
               <ListItem key={index} sx={{ height: '10px' }}>

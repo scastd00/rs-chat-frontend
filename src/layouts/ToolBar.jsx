@@ -23,13 +23,14 @@ function ToolBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const store = useStore();
+  const state = useStore().getState();
+  const userState = state.user;
 
-  const [darkMode, setDarkMode] = useState(store.getState().theme.isDarkTheme);
+  const [darkMode, setDarkMode] = useState(state.theme.isDarkTheme);
 
   useEffect(() => {
-    setDarkMode(store.getState().theme.isDarkTheme);
-  }, [store.getState().theme]);
+    setDarkMode(state.theme.isDarkTheme);
+  }, [state.theme]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -89,7 +90,7 @@ function ToolBar(props) {
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               {loggedIn ? (
                 <div>
-                  {store.getState().user.user.role === 'admin' ? (
+                  {userState.user.role.toLowerCase().startsWith('admin') ? (
                     <MenuItem
                       onClick={() => {
                         setAnchorEl(null);
