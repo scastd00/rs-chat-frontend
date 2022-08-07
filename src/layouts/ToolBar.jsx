@@ -3,10 +3,8 @@ import { AppBar, Button, Grid, IconButton, Menu, MenuItem, Toolbar, Typography }
 import { useNavigate } from 'react-router';
 import { connect, useDispatch, useStore } from 'react-redux';
 import { changeTheme, logOut } from '../actions';
-import ShoppingCartTwoToneIcon from '@mui/icons-material/ShoppingCartTwoTone';
 import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
 import DarkModeTwoToneIcon from '@mui/icons-material/DarkModeTwoTone';
-import Inventory2TwoToneIcon from '@mui/icons-material/Inventory2TwoTone';
 import LoginTwoToneIcon from '@mui/icons-material/LoginTwoTone';
 import LogoutTwoToneIcon from '@mui/icons-material/LogoutTwoTone';
 import HowToRegTwoToneIcon from '@mui/icons-material/HowToRegTwoTone';
@@ -14,17 +12,13 @@ import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeTwoTone';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
-import DesignServicesTwoToneIcon from '@mui/icons-material/DesignServicesTwoTone';
-import BallotTwoToneIcon from '@mui/icons-material/BallotTwoTone';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import InventoryTwoToneIcon from '@mui/icons-material/InventoryTwoTone';
 
 function ToolBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const state = useStore().getState();
-  const userState = state.user;
+  const userState = props.data;
 
   const [darkMode, setDarkMode] = useState(state.theme.isDarkTheme);
 
@@ -47,11 +41,11 @@ function ToolBar(props) {
   useEffect(() => {
     if (!!props.data.user.username) {
       // If username is defined
-      setUsername(props.data.user.username);
       setLoggedIn(true);
+      setUsername(props.data.user.username);
     } else {
-      setUsername('');
       setLoggedIn(false);
+      setUsername('');
     }
   }, [props.data.user]);
 
@@ -90,7 +84,7 @@ function ToolBar(props) {
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
               {loggedIn ? (
                 <div>
-                  {userState.user.role.toLowerCase().startsWith('admin') ? (
+                  {userState.user.role === 'ADMINISTRATOR' ? (
                     <MenuItem
                       onClick={() => {
                         setAnchorEl(null);

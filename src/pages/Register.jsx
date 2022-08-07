@@ -235,11 +235,8 @@ function Register() {
                 {registerError.length > 0 && <ErrorAlert content={registerError} />}
               </Grid>
 
-              <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-                Register
-              </Button>
-
               <FormControlLabel
+                sx={{ pt: 2 }}
                 onChange={(event) => {
                   setTermsAccepted(event.target.checked);
                 }}
@@ -259,6 +256,10 @@ function Register() {
                   </Typography>
                 }
               />
+
+              <Button type='submit' fullWidth variant='contained' sx={{ my: 2 }}>
+                Register
+              </Button>
 
               <Typography textAlign='right'>
                 <Link component='button' type='button' variant='body2' onClick={() => navigate('/login')} sx={{}}>

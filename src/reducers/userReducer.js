@@ -15,6 +15,7 @@ export const userReducer = createReducer({ user: {}, tokens: {}, sessionId: -1 }
     .addCase(logOut, (state, _action) => {
       state.user = {};
       state.tokens = {};
+      state.sessionId = -1;
       // Clear the user in the app
     });
 });

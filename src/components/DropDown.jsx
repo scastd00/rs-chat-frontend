@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import { CssBaseline, Typography, IconButton, Grid, Button } from '@mui/material';
+import { CssBaseline, Grid, IconButton, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function DropDown({ title, children, drop, button }) {
   const [dropped, setDropped] = useState(drop);
+
+  const childrenToRender = typeof children === 'object' ?
+    children :
+    children?.map((child, index) => {
+      return (
+        <Grid item xs={12} sx={{ my: 1.5 }} key={index}>
+          {child}
+        </Grid>
+      );
+    });
 
   return (
     <CssBaseline>
@@ -20,14 +30,8 @@ function DropDown({ title, children, drop, button }) {
       {!dropped ? (
         ''
       ) : (
-        <Grid container>
-          {children?.map((child, index) => {
-            return (
-              <Grid item xs={12} sx={{ my: 1.5 }} key={index}>
-                {child}
-              </Grid>
-            );
-          })}
+        <Grid container sx={{ mx: 7 }}>
+          {childrenToRender}
         </Grid>
       )}
     </CssBaseline>
