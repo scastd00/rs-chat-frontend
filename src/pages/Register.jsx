@@ -14,6 +14,7 @@ import {
   Link,
   TextField,
   Typography,
+  useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -22,6 +23,7 @@ import { setSessionId, setTokens, setUser } from '../actions';
 import AuthService from '../services/AuthService';
 import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
+import { PuffLoader } from 'react-spinners';
 
 function Register() {
   const navigate = useNavigate();
@@ -35,6 +37,8 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [snackbarError, setSnackbarError] = useState(false);
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
+  const theme = useTheme();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -51,6 +55,7 @@ function Register() {
     }
 
     const data = new FormData(event.currentTarget);
+    setShowLoadingSpinner(true);
 
     AuthService
       .register({
@@ -77,6 +82,7 @@ function Register() {
         navigate('/home');
       })
       .catch((e) => {
+        setShowLoadingSpinner(false);
         setRegisterError(e.response.data.error);
       });
   };
@@ -268,6 +274,20 @@ function Register() {
               </Typography>
             </Box>
           </Box>
+
+          {
+            showLoadingSpinner && (
+              <Grid container direction='column' alignItems='center' sx={{ pt: 10 }} spacing={0.8}>
+                <Grid item>
+                  <PuffLoader loading={showLoadingSpinner} size={40} color={theme.palette.info.main} />
+                </Grid>
+
+                <Grid item>
+                  <Typography>Logging in</Typography>
+                </Grid>
+              </Grid>
+            )
+          }
         </Grid>
       </Grid>
 

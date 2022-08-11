@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,13 +15,20 @@ import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
 import { useDispatch } from 'react-redux';
 import { setSessionId, setTokens, setUser } from '../actions';
+import { PuffLoader } from 'react-spinners';
+import { useTheme } from '@mui/material';
 
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
+  const theme = useTheme();
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    setShowLoadingSpinner(true);
+
     const data = new FormData(event.currentTarget);
     AuthService
       .login({
@@ -43,7 +50,10 @@ function Login() {
 
         navigate('/home');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setShowLoadingSpinner(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -105,6 +115,7 @@ function Login() {
           >
             Sign In
           </Button>
+
           <Grid container>
             <Grid item xs>
               <Link href='src/main/react/src/pages/Login#' variant='body2'>
@@ -119,6 +130,20 @@ function Login() {
             </Grid>
           </Grid>
         </Box>
+
+        {
+          showLoadingSpinner && (
+            <Grid container direction='column' alignItems='center' sx={{ pt: 10 }} spacing={0.8}>
+              <Grid item>
+                <PuffLoader loading={showLoadingSpinner} size={40} color={theme.palette.info.main} />
+              </Grid>
+
+              <Grid item>
+                <Typography>Logging in</Typography>
+              </Grid>
+            </Grid>
+          )
+        }
       </Box>
     </Container>
   );

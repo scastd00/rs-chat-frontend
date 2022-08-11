@@ -54,5 +54,8 @@ export default createTheme({
       left: '#f44336',
       info: '#03a9f4',
     },
+    spinner: {
+      main: '#29b6f6',
+    },
   },
 });
