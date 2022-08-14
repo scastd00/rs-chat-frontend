@@ -14,7 +14,8 @@ import PrivateRoute from './routes/PrivateRoute';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
-import Administration from './pages/Administration';
+import AdminRoute from './routes/AdminRoute';
+import { Administration } from './pages/admin';
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
@@ -33,18 +34,32 @@ function App(props) {
           <ToolBar />
 
           <Routes>
-            {/* If not logged in, go to log in */}
+            {/* Go to log in by default if the user is not logged in */}
             <Route path='/' element={<Navigate to='/login' />} />
             <Route path='/login' element={<PublicRoute component={Login} restricted />} />
             <Route path='/register' element={<PublicRoute component={Register} restricted />} />
 
+            <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
+            <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />
+
             <Route path='/home' element={<PrivateRoute component={Home} />} />
             <Route path='/profile' element={<PrivateRoute component={Profile} />} />
             <Route path='/chat/:id' element={<PrivateRoute component={Chat} />} />
-            <Route path='/administration' element={<PrivateRoute component={Administration} />} />
 
-            <Route path='/privacy' element={<PublicRoute component={PrivacyPolicy} />} />
-            <Route path='/terms' element={<PublicRoute component={TermsAndConditions} />} />
+            {/* Administration routes */}
+            <Route path='/administration' element={<AdminRoute component={Administration} />} />
+
+            {/*<Route path='/administration/degrees' element={<AdminRoute component={AdministrationDegree} />} />*/}
+            {/*<Route path='/administration/degree/:id' element={<AdminRoute component={AdministrationDegree} />} />*/}
+
+            {/*<Route path='/administration/subjects' element={<AdminRoute component={AdministrationSubject} />} />*/}
+            {/*<Route path='/administration/subject/:id' element={<AdminRoute component={AdministrationSubject} />} />*/}
+
+            {/*<Route path='/administration/groups' element={<AdminRoute component={AdministrationGroup} />} />*/}
+            {/*<Route path='/administration/group/:id' element={<AdminRoute component={AdministrationGroup} />} />*/}
+
+            {/*<Route path='/administration/users' element={<AdminRoute component={AdministrationUser} />} />*/}
+            {/*<Route path='/administration/user/:id' element={<AdminRoute component={AdministrationUser} />} />*/}
           </Routes>
         </Router>
       </div>

@@ -13,18 +13,20 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import DropDown from '../components/DropDown';
+import DropDown from '../../components/DropDown';
 import AddIcon from '@mui/icons-material/Add';
-import DegreeService from '../services/DegreeService';
+import DegreeService from '../../services/DegreeService';
 import { useDispatch, useStore } from 'react-redux';
-import { checkResponse } from '../utils';
+import { checkResponse } from '../../utils';
 import { useNavigate } from 'react-router';
+import SubjectService from '../../services/SubjectService';
 
 function Administration() {
   const [availableDegrees, setAvailableDegrees] = useState([]);
   const [createDegreeDialog, setCreateDegreeDialog] = useState(false);
   const [degreeName, setDegreeName] = useState('');
 
+  const [availableSubjects, setAvailableSubjects] = useState([]);
   const [createSubjectDialog, setCreateSubjectDialog] = useState(false);
   const [subjectProps, setSubjectProps] = useState({
     name: '',
@@ -43,14 +45,22 @@ function Administration() {
     DegreeService
       .addDegree({ name: degreeName }, userState.tokens.accessToken)
       .then(res => {
-        console.log(res);
+        setAvailableDegrees([...availableDegrees, res.data.degree]);
       });
 
     setCreateDegreeDialog(false);
   };
 
   const handleSubjectCreation = () => {
-    console.log(subjectProps);
+    SubjectService
+      .addSubject(subjectProps, userState.tokens.accessToken)
+      .then(res => {
+        console.log(res);
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+
     setCreateSubjectDialog(false);
   };
 
@@ -59,6 +69,15 @@ function Administration() {
       .getAllDegrees(userState.tokens.accessToken)
       .then(res => {
         setAvailableDegrees(res.data.degrees);
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    SubjectService
+      .getAllSubjects(userState.tokens.accessToken)
+      .then(res => {
+        setAvailableSubjects(res.data.subjects);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -88,9 +107,11 @@ function Administration() {
             <Grid container direction='column'>
               {
                 availableDegrees.map(deg => (
-                  <Grid item key={deg.id}>
-                    <Typography>{deg.name}</Typography>
-                  </Grid>
+                  React.cloneElement(
+                    <Grid item key={deg.id}>
+                      <Typography>{deg.name}</Typography>
+                    </Grid>,
+                  )
                 ))
               }
             </Grid>
@@ -98,7 +119,17 @@ function Administration() {
         </Grid>
         <Grid item>
           <DropDown title='Subjects' button={subjectsButton}>
-
+            <Grid container direction='column'>
+              {
+                availableSubjects.map(sub => (
+                  React.cloneElement(
+                    <Grid item key={sub.id}>
+                      <Typography>{sub.name}</Typography>
+                    </Grid>,
+                  )
+                ))
+              }
+            </Grid>
           </DropDown>
         </Grid>
         <Grid item>
@@ -185,7 +216,7 @@ function Administration() {
             label='Credits'
             margin='dense'
             onChange={(evt) => {
-              setSubjectProps({ ...subjectProps, credits: evt.target.value });
+              setSubjectProps({ ...subjectProps, credits: parseInt(evt.target.value, 10) });
             }}
           >
             <MenuItem value='1'>1</MenuItem>
@@ -205,7 +236,7 @@ function Administration() {
             label='Grade'
             margin='dense'
             onChange={(evt) => {
-              setSubjectProps({ ...subjectProps, grade: evt.target.value });
+              setSubjectProps({ ...subjectProps, grade: parseInt(evt.target.value, 10) });
             }}
           >
             <MenuItem value='1'>1</MenuItem>
