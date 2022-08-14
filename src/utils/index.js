@@ -48,7 +48,7 @@ export function parseDateForInput(date) {
  */
 export function checkResponse(error, navigate, dispatch) {
   console.log('checkResponse');
-  const response = error.response;
+  const { response } = error;
 
   if (response.status === 403) {
     // FORBIDDEN

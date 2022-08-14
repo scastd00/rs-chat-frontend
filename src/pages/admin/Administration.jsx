@@ -20,6 +20,7 @@ import { useDispatch, useStore } from 'react-redux';
 import { checkResponse } from '../../utils';
 import { useNavigate } from 'react-router';
 import SubjectService from '../../services/SubjectService';
+import GroupService from '../../services/GroupService';
 
 function Administration() {
   const [availableDegrees, setAvailableDegrees] = useState([]);
@@ -36,6 +37,10 @@ function Administration() {
     grade: 1,
     degree: '',
   });
+
+  const [availableGroups, setAvailableGroups] = useState([]);
+  const [createGroupDialog, setCreateGroupDialog] = useState(false);
+  const [groupProps, setGroupProps] = useState({ name: '' });
 
   const userState = useStore().getState().user;
   const navigate = useNavigate();
@@ -64,6 +69,19 @@ function Administration() {
     setCreateSubjectDialog(false);
   };
 
+  const handleGroupCreation = () => {
+    GroupService
+      .addGroup(groupProps, userState.tokens.accessToken)
+      .then(res => {
+        console.log(res);
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    setCreateGroupDialog(false);
+  };
+
   useEffect(() => {
     DegreeService
       .getAllDegrees(userState.tokens.accessToken)
@@ -82,6 +100,15 @@ function Administration() {
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
       });
+
+    GroupService
+      .getAllGroups(userState.tokens.accessToken)
+      .then(res => {
+        setAvailableGroups(res.data.groups);
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
   }, []);
 
   function createAddButton(onClickCallback) {
@@ -94,7 +121,7 @@ function Administration() {
 
   const degreesButton = createAddButton(() => setCreateDegreeDialog(true));
   const subjectsButton = createAddButton(() => setCreateSubjectDialog(true));
-  const groupsButton = createAddButton(() => console.log('Pressed'));
+  const groupsButton = createAddButton(() => setCreateGroupDialog(true));
   const usersButton = createAddButton(() => console.log('Pressed'));
 
   return (
@@ -134,7 +161,15 @@ function Administration() {
         </Grid>
         <Grid item>
           <DropDown title='Groups' button={groupsButton}>
-
+            {
+              availableGroups.map(group => (
+                React.cloneElement(
+                  <Grid item key={group.id}>
+                    <Typography>{group.name}</Typography>
+                  </Grid>,
+                )
+              ))
+            }
           </DropDown>
         </Grid>
         <Grid item>
@@ -269,6 +304,26 @@ function Administration() {
         <DialogActions>
           <Button color='success' onClick={handleSubjectCreation}>Ok</Button>
           <Button color='error' onClick={() => setCreateSubjectDialog(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={createGroupDialog} onClose={() => setCreateGroupDialog(false)}>
+        <DialogTitle>Create group</DialogTitle>
+
+        <DialogContent>
+          <TextField
+            required
+            fullWidth
+            id='GroupName'
+            label='Group name'
+            margin='dense'
+            onChange={(evt) => setGroupProps({ ...groupProps, name: evt.target.value })}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button color='success' onClick={handleGroupCreation}>Ok</Button>
+          <Button color='error' onClick={() => setCreateGroupDialog(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
     </Container>
