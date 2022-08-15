@@ -3,14 +3,18 @@ import { useParams } from 'react-router-dom';
 import { Container, CssBaseline, Grid } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
-import { useStore } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import RSWSClient from '../net/ws/RSWSClient';
 import { createMessage } from '../utils';
+import { useNavigate } from 'react-router';
+import { logOut } from '../actions';
 
 function Chat() {
   const { id } = useParams();
-  const [chatType, chatId] = id.split('-');
+  // const [chatType, chatId] = id.split('-');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const userState = useStore().getState().user;
   const [client] = useState(() => new RSWSClient(
@@ -18,10 +22,17 @@ function Chat() {
     id,
     userState.sessionId,
     userState.tokens.accessToken,
+    dispatch,
+    navigate,
   ));
   const [queue, setQueue] = useState([]);
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
+
+  const handleError = () => {
+    dispatch(logOut());
+    navigate('/login');
+  };
 
   useEffect(() => {
     // On component mount
@@ -29,7 +40,7 @@ function Chat() {
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    client.onMessage(addMessageToQueue);
+    client.onMessage(addMessageToQueue, handleError);
 
     return () => {
       // On component unmount
@@ -51,8 +62,10 @@ function Chat() {
       textMessage,
     );
 
-    addMessageToQueue(message); // Add the message to my queue
-    client.send(message); // Send the message to other clients
+
+    if (client.send(message)) { // Send the message to other clients
+      addMessageToQueue(message); // Add the message to my queue
+    }
   }
 
   useEffect(checkUserAccessToCourseAndGroupChats, []);

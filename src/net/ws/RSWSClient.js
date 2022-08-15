@@ -1,4 +1,4 @@
-import { TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
+import { ERROR_MESSAGE, TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
 import { createMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
@@ -33,16 +33,26 @@ function RSWSClient(username, chatId, sessionId, __token__) {
  * @param {string|object} message message to send.
  */
 RSWSClient.prototype.send = function(message) {
+  if (this.socket.readyState !== WebSocket.OPEN) {
+    return false; // Do not send anything
+  }
+
   if (typeof message === 'string') {
     this.socket.send(
       JSON.stringify(
         createMessage(this.username, this.chatId, this.sessionId, TEXT_MESSAGE, this.__token__, message),
       ),
     );
+
+    return true;
   } else if (typeof message === 'object') {
     this.socket.send(JSON.stringify(message));
+
+    return true;
   } else {
     alert('Could not send message (type must be a string or an object)');
+
+    return false;
   }
 };
 
@@ -70,12 +80,21 @@ RSWSClient.prototype.disconnect = function() {
  *
  * @param {function(string): void} callback function to execute when
  * receiving a message.
+ * @param {function(): void} errorCallback function to execute when an
+ * error message is received.
  */
-RSWSClient.prototype.onMessage = function(callback) {
+RSWSClient.prototype.onMessage = function(callback, errorCallback) {
   // Todo: function to parse messages (base64 -> binary)
 
   this.socket.onmessage = function(message) {
-    callback(JSON.parse(message.data));
+    const parsedMessage = JSON.parse(message.data);
+
+    if (parsedMessage.headers.type === ERROR_MESSAGE) {
+      errorCallback();
+      return;
+    }
+
+    callback(parsedMessage);
   };
 };
 
