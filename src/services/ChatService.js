@@ -13,4 +13,8 @@ export default {
   sendTextMessage(message, chatId, __token__) {
     return Api.post(`/chat/send/${chatId}`, message, headers(__token__));
   },
+
+  getAllChatsOfUser(username, __token__) {
+    return Api.get(`/chats/${username}`, headers(__token__));
+  },
 };
