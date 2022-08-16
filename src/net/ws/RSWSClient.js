@@ -37,23 +37,20 @@ RSWSClient.prototype.send = function(message) {
     return false; // Do not send anything
   }
 
+  let msgToSend;
+
   if (typeof message === 'string') {
-    this.socket.send(
-      JSON.stringify(
-        createMessage(this.username, this.chatId, this.sessionId, TEXT_MESSAGE, this.__token__, message),
-      ),
-    );
-
-    return true;
+    msgToSend = JSON.stringify(this.prepareTextMessage(message));
   } else if (typeof message === 'object') {
-    this.socket.send(JSON.stringify(message));
-
-    return true;
+    msgToSend = JSON.stringify(message);
   } else {
     alert('Could not send message (type must be a string or an object)');
 
     return false;
   }
+
+  this.socket.send(msgToSend);
+  return true;
 };
 
 /**
@@ -96,6 +93,10 @@ RSWSClient.prototype.onMessage = function(callback, errorCallback) {
 
     callback(parsedMessage);
   };
+};
+
+RSWSClient.prototype.prepareTextMessage = function(message) {
+  return createMessage(this.username, this.chatId, this.sessionId, TEXT_MESSAGE, this.__token__, message);
 };
 
 export default RSWSClient;

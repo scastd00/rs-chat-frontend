@@ -4,9 +4,7 @@ import { Container, CssBaseline, Grid } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
-import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import RSWSClient from '../net/ws/RSWSClient';
-import { createMessage } from '../utils';
 import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 
@@ -53,15 +51,7 @@ function Chat() {
   }
 
   function sendTextMessage(textMessage) {
-    const message = createMessage(
-      userState.user.username,
-      id,
-      userState.sessionId,
-      TEXT_MESSAGE,
-      userState.tokens.accessToken,
-      textMessage,
-    );
-
+    const message = client.prepareTextMessage(textMessage);
 
     if (client.send(message)) { // Send the message to other clients
       addMessageToQueue(message); // Add the message to my queue
