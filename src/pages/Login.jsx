@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setSessionId, setTokens, setUser } from '../actions';
+import { setAvailableChats, setSessionId, setTokens, setUser } from '../actions';
 import { PuffLoader } from 'react-spinners';
 import { useTheme } from '@mui/material';
 
@@ -23,6 +23,16 @@ function Login() {
   const dispatch = useDispatch();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const theme = useTheme();
+
+  const setStateOfStore = ({ user, session, chats }) => {
+    dispatch(setUser(user));
+    dispatch(setTokens({
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+    }));
+    dispatch(setSessionId(session.id));
+    dispatch(setAvailableChats(chats));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -36,18 +46,7 @@ function Login() {
         password: data.get('password'),
       })
       .then((res) => {
-        const {
-          user,
-          session,
-        } = res.data;
-
-        dispatch(setUser(user));
-        dispatch(setTokens({
-          accessToken: session.accessToken,
-          refreshToken: session.refreshToken,
-        }));
-        dispatch(setSessionId(session.id));
-
+        setStateOfStore(res.data);
         navigate('/home');
       })
       .catch((err) => {

@@ -1,27 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
-import ChatService from '../services/ChatService';
-import { useDispatch, useStore } from 'react-redux';
-import { checkResponse } from '../utils';
+import { useStore } from 'react-redux';
 import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 
 function Home() {
-  const [allChats, setAllChats] = useState({});
   const userState = useStore().getState().user;
+  const [allChats] = useState(userState.chats);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    ChatService
-      .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
-      .then((res) => {
-        setAllChats(res.data.chats);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-  }, []);
 
   return (
     <Container sx={{ my: 2 }}>
