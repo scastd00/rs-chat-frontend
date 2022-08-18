@@ -19,7 +19,7 @@ import {
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { setSessionId, setTokens, setUser } from '../actions';
+import { setAvailableChats, setSessionId, setTokens, setUser } from '../actions';
 import AuthService from '../services/AuthService';
 import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
@@ -39,6 +39,16 @@ function Register() {
   const [snackbarError, setSnackbarError] = useState(false);
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const theme = useTheme();
+
+  const setStateOfStore = ({ user, session, chats }) => {
+    dispatch(setUser(user));
+    dispatch(setTokens({
+      accessToken: session.accessToken,
+      refreshToken: session.refreshToken,
+    }));
+    dispatch(setSessionId(session.id));
+    dispatch(setAvailableChats(chats));
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -67,18 +77,7 @@ function Register() {
         agreeTerms: termsAccepted,
       })
       .then((res) => {
-        const {
-          user,
-          session,
-        } = res.data;
-
-        dispatch(setUser(user));
-        dispatch(setTokens({
-          accessToken: session.accessToken,
-          refreshToken: session.refreshToken,
-        }));
-        dispatch(setSessionId(session.id));
-
+        setStateOfStore(res.data);
         navigate('/home');
       })
       .catch((e) => {
