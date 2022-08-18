@@ -13,7 +13,7 @@ function Home() {
     <Container sx={{ my: 2 }}>
       <CssBaseline />
 
-      <Grid container direction='column'>
+      <Grid container direction='column' spacing={2}>
         <Grid item>
           <Typography variant='h4'>
             Your chats

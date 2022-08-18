@@ -25,7 +25,6 @@ function ChatTextBar({ addMessage, sendTextMessage }) {
   }
 
   function performMessageSend() {
-    // addMessage(message);
     setMessage('');
     sendTextMessage(message);
   }

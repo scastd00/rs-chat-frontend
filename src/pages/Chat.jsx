@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, CssBaseline, Grid } from '@mui/material';
+import { Container, CssBaseline, Grid, Typography } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
 import RSWSClient from '../net/ws/RSWSClient';
 import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
+import ChatService from '../services/ChatService';
+import { checkResponse } from '../utils';
 
 function Chat() {
   const { id } = useParams();
-  // const [chatType, chatId] = id.split('-');
+  const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -24,6 +26,10 @@ function Chat() {
     navigate,
   ));
   const [queue, setQueue] = useState([]);
+  const [chatInfo, setChatInfo] = useState({
+    name: '',
+    metadata: {},
+  });
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
@@ -46,10 +52,6 @@ function Chat() {
     };
   }, []);
 
-  function checkUserAccessToCourseAndGroupChats() {
-
-  }
-
   function sendTextMessage(textMessage) {
     const message = client.prepareTextMessage(textMessage);
 
@@ -58,14 +60,30 @@ function Chat() {
     }
   }
 
-  useEffect(checkUserAccessToCourseAndGroupChats, []);
+  useEffect(() => {
+    ChatService
+      .getChatInfo(chatId, userState.tokens.accessToken)
+      .then((res) => {
+        setChatInfo({
+          name: res.data.name,
+          metadata: JSON.parse(res.data.metadata),
+        });
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+  }, []);
 
   return (
-    <Container component='main'>
+    <Container component='main' sx={{ pt: 1 }}>
       <CssBaseline />
 
-      <Grid container direction='column'>
-        <Grid item sx={{ mt: 4 }}>
+      <Grid container direction='column' spacing={1}>
+        <Grid item>
+          <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+        </Grid>
+
+        <Grid item>
           <ChatBox messages={queue} />
         </Grid>
 
