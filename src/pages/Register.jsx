@@ -282,7 +282,7 @@ function Register() {
                 </Grid>
 
                 <Grid item>
-                  <Typography>Logging in</Typography>
+                  <Typography>Registering</Typography>
                 </Grid>
               </Grid>
             )
