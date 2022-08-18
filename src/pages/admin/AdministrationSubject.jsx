@@ -7,7 +7,7 @@ function AdministrationSubject(props) {
     <DropDown title='Subjects' button={props.button}>
       <Grid container direction='column'>
         {
-          props.availableSubjects.map(sub => (
+          props.allSubjects.map(sub => (
             React.cloneElement(
               <Grid item key={sub.id}>
                 <Typography>{sub.name}</Typography>

@@ -7,7 +7,7 @@ function AdministrationDegree(props) {
     <DropDown title='Degrees' button={props.button}>
       <Grid container direction='column'>
         {
-          props.availableDegrees.map(deg => (
+          props.allDegrees.map(deg => (
             React.cloneElement(
               <Grid item key={deg.id}>
                 <Typography>{deg.name}</Typography>

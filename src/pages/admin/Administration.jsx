@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, CssBaseline, Grid, IconButton, MenuItem } from '@mui/material';
+import { Container, CssBaseline, Grid, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DegreeService from '../../services/DegreeService';
 import { useDispatch, useStore } from 'react-redux';
@@ -11,70 +11,24 @@ import { AdministrationDegree, AdministrationGroup, AdministrationSubject, Admin
 import { CreateDegreeDialog, CreateGroupDialog, CreateSubjectDialog } from './dialogs';
 
 function Administration() {
-  const [availableDegrees, setAvailableDegrees] = useState([]);
+  const [allDegrees, setAllDegrees] = useState([]);
   const [createDegreeDialogOpen, setCreateDegreeDialogOpen] = useState(false);
-  const [degreeName, setDegreeName] = useState('');
 
-  const [availableSubjects, setAvailableSubjects] = useState([]);
+  const [allSubjects, setAllSubjects] = useState([]);
   const [createSubjectDialogOpen, setCreateSubjectDialogOpen] = useState(false);
-  const [subjectProps, setSubjectProps] = useState({
-    name: '',
-    period: 'A',
-    type: 'TR',
-    credits: 6,
-    grade: 1,
-    degree: '',
-  });
 
-  const [availableGroups, setAvailableGroups] = useState([]);
-  const [createGroupDialog, setCreateGroupDialog] = useState(false);
-  const [groupProps, setGroupProps] = useState({ name: '' });
+  const [allGroups, setAllGroups] = useState([]);
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
 
   const userState = useStore().getState().user;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const handleDegreeCreation = () => {
-    DegreeService
-      .addDegree({ name: degreeName }, userState.tokens.accessToken)
-      .then(res => {
-        setAvailableDegrees([...availableDegrees, res.data.degree]);
-      });
-
-    setCreateDegreeDialogOpen(false);
-  };
-
-  const handleSubjectCreation = () => {
-    SubjectService
-      .addSubject(subjectProps, userState.tokens.accessToken)
-      .then(res => {
-        console.log(res);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-
-    setCreateSubjectDialogOpen(false);
-  };
-
-  const handleGroupCreation = () => {
-    GroupService
-      .addGroup(groupProps, userState.tokens.accessToken)
-      .then(res => {
-        console.log(res);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-
-    setCreateGroupDialog(false);
-  };
-
   useEffect(() => {
     DegreeService
       .getAllDegrees(userState.tokens.accessToken)
       .then(res => {
-        setAvailableDegrees(res.data.degrees);
+        setAllDegrees(res.data.degrees);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -83,7 +37,7 @@ function Administration() {
     SubjectService
       .getAllSubjects(userState.tokens.accessToken)
       .then(res => {
-        setAvailableSubjects(res.data.subjects);
+        setAllSubjects(res.data.subjects);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -92,7 +46,7 @@ function Administration() {
     GroupService
       .getAllGroups(userState.tokens.accessToken)
       .then(res => {
-        setAvailableGroups(res.data.groups);
+        setAllGroups(res.data.groups);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -109,7 +63,7 @@ function Administration() {
 
   const degreesButton = createAddButton(() => setCreateDegreeDialogOpen(true));
   const subjectsButton = createAddButton(() => setCreateSubjectDialogOpen(true));
-  const groupsButton = createAddButton(() => setCreateGroupDialog(true));
+  const groupsButton = createAddButton(() => setCreateGroupDialogOpen(true));
   const usersButton = createAddButton(() => console.log('Pressed'));
 
   return (
@@ -118,58 +72,37 @@ function Administration() {
 
       <Grid>
         <Grid item>
-          <AdministrationDegree button={degreesButton} availableDegrees={availableDegrees} />
+          <AdministrationDegree button={degreesButton} allDegrees={allDegrees} />
         </Grid>
+
         <Grid item>
-          <AdministrationSubject button={subjectsButton} availableSubjects={availableSubjects} />
+          <AdministrationSubject button={subjectsButton} allSubjects={allSubjects} />
         </Grid>
+
         <Grid item>
-          <AdministrationGroup button={groupsButton} availableGroups={availableGroups} />
+          <AdministrationGroup button={groupsButton} allGroups={allGroups} />
         </Grid>
+
         <Grid item>
           <AdministrationUser button={usersButton} />
         </Grid>
       </Grid>
 
-      <CreateDegreeDialog open={createDegreeDialogOpen} onClose={() => setCreateDegreeDialogOpen(false)}
-                          onChange={(evt) => setDegreeName(evt.target.value)} onClick={handleDegreeCreation} />
+      <CreateDegreeDialog
+        open={createDegreeDialogOpen}
+        onClose={() => setCreateDegreeDialogOpen(false)}
+        onDegreeCreate={(newDegree) => setAllDegrees([...allDegrees, newDegree])}
+      />
 
       <CreateSubjectDialog
         open={createSubjectDialogOpen}
         onClose={() => setCreateSubjectDialogOpen(false)}
-        onChange={(evt) => {
-          setSubjectProps({ ...subjectProps, name: evt.target.value });
-        }}
-        subjectProps={subjectProps}
-        onChange1={(evt) => {
-          setSubjectProps({ ...subjectProps, period: evt.target.value });
-        }}
-        onChange2={(evt) => {
-          setSubjectProps({ ...subjectProps, type: evt.target.value });
-        }}
-        onChange3={(evt) => {
-          setSubjectProps({ ...subjectProps, credits: parseInt(evt.target.value, 10) });
-        }}
-        onChange4={(evt) => {
-          setSubjectProps({ ...subjectProps, grade: parseInt(evt.target.value, 10) });
-        }}
-        onChange5={(evt) => {
-          setSubjectProps({ ...subjectProps, degree: evt.target.value });
-        }}
-        availableDegrees={availableDegrees}
-        callbackfn={degree => (
-          React.cloneElement(
-            <MenuItem key={degree.id} value={degree.name}>{degree.name}</MenuItem>,
-          )
-        )}
-        onClick={handleSubjectCreation}
+        allDegrees={allDegrees}
       />
 
       <CreateGroupDialog
-        open={createGroupDialog}
-        onClose={() => setCreateGroupDialog(false)}
-        onChange={(evt) => setGroupProps({ ...groupProps, name: evt.target.value })}
-        onClick={handleGroupCreation}
+        open={createGroupDialogOpen}
+        onClose={() => setCreateGroupDialogOpen(false)}
       />
     </Container>
   );
