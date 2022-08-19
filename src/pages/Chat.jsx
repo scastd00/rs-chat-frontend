@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, CssBaseline, Grid, Typography } from '@mui/material';
+import { Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
@@ -115,7 +115,11 @@ function Chat() {
           {
             activeUsers.map((username) => (
               React.cloneElement(
-                <Typography key={username} variant='body1'>{username}</Typography>,
+                <Typography key={username}>
+                  <Link underline='hover' component='button' variant='body1' color='text.primary'>
+                    {username}
+                  </Link>
+                </Typography>,
               )
             ))
           }
