@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
+import { ACTIVE_USERS_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
 
 function Chat() {
   const { id } = useParams();
@@ -16,6 +17,7 @@ function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [activeUsers, setActiveUsers] = useState([]);
   const userState = useStore().getState().user;
   const [client] = useState(() => new RSWSClient(
     userState.user.username,
@@ -38,13 +40,21 @@ function Chat() {
     navigate('/login');
   };
 
+  const displayActiveUsers = (usernames) => {
+    setActiveUsers(usernames);
+  };
+
   useEffect(() => {
     // On component mount
     window.addEventListener('beforeunload', function() {
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    client.onMessage(addMessageToQueue, handleError);
+    client.onMessage(addMessageToQueue, handleError, displayActiveUsers);
+
+    setTimeout(() => {
+      client.send('', ACTIVE_USERS_MESSAGE);
+    }, 1500);
 
     return () => {
       // On component unmount
@@ -53,7 +63,7 @@ function Chat() {
   }, []);
 
   function sendTextMessage(textMessage) {
-    const message = client.prepareTextMessage(textMessage);
+    const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
 
     if (client.send(message)) { // Send the message to other clients
       addMessageToQueue(message); // Add the message to my queue
@@ -75,23 +85,43 @@ function Chat() {
   }, []);
 
   return (
-    <Container component='main' sx={{ pt: 1 }}>
+    <Grid container>
       <CssBaseline />
 
-      <Grid container direction='column' spacing={1}>
-        <Grid item>
-          <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
-        </Grid>
+      <Grid item xs>
+        <Container component='main' sx={{ pt: 1 }}>
+          <CssBaseline />
 
-        <Grid item>
-          <ChatBox messages={queue} />
-        </Grid>
+          <Grid container direction='column' spacing={1}>
+            <Grid item>
+              <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+            </Grid>
 
-        <Grid item>
-          <ChatTextBar addMessage={addMessageToQueue} sendTextMessage={sendTextMessage} />
-        </Grid>
+            <Grid item>
+              <ChatBox messages={queue} />
+            </Grid>
+
+            <Grid item>
+              <ChatTextBar addMessage={addMessageToQueue} sendTextMessage={sendTextMessage} />
+            </Grid>
+          </Grid>
+        </Container>
       </Grid>
-    </Container>
+
+      <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
+        <Container component='main' sx={{ pt: 1 }}>
+          <Typography variant='h5' sx={{ mb: 1 }}>Active users</Typography>
+
+          {
+            activeUsers.map((username) => (
+              React.cloneElement(
+                <Typography key={username} variant='body1'>{username}</Typography>,
+              )
+            ))
+          }
+        </Container>
+      </Grid>
+    </Grid>
   );
 }
 

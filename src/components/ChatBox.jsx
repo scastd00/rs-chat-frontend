@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Container, Grid } from '@mui/material';
 import UserMessage from './UserMessage';
 import ServerMessage from './ServerMessage';
-import { USER_MESSAGES } from '../net/ws/MessageProps';
+import { isUserMessage } from '../utils';
 
 function ChatBox({ messages }) {
   const divRef = useRef(null);
@@ -13,6 +13,7 @@ function ChatBox({ messages }) {
 
   return (
     <Container
+      maxWidth='lg'
       sx={{
         maxHeight: 800,
         minHeight: 800,
@@ -37,8 +38,7 @@ function ChatBox({ messages }) {
           messages.map((msg, index) => (
             <Grid item key={index} sx={{ my: 0.6 }}>
               {
-                // If the message is of type user
-                USER_MESSAGES.includes(msg.headers.type)
+                isUserMessage(msg.headers.type)
                   ? <UserMessage message={msg} />
                   : <ServerMessage message={msg} />
               }

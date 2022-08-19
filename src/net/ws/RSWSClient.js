@@ -1,5 +1,5 @@
-import { ERROR_MESSAGE, TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
-import { createMessage } from '../../utils';
+import { ACTIVE_USERS_MESSAGE, ERROR_MESSAGE, TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
+import { createMessage, isActivityMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
@@ -31,8 +31,9 @@ function RSWSClient(username, chatId, sessionId, __token__) {
  * Sends a message to the connected server (string or JSON).
  *
  * @param {string|object} message message to send.
+ * @param {string} type
  */
-RSWSClient.prototype.send = function(message) {
+RSWSClient.prototype.send = function(message, type = TEXT_MESSAGE) {
   if (this.socket.readyState !== WebSocket.OPEN) {
     return false; // Do not send anything
   }
@@ -40,7 +41,7 @@ RSWSClient.prototype.send = function(message) {
   let msgToSend;
 
   if (typeof message === 'string') {
-    msgToSend = JSON.stringify(this.prepareTextMessage(message));
+    msgToSend = JSON.stringify(this.prepareMessage(message, type));
   } else if (typeof message === 'object') {
     msgToSend = JSON.stringify(message);
   } else {
@@ -75,28 +76,35 @@ RSWSClient.prototype.disconnect = function() {
  * Establishes a function that will be executed each time the socket
  * receives a message.
  *
- * @param {function(string): void} callback function to execute when
+ * @param {function(string): void} displayCallback function to execute when
  * receiving a message.
  * @param {function(): void} errorCallback function to execute when an
  * error message is received.
+ * @param {function(string[]): void} activeUsersCallback
  */
-RSWSClient.prototype.onMessage = function(callback, errorCallback) {
+RSWSClient.prototype.onMessage = function(displayCallback, errorCallback, activeUsersCallback) {
   // Todo: function to parse messages (base64 -> binary)
 
-  this.socket.onmessage = function(message) {
+  this.socket.onmessage = (message) => {
     const parsedMessage = JSON.parse(message.data);
 
     if (parsedMessage.headers.type === ERROR_MESSAGE) {
       errorCallback();
-      return;
-    }
+    } else if (parsedMessage.headers.type === ACTIVE_USERS_MESSAGE) {
+      // String containing an array of usernames
+      activeUsersCallback(JSON.parse(parsedMessage.body.content));
+    } else {
+      displayCallback(parsedMessage);
 
-    callback(parsedMessage);
+      if (isActivityMessage(parsedMessage.headers.type)) {
+        this.send('', ACTIVE_USERS_MESSAGE);
+      }
+    }
   };
 };
 
-RSWSClient.prototype.prepareTextMessage = function(message) {
-  return createMessage(this.username, this.chatId, this.sessionId, TEXT_MESSAGE, this.__token__, message);
+RSWSClient.prototype.prepareMessage = function(message, type) {
+  return createMessage(this.username, this.chatId, this.sessionId, type, this.__token__, message);
 };
 
 export default RSWSClient;

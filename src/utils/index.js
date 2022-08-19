@@ -1,5 +1,5 @@
 import { logOut } from '../actions';
-import { UTF_8 } from '../net/ws/MessageProps';
+import { USER_JOINED, USER_LEFT, USER_MESSAGES, UTF_8 } from '../net/ws/MessageProps';
 
 export function headers(__token__) {
   return {
@@ -95,4 +95,12 @@ export function createMessage(username, chatId, sessionId,
 
 export function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function isActivityMessage(type) {
+  return type === USER_JOINED || type === USER_LEFT;
+}
+
+export function isUserMessage(type) {
+  return USER_MESSAGES.includes(type);
 }
