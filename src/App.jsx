@@ -15,7 +15,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Chat from './pages/Chat';
 import AdminRoute from './routes/AdminRoute';
-import { Administration } from './pages/admin';
+import Administration from './pages/Administration';
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48

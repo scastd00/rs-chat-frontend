@@ -1,5 +1,5 @@
 import React from 'react';
-import DropDown from '../../components/DropDown';
+import DropDown from '../DropDown';
 
 function AdministrationUser(props) {
   return (

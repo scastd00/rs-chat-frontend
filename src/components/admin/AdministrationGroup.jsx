@@ -1,5 +1,5 @@
 import React from 'react';
-import DropDown from '../../components/DropDown';
+import DropDown from '../DropDown';
 import { Grid, Typography } from '@mui/material';
 
 function AdministrationGroup(props) {
