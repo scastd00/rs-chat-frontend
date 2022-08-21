@@ -4,7 +4,7 @@ import { prettyDate } from '../utils';
 import { SERVER_INFO_MESSAGE, USER_JOINED, USER_LEFT } from '../net/ws/MessageProps';
 import ErrorChatCard from './cards/ErrorChatCard';
 import UserEventChatCard from './cards/UserEventChatCard';
-import ServerInfoChatCard from './cards/ServerInfoChatCard';
+import TextChatCard from './cards/TextChatCard';
 
 function ServerMessage({ message }) {
   return (
@@ -32,7 +32,7 @@ function ServerMessage({ message }) {
                 return <UserEventChatCard text={message.body.content} />;
 
               case SERVER_INFO_MESSAGE:
-                return <ServerInfoChatCard text={message.body.content} />;
+                return <TextChatCard text={message.body.content} serverInfo />;
 
               default:
                 return <ErrorChatCard />;

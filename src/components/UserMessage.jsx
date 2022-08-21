@@ -1,6 +1,6 @@
 import React from 'react';
-import { Grid, Paper, Typography } from '@mui/material';
-import { prettyDate } from '../utils';
+import { Grid, Paper, Tooltip, Typography } from '@mui/material';
+import { fullPrettyDate, prettyDate } from '../utils';
 import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageProps';
 import TextChatCard from './cards/TextChatCard';
 import ImageChatCard from './cards/ImageChatCard';
@@ -19,9 +19,11 @@ function UserMessage({ message }) {
         </Grid>
 
         <Grid item>
-          <Typography variant='text' component='span' fontSize={11}>
-            {prettyDate(message.headers.date)}
-          </Typography>
+          <Tooltip title={fullPrettyDate(message.headers.date)} placement='right' arrow>
+            <Typography variant='text' component='span' fontSize={11}>
+              {prettyDate(message.headers.date)}
+            </Typography>
+          </Tooltip>
         </Grid>
       </Grid>
 
