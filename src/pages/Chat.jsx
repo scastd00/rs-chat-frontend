@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
+import { Container, CssBaseline, Grid, Typography } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
@@ -10,6 +10,7 @@ import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
 import { ACTIVE_USERS_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
+import ActiveUsers from '../components/ActiveUsers';
 
 function Chat() {
   const { id } = useParams();
@@ -109,21 +110,7 @@ function Chat() {
       </Grid>
 
       <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
-        <Container component='main' sx={{ pt: 1 }}>
-          <Typography variant='h5' sx={{ mb: 1 }}>Active users</Typography>
-
-          {
-            activeUsers.map((username) => (
-              React.cloneElement(
-                <Typography key={username}>
-                  <Link underline='hover' component='button' variant='body1' color='text.primary'>
-                    {username}
-                  </Link>
-                </Typography>,
-              )
-            ))
-          }
-        </Container>
+        <ActiveUsers activeUsers={activeUsers} />
       </Grid>
     </Grid>
   );
