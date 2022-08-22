@@ -1,4 +1,11 @@
-import { ACTIVE_USERS_MESSAGE, ERROR_MESSAGE, TEXT_MESSAGE, USER_JOINED, USER_LEFT } from './MessageProps';
+import {
+  ACTIVE_USERS_MESSAGE,
+  ERROR_MESSAGE,
+  GET_HISTORY_MESSAGE,
+  TEXT_MESSAGE,
+  USER_JOINED,
+  USER_LEFT,
+} from './MessageProps';
 import { createMessage, isActivityMessage } from '../../utils';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
@@ -24,6 +31,9 @@ function RSWSClient(username, chatId, sessionId, __token__) {
         'Hi',
       ),
     );
+
+    this.send('', GET_HISTORY_MESSAGE);
+    this.send('', ACTIVE_USERS_MESSAGE);
   };
 }
 
@@ -81,22 +91,32 @@ RSWSClient.prototype.disconnect = function() {
  * @param {function(): void} errorCallback function to execute when an
  * error message is received.
  * @param {function(string[]): void} activeUsersCallback
+ * @param {function(string[]): void} historyCallback
  */
-RSWSClient.prototype.onMessage = function(displayCallback, errorCallback, activeUsersCallback) {
+RSWSClient.prototype.onMessage = function(
+  displayCallback, errorCallback, activeUsersCallback, historyCallback,
+) {
   // Todo: function to parse messages (base64 -> binary)
 
   this.socket.onmessage = (message) => {
     const parsedMessage = JSON.parse(message.data);
+    const { headers, body } = parsedMessage;
 
-    if (parsedMessage.headers.type === ERROR_MESSAGE) {
+    if (headers.type === ERROR_MESSAGE) {
       errorCallback();
-    } else if (parsedMessage.headers.type === ACTIVE_USERS_MESSAGE) {
+    } else if (headers.type === ACTIVE_USERS_MESSAGE) {
       // String containing an array of usernames
-      activeUsersCallback(JSON.parse(parsedMessage.body.content));
+      activeUsersCallback(JSON.parse(body.content));
+    } else if (headers.type === GET_HISTORY_MESSAGE) {
+      // String containing an array of messages that must be parsed also.
+      const messages = JSON.parse(body.content);
+      historyCallback(messages.map(JSON.parse));
     } else {
       displayCallback(parsedMessage);
 
-      if (isActivityMessage(parsedMessage.headers.type)) {
+      // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
+      // to the server to get the updated list of active users.
+      if (isActivityMessage(headers.type)) {
         this.send('', ACTIVE_USERS_MESSAGE);
       }
     }

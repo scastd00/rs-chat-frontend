@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { ACTIVE_USERS_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 
 function Chat() {
@@ -42,7 +42,11 @@ function Chat() {
   };
 
   const displayActiveUsers = (usernames) => {
-    setActiveUsers(usernames);
+    // setActiveUsers(usernames);
+  };
+
+  const handleHistory = (messages) => {
+    setQueue(messages);
   };
 
   useEffect(() => {
@@ -51,11 +55,15 @@ function Chat() {
       client.disconnect(); // Executed when the page is reloaded
     });
 
-    client.onMessage(addMessageToQueue, handleError, displayActiveUsers);
-
-    setTimeout(() => {
-      client.send('', ACTIVE_USERS_MESSAGE);
-    }, 1500);
+    // This is executed before any message is sent to the server
+    // So we can execute them immediately after the socket is connected to
+    // speed up the process of getting the data.
+    client.onMessage(
+      addMessageToQueue,
+      handleError,
+      displayActiveUsers,
+      handleHistory,
+    );
 
     return () => {
       // On component unmount
