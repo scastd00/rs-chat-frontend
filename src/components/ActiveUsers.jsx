@@ -12,10 +12,7 @@ function ActiveUsers(props) {
 
       {
         props.activeUsers.map((username) => {
-          if (username === userState.user.username) {
-            return React.cloneElement(<></>, { key: username });
-          }
-
+          // Current user is filtered by the server
           return React.cloneElement(
             <Typography key={username}>
               <b>{'· '}</b>

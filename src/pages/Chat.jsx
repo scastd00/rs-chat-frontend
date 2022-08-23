@@ -42,7 +42,7 @@ function Chat() {
   };
 
   const displayActiveUsers = (usernames) => {
-    // setActiveUsers(usernames);
+    setActiveUsers(usernames);
   };
 
   const handleHistory = (messages) => {
