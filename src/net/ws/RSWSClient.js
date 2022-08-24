@@ -108,9 +108,8 @@ RSWSClient.prototype.onMessage = function(
       // String containing an array of usernames
       activeUsersCallback(JSON.parse(body.content));
     } else if (headers.type === GET_HISTORY_MESSAGE) {
-      // String containing an array of messages that must be parsed also.
       const messages = JSON.parse(body.content);
-      historyCallback(messages.map(JSON.parse));
+      historyCallback(messages);
     } else {
       displayCallback(parsedMessage);
 
