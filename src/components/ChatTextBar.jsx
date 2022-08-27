@@ -65,15 +65,12 @@ function ChatTextBar({ sendTextMessage, sendImageMessage }) {
       new Promise((resolve, reject) => {
         const reader = new FileReader();
 
-        reader.onload = (ev) => {
-          const base64Content = reader.result.split(',')[1];
-
+        reader.onloadend = (ev) => {
           if (ev.loaded === ev.total) {
-            console.log('% loaded', (ev.loaded / ev.total) * 100);
             resolve({
               name: file.name,
               type: file.type,
-              data: base64Content,
+              data: reader.result,
             });
           }
         };
@@ -82,6 +79,8 @@ function ChatTextBar({ sendTextMessage, sendImageMessage }) {
           reject(err);
         };
 
+        // data:*/*;base64,<base64 encoded text>
+        // The encoded text is taken in server
         reader.readAsDataURL(file);
       }));
 

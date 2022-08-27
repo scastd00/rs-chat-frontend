@@ -11,6 +11,7 @@ import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
 import { IMAGE_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
+import FileService from '../services/FileService';
 
 function Chat() {
   const { id } = useParams();
@@ -87,6 +88,24 @@ function Chat() {
     }
   }
 
+  function uploadFiles(files) {
+    files.forEach((file) => {
+      console.log('file', file);
+      FileService
+        .uploadFile(file, userState.tokens.accessToken)
+        .then(res => {
+          const message = client.prepareMessage(res.data.uri, IMAGE_MESSAGE);
+
+          if (client.send(message)) {
+            addMessageToQueue(message);
+          }
+        })
+        .catch(err => {
+          checkResponse(err, navigate, dispatch);
+        });
+    });
+  }
+
   useEffect(() => {
     ChatService
       .getChatInfo(chatId, userState.tokens.accessToken)
@@ -119,7 +138,7 @@ function Chat() {
             </Grid>
 
             <Grid item>
-              <ChatTextBar sendTextMessage={sendTextMessage} sendImageMessage={sendImageMessage} />
+              <ChatTextBar sendTextMessage={sendTextMessage} sendImageMessage={uploadFiles} />
             </Grid>
           </Grid>
         </Container>
