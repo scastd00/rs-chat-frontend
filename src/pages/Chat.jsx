@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { IMAGE_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 
 function Chat() {
@@ -79,6 +79,14 @@ function Chat() {
     }
   }
 
+  function sendImageMessage(files) {
+    const message = client.prepareMessage(files, IMAGE_MESSAGE);
+
+    if (client.send(message)) { // Send the message to other clients
+      addMessageToQueue(message); // Add the message to my queue
+    }
+  }
+
   useEffect(() => {
     ChatService
       .getChatInfo(chatId, userState.tokens.accessToken)
@@ -111,7 +119,7 @@ function Chat() {
             </Grid>
 
             <Grid item>
-              <ChatTextBar addMessage={addMessageToQueue} sendTextMessage={sendTextMessage} />
+              <ChatTextBar sendTextMessage={sendTextMessage} sendImageMessage={sendImageMessage} />
             </Grid>
           </Grid>
         </Container>

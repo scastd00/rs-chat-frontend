@@ -38,24 +38,28 @@ function RSWSClient(username, chatId, sessionId, __token__) {
 }
 
 /**
- * Sends a message to the connected server (string or JSON).
+ * Sends a messageContent to the connected server (string or JSON).
  *
- * @param {string|object} message message to send.
+ * @param {string|object} messageContent messageContent to send.
  * @param {string} type
  */
-RSWSClient.prototype.send = function(message, type = TEXT_MESSAGE) {
+RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
+  // if (this.socket.readyState === WebSocket.CLOSING || this.socket.readyState === WebSocket.CLOSED) {
+  //   alert('The connection is closed.');
+  //   return false;
+  // }
   if (this.socket.readyState !== WebSocket.OPEN) {
     return false; // Do not send anything
   }
 
   let msgToSend;
 
-  if (typeof message === 'string') {
-    msgToSend = JSON.stringify(this.prepareMessage(message, type));
-  } else if (typeof message === 'object') {
-    msgToSend = JSON.stringify(message);
+  if (typeof messageContent === 'string') {
+    msgToSend = JSON.stringify(this.prepareMessage(messageContent, type));
+  } else if (typeof messageContent === 'object') {
+    msgToSend = JSON.stringify(messageContent);
   } else {
-    alert('Could not send message (type must be a string or an object)');
+    alert('Could not send messageContent (type must be a string or an object)');
 
     return false;
   }
@@ -122,8 +126,8 @@ RSWSClient.prototype.onMessage = function(
   };
 };
 
-RSWSClient.prototype.prepareMessage = function(message, type) {
-  return createMessage(this.username, this.chatId, this.sessionId, type, this.__token__, message);
+RSWSClient.prototype.prepareMessage = function(content, type) {
+  return createMessage(this.username, this.chatId, this.sessionId, type, this.__token__, content);
 };
 
 export default RSWSClient;
