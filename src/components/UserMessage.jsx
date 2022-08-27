@@ -35,7 +35,7 @@ function UserMessage({ message }) {
                 return <TextChatCard text={message.body.content} />;
 
               case IMAGE_MESSAGE:
-                return <ImageChatCard />;
+                return <ImageChatCard uri={message.body.content} />;
 
               case AUDIO_MESSAGE:
                 return <AudioChatCard />;

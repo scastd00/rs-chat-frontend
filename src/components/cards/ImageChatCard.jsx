@@ -1,8 +1,10 @@
 import React from 'react';
 
-function ImageChatCard(props) {
+function ImageChatCard({ uri }) {
   return (
-    <></>
+    <>
+      <img src={uri} style={{ maxWidth: 900 }} alt='' />
+    </>
   );
 }
 
