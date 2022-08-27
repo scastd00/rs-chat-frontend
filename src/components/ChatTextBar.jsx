@@ -15,7 +15,7 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { useDropzone } from 'react-dropzone';
 
-function ChatTextBar({ sendTextMessage, sendImageMessage }) {
+function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
@@ -86,8 +86,8 @@ function ChatTextBar({ sendTextMessage, sendImageMessage }) {
 
     Promise
       .all(promises)
-      .then((d) => {
-        sendImageMessage(d);
+      .then((file) => {
+        sendFiles(file);
         setTimeout(() => setSelectedImages([]), 200);
       })
       .catch((err) => {

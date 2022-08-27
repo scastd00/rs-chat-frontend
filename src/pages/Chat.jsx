@@ -80,21 +80,12 @@ function Chat() {
     }
   }
 
-  function sendImageMessage(files) {
-    const message = client.prepareMessage(files, IMAGE_MESSAGE);
-
-    if (client.send(message)) { // Send the message to other clients
-      addMessageToQueue(message); // Add the message to my queue
-    }
-  }
-
   function uploadFiles(files) {
     files.forEach((file) => {
-      console.log('file', file);
       FileService
         .uploadFile(file, userState.tokens.accessToken)
         .then(res => {
-          const message = client.prepareMessage(res.data.uri, IMAGE_MESSAGE);
+          const message = client.prepareMessage(res.data, IMAGE_MESSAGE);
 
           if (client.send(message)) {
             addMessageToQueue(message);
@@ -138,7 +129,7 @@ function Chat() {
             </Grid>
 
             <Grid item>
-              <ChatTextBar sendTextMessage={sendTextMessage} sendImageMessage={uploadFiles} />
+              <ChatTextBar sendTextMessage={sendTextMessage} sendFiles={uploadFiles} />
             </Grid>
           </Grid>
         </Container>
