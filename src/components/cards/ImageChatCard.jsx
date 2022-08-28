@@ -4,20 +4,6 @@ import { Card, CardActionArea, CardMedia, Dialog } from '@mui/material';
 function ImageChatCard({ data }) {
   const [imageDialogOpen, setImageDialogOpen] = useState(false);
 
-  const getMaxWidth = () => {
-    if (data.metadata.width <= 200 || data.metadata.height <= 200) {
-      return 'xs';
-    } else if (data.metadata.width <= 500 || data.metadata.height <= 500) {
-      return 'sm';
-    } else if (data.metadata.width <= 800 || data.metadata.height <= 800) {
-      return 'md';
-    } else if (data.metadata.width <= 1200 || data.metadata.height <= 1200) {
-      return 'lg';
-    } else {
-      return 'xl';
-    }
-  };
-
   return (
     <>
       <Card style={{ width: 175, height: 175 }}>
@@ -37,7 +23,7 @@ function ImageChatCard({ data }) {
         open={imageDialogOpen}
         onClose={() => setImageDialogOpen(false)}
         fullWidth
-        maxWidth={getMaxWidth()}
+        maxWidth={data.metadata.maxWidth}
       >
         <img src={data.uri} alt={data.name} />
       </Dialog>
