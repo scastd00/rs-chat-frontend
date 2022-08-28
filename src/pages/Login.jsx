@@ -49,9 +49,8 @@ function Login() {
         setStateOfStore(res.data);
         navigate('/home');
       })
-      .catch((err) => {
+      .catch(() => {
         setShowLoadingSpinner(false);
-        console.log(err);
       });
   };
 
