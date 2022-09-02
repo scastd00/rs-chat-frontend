@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { IMAGE_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 import FileService from '../services/FileService';
 
@@ -85,7 +85,7 @@ function Chat() {
       FileService
         .uploadFile(file, userState.tokens.accessToken)
         .then(res => {
-          const message = client.prepareMessage(res.data, IMAGE_MESSAGE);
+          const message = client.prepareMessage(res.data, res.data.metadata.messageType);
 
           if (client.send(message)) {
             addMessageToQueue(message);

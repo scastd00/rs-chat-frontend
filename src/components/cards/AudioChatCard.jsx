@@ -1,8 +1,10 @@
 import React from 'react';
 
-function AudioChatCard(props) {
+function AudioChatCard({ data }) {
   return (
-    <></>
+    <audio controls>
+      <source src={data.uri} />
+    </audio>
   );
 }
 

@@ -38,10 +38,10 @@ function UserMessage({ message }) {
                 return <ImageChatCard data={message.body.content} />;
 
               case AUDIO_MESSAGE:
-                return <AudioChatCard />;
+                return <AudioChatCard data={message.body.content} />;
 
               case VIDEO_MESSAGE:
-                return <VideoChatCard />;
+                return <VideoChatCard data={message.body.content} />;
 
               default:
                 return <ErrorChatCard />;
