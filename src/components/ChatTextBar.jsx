@@ -137,7 +137,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
                 onMouseLeave={() => setDropzoneHover('grey')}
                 onDragLeave={() => setDropzoneHover('grey')}
               >
-                <input {...getInputProps()} type='file' accept='image/*' />
+                <input {...getInputProps()} type='file' accept='*' />
 
                 <Typography sx={{ textAlign: 'center', p: 3 }}>
                   Drag 'n' drop files here, or click here to select them
