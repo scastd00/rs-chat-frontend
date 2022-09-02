@@ -14,12 +14,13 @@ import {
 import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { useDropzone } from 'react-dropzone';
+import { SUPPORTED_FILES } from '../utils/constants';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
-    // accept: SUPPORTED_FILES,
+    accept: SUPPORTED_FILES,
   });
   const [dropzoneHover, setDropzoneHover] = useState('grey');
   // const [filesError, setFilesError] = useState({ show: false, text: 'Hola' });

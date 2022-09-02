@@ -1,20 +1,7 @@
-export const SUPPORTED_FILES = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'video/mp4',
-  'video/mpeg',
-  'video/avi',
-  'audio/mp3',
-  'audio/wav',
-  'file/pdf',
-  'file/doc',
-  'file/docx',
-  'file/xls',
-  'file/xlsx',
-  'file/ppt',
-  'file/pptx',
-  'file/txt',
-  'file/csv',
-  'file/html',
-];
+export const SUPPORTED_FILES = {
+  'text/*': ['.txt', '.md', '.csv', '.tsv', '.xml', '.json'],
+  'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.svg'],
+  'video/*': ['.mp4', '.mov', '.avi', '.wmv', '.flv', '.webm'],
+  'audio/*': ['.mp3', '.wav', '.ogg', '.flac', '.aac'],
+  'application/pdf': ['.pdf'],
+};
