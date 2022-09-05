@@ -2,6 +2,8 @@ import {
   ACTIVE_USERS_MESSAGE,
   ERROR_MESSAGE,
   GET_HISTORY_MESSAGE,
+  PING_MESSAGE,
+  PONG_MESSAGE,
   TEXT_MESSAGE,
   USER_JOINED,
   USER_LEFT,
@@ -34,6 +36,12 @@ function RSWSClient(username, chatId, sessionId, __token__) {
 
     this.send('', GET_HISTORY_MESSAGE);
     this.send('', ACTIVE_USERS_MESSAGE);
+
+    setTimeout(() => {
+      setInterval(() => {
+        this.send('', PING_MESSAGE);
+      }, 45000);
+    }, 10000);
   };
 }
 
@@ -44,10 +52,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
  * @param {string} type
  */
 RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
-  // if (this.socket.readyState === WebSocket.CLOSING || this.socket.readyState === WebSocket.CLOSED) {
-  //   alert('The connection is closed.');
-  //   return false;
-  // }
   if (this.socket.readyState !== WebSocket.OPEN) {
     return false; // Do not send anything
   }
@@ -83,7 +87,7 @@ RSWSClient.prototype.disconnect = function() {
     ),
   );
 
-  this.socket.close(1000, 'Disconnected'); // Todo: send more detailed message
+  this.socket.close(1000, 'Disconnected');
 };
 
 /**
@@ -114,6 +118,8 @@ RSWSClient.prototype.onMessage = function(
     } else if (headers.type === GET_HISTORY_MESSAGE) {
       const messages = JSON.parse(body.content);
       historyCallback(messages);
+    } else if (headers.type === PONG_MESSAGE) {
+      // Do nothing
     } else {
       displayCallback(parsedMessage);
 

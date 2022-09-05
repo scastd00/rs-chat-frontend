@@ -15,6 +15,10 @@ function VideoChatCard({ data }) {
         </Typography>
       </Button>
 
+      <Typography variant='caption' display='block'>
+        Duration: {data.metadata.duration} ({data.metadata.size})
+      </Typography>
+
       <Dialog
         open={videoDialogOpen}
         onClose={() => setVideoDialogOpen(false)}
