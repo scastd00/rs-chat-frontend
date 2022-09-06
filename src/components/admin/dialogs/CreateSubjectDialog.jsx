@@ -35,7 +35,7 @@ function CreateSubjectDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.onClose}>
-      <DialogTitle>Create degree</DialogTitle>
+      <DialogTitle>Create subject</DialogTitle>
 
       <DialogContent>
         <TextField
