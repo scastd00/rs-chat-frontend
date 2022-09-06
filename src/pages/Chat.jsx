@@ -80,21 +80,29 @@ function Chat() {
     }
   }
 
+  /**
+   * Sends the files to the server and then sends the message to the other clients
+   * in the order they were sent.
+   *
+   * @param files The files to be sent.
+   */
   function uploadFiles(files) {
-    files.forEach((file) => {
-      FileService
-        .uploadFile(file, userState.tokens.accessToken)
-        .then(res => {
-          const message = client.prepareMessage(res.data, res.data.metadata.messageType);
+    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.tokens.accessToken));
+
+    Promise
+      .all(uploadPromises)
+      .then(uploadedFiles => {
+        uploadedFiles.forEach(file => {
+          const message = client.prepareMessage(file.data, file.data.metadata.messageType);
 
           if (client.send(message)) {
             addMessageToQueue(message);
           }
-        })
-        .catch(err => {
-          checkResponse(err, navigate, dispatch);
         });
-    });
+      })
+      .catch(err => {
+        console.log('err', err);
+      });
   }
 
   useEffect(() => {
