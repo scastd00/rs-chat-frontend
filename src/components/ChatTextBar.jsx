@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Badge,
   Button,
   CssBaseline,
   Dialog,
@@ -26,37 +27,48 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   // const [filesError, setFilesError] = useState({ show: false, text: 'Hola' });
   const [selectedImages, setSelectedImages] = useState([]);
   const [uploadAttachmentDialog, setUploadAttachmentDialog] = useState(false);
+  const [attachedFiles, setAttachedFiles] = useState([]);
+  const [enableSendIcon, setEnableSendIcon] = useState(false);
 
   useEffect(() => {
     setSelectedImages(acceptedFiles.map((file) => file));
   }, [acceptedFiles]);
 
   function handleSendButton(evt) {
-    if (message !== '') {
-      evt.currentTarget
-         .parentElement
-         .parentElement
-         .getElementsByTagName('input')[0]
-        .focus({ preventScroll: true });
+    evt.currentTarget
+       .parentElement
+       .parentElement
+       .getElementsByTagName('input')[0]
+      .focus({ preventScroll: true });
 
-      performMessageSend();
-    }
+    performMessageSend(); // Outside the if statement to be able to send attachments without text
   }
 
   function handleSendEnter(evt) {
-    if (evt.code === 'Enter' && message.trim().length !== 0) {
+    if (evt.code === 'Enter') {
       performMessageSend();
     }
   }
 
   function performMessageSend() {
+    // First send the text message if possible.
+    if (message.trim().length !== 0) {
+      sendTextMessage(message);
+    }
+
+    // Then send the attached files if possible.
+    if (attachedFiles.length > 0) {
+      sendFiles(attachedFiles);
+    }
+
     setMessage('');
-    sendTextMessage(message);
+    setAttachedFiles([]);
+    setSelectedImages([]);
+    setEnableSendIcon(false);
   }
 
   function handleDropzoneCloseWithFileRemoval() {
     setUploadAttachmentDialog(false);
-    setTimeout(() => setSelectedImages([]), 200);
   }
 
   function handleAttachments() {
@@ -87,8 +99,9 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
 
     Promise
       .all(promises)
-      .then((file) => {
-        sendFiles(file);
+      .then(files => {
+        setAttachedFiles(files);
+        setEnableSendIcon(true);
         setTimeout(() => setSelectedImages([]), 200);
       })
       .catch((err) => {
@@ -108,16 +121,21 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         name='text'
         color='secondary'
         onKeyDown={handleSendEnter}
-        onChange={(evt) => setMessage(evt.target.value)}
+        onChange={(evt) => {
+          setMessage(evt.target.value);
+          setEnableSendIcon(evt.target.value.trim().length !== 0);
+        }}
         autoFocus
         value={message}
         InputProps={{
           endAdornment: (
             <InputAdornment position='end'>
               <IconButton onClick={() => setUploadAttachmentDialog(true)}>
-                <AttachmentIcon sx={{ transform: 'rotate(-45deg)' }} />
+                <Badge badgeContent={attachedFiles.length} color='primary'>
+                  <AttachmentIcon sx={{ transform: 'rotate(-45deg)' }} />
+                </Badge>
               </IconButton>
-              <IconButton onClick={handleSendButton}>
+              <IconButton onClick={handleSendButton} disabled={!enableSendIcon}>
                 <SendIcon />
               </IconButton>
             </InputAdornment>
