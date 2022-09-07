@@ -16,7 +16,7 @@ function CreateGroupDialog(props) {
     GroupService
       .addGroup(groupProps, userState.tokens.accessToken)
       .then(res => {
-        console.log(res);
+        // Todo: show success alert
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);

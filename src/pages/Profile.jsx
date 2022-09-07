@@ -24,6 +24,8 @@ import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 import SnackAlert from '../components/SnackAlert';
 import AuthService from '../services/AuthService';
+import ChatService from '../services/ChatService';
+import { setAvailableChats } from '../actions';
 
 function Profile() {
   const navigate = useNavigate();
@@ -103,16 +105,24 @@ function Profile() {
   function handleJoinChat() {
     UserService
       .joinToChat(userState.user.id, chatCode, userState.tokens.accessToken)
-      .then((res) => {
+      .then(res => {
         setChatCode('');
         showInvitationCodeAlert('success', 'Joined to chat ' + res.data.name);
 
-        // Todo: update the list of chats that the user can connect to.
+
+        ChatService
+          .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
+          .then(chatsRes => {
+            dispatch(setAvailableChats(chatsRes.data.chats));
+          })
+          .catch(err => {
+            console.error(err);
+          })
       })
-      .catch((err => {
+      .catch(err => {
         setChatCode('');
         showInvitationCodeAlert('error', err.response.data.message);
-      }));
+      });
   }
 
   // Executed in this order to avoid the alert from closing strangely
