@@ -9,6 +9,7 @@ import {
   DialogTitle,
   Divider,
   Grid,
+  List,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -86,7 +87,7 @@ function Profile() {
         closePasswordChangeDialog();
       })
       .catch(e => {
-        console.log("Error in passwords", e.response.data.message);
+        console.log('Error in passwords', e.response.data.message);
       });
   }
 
@@ -188,16 +189,20 @@ function Profile() {
         <Divider sx={dividerSx} />
 
         <DropDown title='Opened sessions'>
-          {
-            sessions.map((session, index) => (
-              <ListItem key={index} sx={{ height: '10px' }}>
-                <ListItemIcon sx={{ mr: -2 }}>
-                  <ArrowRightIcon />
-                </ListItemIcon>
-                <ListItemText primary={session} />
-              </ListItem>
-            ))
-          }
+          <List>
+            {
+              sessions.map((session, index) => (
+                React.cloneElement(
+                  <ListItem key={index} sx={{ height: 30 }}>
+                    <ListItemIcon sx={{ mr: -2 }}>
+                      <ArrowRightIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={session} />
+                  </ListItem>,
+                )
+              ))
+            }
+          </List>
         </DropDown>
       </Grid>
     </Container>
