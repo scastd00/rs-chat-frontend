@@ -75,23 +75,10 @@ function Administration() {
     <Container sx={{ py: 3 }} component='main'>
       <CssBaseline />
 
-      <Grid>
-        <Grid item>
-          <AdministrationDegree button={degreesButton} allDegrees={allDegrees} />
-        </Grid>
-
-        <Grid item>
-          <AdministrationSubject button={subjectsButton} allSubjects={allSubjects} />
-        </Grid>
-
-        <Grid item>
-          <AdministrationGroup button={groupsButton} allGroups={allGroups} />
-        </Grid>
-
-        <Grid item>
-          <AdministrationUser button={usersButton} />
-        </Grid>
-      </Grid>
+      <AdministrationDegree button={degreesButton} allDegrees={allDegrees} />
+      <AdministrationSubject button={subjectsButton} allSubjects={allSubjects} />
+      <AdministrationGroup button={groupsButton} allGroups={allGroups} />
+      <AdministrationUser button={usersButton} />
 
       <CreateDegreeDialog
         open={createDegreeDialogOpen}

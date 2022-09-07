@@ -29,11 +29,11 @@ function Home() {
             Object.entries(userState.chats).map(([chatType, chatList], idx) => {
               return React.cloneElement(
                 <DropDown title={capitalizeFirstLetter(chatType)} key={idx} drop={chatType === 'group'}>
-                  <Grid container sx={{ pt: 2 }}>
+                  <Grid container sx={{ py: 1.5 }} spacing={2} columns={12}>
                     {
                       chatList.map(({ name, id: chatId }, idx2) => {
                         return (
-                          <Grid item key={idx2}>
+                          <Grid item key={idx2} xs={3}>
                             <Link style={{ display: 'block' }} underline='none'>
                               <Button
                                 variant='outlined'

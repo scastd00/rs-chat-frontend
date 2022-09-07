@@ -41,6 +41,7 @@ function CreateSubjectDialog(props) {
         <TextField
           required
           fullWidth
+          autoFocus
           id='subjectName'
           label='Name'
           margin='dense'

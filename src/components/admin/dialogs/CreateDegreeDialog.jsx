@@ -33,6 +33,7 @@ function CreateDegreeDialog(props) {
         <TextField
           required
           fullWidth
+          autoFocus
           id='DegreeName'
           label='Degree name'
           margin='dense'
