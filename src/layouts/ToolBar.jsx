@@ -56,7 +56,7 @@ function ToolBar(props) {
           <Grid item>
             <Grid container spacing={2}>
               <Grid item>
-                <Button variant='text' color='secondary' onClick={() => navigate('/home')}>
+                <Button variant='text' disabled={!loggedIn} color='secondary' onClick={() => navigate('/home')}>
                   <HomeTwoToneIcon sx={{ mr: 1 }} fontSize='medium' />
                   Home
                 </Button>
@@ -69,7 +69,7 @@ function ToolBar(props) {
               <AccountCircleIcon fontSize='large' />
               {
                 // If the user is logged in, show the username
-                username.length !== 0 && (
+                loggedIn && (
                   <Typography variant='text' color='secondary' fontSize='medium' sx={{ pl: 1, textTransform: 'none' }}>
                     {username}
                   </Typography>
