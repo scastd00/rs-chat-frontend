@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Container, CssBaseline, Grid, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import DegreeService from '../../services/DegreeService';
+import DegreeService from '../services/DegreeService';
 import { useDispatch, useStore } from 'react-redux';
-import { checkResponse } from '../../utils';
+import { checkResponse } from '../utils';
 import { useNavigate } from 'react-router';
-import SubjectService from '../../services/SubjectService';
-import GroupService from '../../services/GroupService';
+import SubjectService from '../services/SubjectService';
+import GroupService from '../services/GroupService';
 import {
   AdministrationDegree,
   AdministrationGroup,
   AdministrationSubject,
   AdministrationUser,
-} from '../../components/admin';
-import { CreateDegreeDialog, CreateGroupDialog, CreateSubjectDialog } from '../../components/admin/dialogs';
+} from '../components/admin';
+import { CreateDegreeDialog, CreateGroupDialog, CreateSubjectDialog } from '../components/admin/dialogs';
 
 function Administration() {
   const [allDegrees, setAllDegrees] = useState([]);

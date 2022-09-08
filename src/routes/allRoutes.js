@@ -5,7 +5,7 @@ import TermsAndConditions from '../pages/TermsAndConditions';
 import Profile from '../pages/Profile';
 import Home from '../pages/Home';
 import Chat from '../pages/Chat';
-import Administration from '../pages/administration/Administration';
+import Administration from '../pages/Administration';
 import AdministerDegree from '../pages/administration/AdministerDegree';
 import AdministerSubject from '../pages/administration/AdministerSubject';
 import AdministerGroup from '../pages/administration/AdministerGroup';
