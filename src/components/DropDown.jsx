@@ -10,7 +10,7 @@ function DropDown({ title, children, drop, button }) {
     children :
     children?.map((child, index) => {
       return (
-        <Grid item xs={12} key={index}>
+        <Grid item key={index}>
           {child}
         </Grid>
       );
