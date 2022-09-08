@@ -29,7 +29,6 @@ export function parseDateForInput(date) {
  * @param dispatch - function to dispatch an action
  */
 export function checkResponse(error, navigate, dispatch) {
-  console.log('checkResponse');
   const { response } = error;
 
   if (response.status === 403) {

@@ -4,10 +4,24 @@ import { useStore } from 'react-redux';
 import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 import { capitalizeFirstLetter } from '../utils';
+import ChatService from '../services/ChatService';
 
 function Home() {
   const userState = useStore().getState().user;
   const navigate = useNavigate();
+
+  function connectToChatIfPossible(chatType, chatId) {
+    ChatService
+      .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
+      .then((res) => {
+        if (res.data.canConnect) {
+          navigate(`/chat/${chatType}-${chatId}`);
+        } else {
+          // Todo: display a popup
+        }
+      })
+      .catch((err) => console.error("Error: ", err));
+  }
 
   return (
     <Container sx={{ my: 2 }}>
@@ -40,7 +54,7 @@ function Home() {
                                 variant='outlined'
                                 disableElevation
                                 color='secondary'
-                                onClick={() => navigate(`/chat/${chatType}-${chatId}`)}
+                                onClick={() => connectToChatIfPossible(chatType, chatId)}
                               >
                                 {name}
                               </Button>

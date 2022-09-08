@@ -31,20 +31,20 @@ function App(props) {
             <Route path='/' element={<Navigate to='/login' />} />
 
             {
-              PUBLIC_ROUTES.map(({ path, component, restricted }) => (
-                <Route path={path} element={<PublicRoute component={component} restricted={restricted} />} />
+              PUBLIC_ROUTES.map(({ path, component, restricted }, index) => (
+                <Route key={index} path={path} element={<PublicRoute component={component} restricted={restricted} />} />
               ))
             }
 
             {
-              PRIVATE_ROUTES.map(({ path, component }) => (
-                <Route path={path} element={<PrivateRoute component={component} />} />
+              PRIVATE_ROUTES.map(({ path, component }, index) => (
+                <Route key={index} path={path} element={<PrivateRoute component={component} />} />
               ))
             }
 
             {
-              ADMINISTRATION_ROUTES.map(({ path, component }) => (
-                <Route path={path} element={<AdminRoute component={component} />} />
+              ADMINISTRATION_ROUTES.map(({ path, component }, index) => (
+                <Route key={index} path={path} element={<AdminRoute component={component} />} />
               ))
             }
           </Routes>

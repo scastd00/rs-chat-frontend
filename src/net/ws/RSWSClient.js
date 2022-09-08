@@ -21,27 +21,7 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.sessionId = sessionId;
   this.__token__ = __token__;
   this.pingInterval = null;
-
-  this.socket.onopen = () => {
-    // Only executed one time
-    this.send(
-      createMessage(
-        this.username,
-        this.chatId,
-        this.sessionId,
-        USER_JOINED,
-        this.__token__,
-        'Hi',
-      ),
-    );
-
-    this.send('', GET_HISTORY_MESSAGE);
-    this.send('', ACTIVE_USERS_MESSAGE);
-
-    this.pingInterval = setInterval(() => {
-      this.send('I send a ping message', PING_MESSAGE);
-    }, 30000);
-  };
+  this.connected = false;
 }
 
 /**
@@ -51,7 +31,7 @@ function RSWSClient(username, chatId, sessionId, __token__) {
  * @param {string} type
  */
 RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
-  if (this.socket.readyState !== WebSocket.OPEN) {
+  if (this.socket.readyState !== WebSocket.OPEN || !this.connected) {
     return false; // Do not send anything
   }
 
@@ -71,10 +51,39 @@ RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
   return true;
 };
 
+RSWSClient.prototype.connect = function() {
+  if (!this.connected) {
+    this.connected = true;
+
+    // Only executed one time
+    this.send(
+      createMessage(
+        this.username,
+        this.chatId,
+        this.sessionId,
+        USER_JOINED,
+        this.__token__,
+        'Hi',
+      ),
+    );
+
+    this.send('', GET_HISTORY_MESSAGE);
+    this.send('', ACTIVE_USERS_MESSAGE);
+
+    this.pingInterval = setInterval(() => {
+      this.send('I send a ping message', PING_MESSAGE);
+    }, 30000);
+  }
+}
+
 /**
  * Disconnects the user from the server sending a message.
  */
 RSWSClient.prototype.disconnect = function() {
+  if (!this.connected) {
+    return;
+  }
+
   clearInterval(this.pingInterval);
 
   this.send(
@@ -108,6 +117,10 @@ RSWSClient.prototype.onMessage = function(
   // Todo: function to parse messages (base64 -> binary)
 
   this.socket.onmessage = (message) => {
+    if (!this.connected) {
+      return;
+    }
+
     const parsedMessage = JSON.parse(message.data);
     const { headers, body } = parsedMessage;
 
