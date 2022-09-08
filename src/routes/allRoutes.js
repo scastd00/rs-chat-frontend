@@ -5,7 +5,15 @@ import TermsAndConditions from '../pages/TermsAndConditions';
 import Profile from '../pages/Profile';
 import Home from '../pages/Home';
 import Chat from '../pages/Chat';
-import Administration from '../pages/Administration';
+import Administration from '../pages/administration/Administration';
+import AdministerDegree from '../pages/administration/AdministerDegree';
+import AdministerSubject from '../pages/administration/AdministerSubject';
+import AdministerGroup from '../pages/administration/AdministerGroup';
+import AdministerUser from '../pages/administration/AdministerUser';
+import AdministrationDegrees from '../pages/administration/AdministrationDegrees';
+import AdministrationSubjects from '../pages/administration/AdministrationSubjects';
+import AdministrationGroups from '../pages/administration/AdministrationGroups';
+import AdministrationUsers from '../pages/administration/AdministrationUsers';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -22,12 +30,12 @@ export const PRIVATE_ROUTES = [
 
 export const ADMINISTRATION_ROUTES = [
   { path: '/administration', component: Administration },
-  // { path: '/administration/degrees', component: AdministrationDegree },
-  // { path: '/administration/degree/:id', component: AdministrationDegree },
-  // { path: '/administration/subjects', component: AdministrationSubject },
-  // { path: '/administration/subject/:id', component: AdministrationSubject },
-  // { path: '/administration/groups', component: AdministrationGroup },
-  // { path: '/administration/group/:id', component: AdministrationGroup },
-  // { path: '/administration/users', component: AdministrationUser },
-  // { path: '/administration/user/:id', component: AdministrationUser },
+  { path: '/administration/degrees', component: AdministrationDegrees },
+  { path: '/administration/degree/:id', component: AdministerDegree },
+  { path: '/administration/subjects', component: AdministrationSubjects },
+  { path: '/administration/subject/:id', component: AdministerSubject },
+  { path: '/administration/groups', component: AdministrationGroups },
+  { path: '/administration/group/:id', component: AdministerGroup },
+  { path: '/administration/users', component: AdministrationUsers },
+  { path: '/administration/user/:id', component: AdministerUser },
 ];
