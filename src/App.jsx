@@ -32,7 +32,9 @@ function App(props) {
 
             {
               PUBLIC_ROUTES.map(({ path, component, restricted }, index) => (
-                <Route key={index} path={path} element={<PublicRoute component={component} restricted={restricted} />} />
+                <Route key={index}
+                       path={path}
+                       element={<PublicRoute component={component} restricted={restricted} />} />
               ))
             }
 

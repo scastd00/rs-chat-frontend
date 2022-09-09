@@ -20,7 +20,7 @@ function Home() {
           // Todo: display a popup
         }
       })
-      .catch((err) => console.error("Error: ", err));
+      .catch((err) => console.error('Error: ', err));
   }
 
   return (
