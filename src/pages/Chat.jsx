@@ -19,6 +19,7 @@ function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const userState = useStore().getState().user;
   const [client] = useState(() => new RSWSClient(
@@ -50,8 +51,36 @@ function Chat() {
     setQueue(messages);
   };
 
+  function fetchChatInfo() {
+    ChatService
+      .getChatInfo(chatId, userState.tokens.accessToken)
+      .then(res => {
+        setChatInfo({
+          name: res.data.name,
+          metadata: JSON.parse(res.data.metadata),
+        });
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+  }
+
   useEffect(() => {
     // On component mount
+    ChatService
+      .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
+      .then(response => {
+        if (!response.data.canConnect) {
+          navigate('/home');
+          return;
+        }
+
+        setShowPage(true);
+        client.connect();
+        fetchChatInfo();
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+
     window.addEventListener('beforeunload', function() {
       client.disconnect(); // Executed when the page is reloaded
     });
@@ -105,47 +134,39 @@ function Chat() {
       });
   }
 
-  useEffect(() => {
-    ChatService
-      .getChatInfo(chatId, userState.tokens.accessToken)
-      .then((res) => {
-        setChatInfo({
-          name: res.data.name,
-          metadata: JSON.parse(res.data.metadata),
-        });
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-  }, []);
-
   return (
     <Grid container>
       <CssBaseline />
 
-      <Grid item xs>
-        <Container component='main' sx={{ pt: 1 }}>
-          <CssBaseline />
+      {
+        showPage && (
+          <>
+            <Grid item xs>
+              <Container component='main' sx={{ pt: 1 }}>
+                <CssBaseline />
 
-          <Grid container direction='column' spacing={1}>
-            <Grid item>
-              <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+                <Grid container direction='column' spacing={1}>
+                  <Grid item>
+                    <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+                  </Grid>
+
+                  <Grid item>
+                    <ChatBox messages={queue} />
+                  </Grid>
+
+                  <Grid item>
+                    <ChatTextBar sendTextMessage={sendTextMessage} sendFiles={uploadFiles} />
+                  </Grid>
+                </Grid>
+              </Container>
             </Grid>
 
-            <Grid item>
-              <ChatBox messages={queue} />
+            <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
+              <ActiveUsers activeUsers={activeUsers} />
             </Grid>
-
-            <Grid item>
-              <ChatTextBar sendTextMessage={sendTextMessage} sendFiles={uploadFiles} />
-            </Grid>
-          </Grid>
-        </Container>
-      </Grid>
-
-      <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
-        <ActiveUsers activeUsers={activeUsers} />
-      </Grid>
+          </>
+        )
+      }
     </Grid>
   );
 }

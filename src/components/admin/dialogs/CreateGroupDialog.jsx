@@ -16,7 +16,7 @@ function CreateGroupDialog(props) {
     GroupService
       .addGroup(groupProps, userState.tokens.accessToken)
       .then(res => {
-        console.log(res);
+        // Todo: show success alert
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -33,6 +33,7 @@ function CreateGroupDialog(props) {
         <TextField
           required
           fullWidth
+          autoFocus
           id='GroupName'
           label='Group name'
           margin='dense'

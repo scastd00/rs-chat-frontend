@@ -24,12 +24,14 @@ import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 import SnackAlert from '../components/SnackAlert';
 import AuthService from '../services/AuthService';
+import ChatService from '../services/ChatService';
+import { setAvailableChats } from '../actions';
 
 function Profile() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const state = useStore().getState();
+  const userState = useStore().getState().user;
   const dividerSx = { my: 2, opacity: 1 };
 
   const [sessions, setSessions] = useState([]);
@@ -38,10 +40,12 @@ function Profile() {
   const [passwordChangeConfirm, setPasswordChangeConfirm] = useState('');
   const [changePasswordAlertOpen, setChangePasswordAlertOpen] = useState(false);
   const [passwordError, setPasswordError] = useState('');
+  const [chatCode, setChatCode] = useState('');
+  const [joinAlert, setJoinAlert] = useState({ open: false, type: 'success', message: '' });
 
   useEffect(() => {
     UserService
-      .openedSessions(state.user.user.username, state.user.tokens.accessToken)
+      .openedSessions(userState.user.username, userState.tokens.accessToken)
       .then((res) => {
         setSessions(res.data.sessions);
       })
@@ -79,10 +83,11 @@ function Profile() {
     }
 
     AuthService
-      .changePassword(state.user.user.username,
+      .changePassword(userState.user.username,
         pass,
         confirmPass,
-        state.user.tokens.accessToken)
+        userState.tokens.accessToken,
+      )
       .then(_ => { // We do not return passwords from server
         closePasswordChangeDialog();
       })
@@ -97,6 +102,38 @@ function Profile() {
     setPasswordChangeConfirm('');
   }
 
+  function handleJoinChat() {
+    UserService
+      .joinToChat(userState.user.id, chatCode, userState.tokens.accessToken)
+      .then(res => {
+        setChatCode('');
+        showInvitationCodeAlert('success', 'Joined to chat ' + res.data.name);
+
+
+        ChatService
+          .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
+          .then(chatsRes => {
+            dispatch(setAvailableChats(chatsRes.data.chats));
+          })
+          .catch(err => {
+            console.error(err);
+          })
+      })
+      .catch(err => {
+        setChatCode('');
+        showInvitationCodeAlert('error', err.response.data.message);
+      });
+  }
+
+  // Executed in this order to avoid the alert from closing strangely
+  function showInvitationCodeAlert(type, message) {
+    setJoinAlert({ open: true, type, message });
+
+    setTimeout(() => {
+      setJoinAlert({ open: false, type, message }); // Close the alert
+    }, 2500);
+  }
+
   return (
     <Container sx={{ pt: 2 }}>
       <CssBaseline />
@@ -108,81 +145,67 @@ function Profile() {
 
         <Divider sx={dividerSx} />
 
-        <Grid item container direction='column' spacing={1.5}>
+        <Grid item container direction='row' alignItems='center' justifyContent='space-between' spacing={1.5}>
           <Grid item>
-            <Typography sx={{ fontSize: 18 }}>
-              Username: {state.user.user.username} ({state.user.user.role})
-            </Typography>
+            <Grid container direction='column'>
+              <Grid item>
+                <Typography sx={{ fontSize: 18 }}>
+                  Username: {userState.user.username} ({userState.user.role})
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography sx={{ fontSize: 18 }}>
+                  Full name: {userState.user.fullName}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography sx={{ fontSize: 18 }}>
+                  Email: {userState.user.email}
+                </Typography>
+              </Grid>
+
+              <Grid item>
+                <Typography sx={{ fontSize: 18 }}>
+                  Password: *****
+                  <Button
+                    size='small'
+                    sx={{ ml: 2 }}
+                    onClick={() => setShowPasswordDialog(true)}
+                  >
+                    Change
+                  </Button>
+                </Typography>
+              </Grid>
+            </Grid>
           </Grid>
 
           <Grid item>
-            <Typography sx={{ fontSize: 18 }}>
-              Full name: {state.user.user.fullName}
-            </Typography>
-          </Grid>
+            <Grid container direction='column' spacing={0.5}>
+              <Grid item>
+                <Typography>
+                  Join a chat
+                </Typography>
+              </Grid>
 
-          <Grid item>
-            <Typography sx={{ fontSize: 18 }}>
-              Email: {state.user.user.email}
-            </Typography>
-          </Grid>
+              <Grid item>
+                <TextField
+                  margin='dense'
+                  id='chatCode'
+                  label='Chat code'
+                  name='chatCode'
+                  value={chatCode}
+                  onChange={(e) => setChatCode(e.target.value)}
+                />
+              </Grid>
 
-          <Grid item>
-            <Typography sx={{ fontSize: 18 }}>
-              Password: *****
-              <Button
-                size='small'
-                sx={{ ml: 2 }}
-                onClick={() => setShowPasswordDialog(true)}
-              >
-                Change
-              </Button>
-            </Typography>
-
-            <Dialog open={showPasswordDialog} onClose={() => setShowPasswordDialog(false)}>
-              <DialogTitle>Change password</DialogTitle>
-
-              <DialogContent>
-                <Grid container direction='column'>
-                  <Grid item>
-                    <TextField
-                      autoFocus
-                      margin='dense'
-                      id='NewPassword'
-                      label='New password'
-                      type='password'
-                      fullWidth
-                      onChange={(e) => setPasswordChange(e.target.value)}
-                    />
-                  </Grid>
-
-                  <Grid item>
-                    <TextField
-                      margin='dense'
-                      id='NewPasswordConfirm'
-                      label='Confirm new password'
-                      type='password'
-                      fullWidth
-                      onChange={(e) => setPasswordChangeConfirm(e.target.value)}
-                    />
-                  </Grid>
-                </Grid>
-              </DialogContent>
-
-              <DialogActions>
-                <Button onClick={closePasswordChangeDialog} color='error'>
-                  Cancel
+              <Grid item>
+                <Button onClick={handleJoinChat} disabled={chatCode.trim().length === 0}>
+                  Unlock chat
                 </Button>
-
-                <Button onClick={handleSendChangePassword} color='success'>
-                  Confirm
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-            <SnackAlert open={changePasswordAlertOpen} severity='error'>
-              <Typography>{passwordError}</Typography>
-            </SnackAlert>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -204,6 +227,55 @@ function Profile() {
             }
           </List>
         </DropDown>
+
+        <Dialog open={showPasswordDialog} onClose={() => setShowPasswordDialog(false)}>
+          <DialogTitle>Change password</DialogTitle>
+
+          <DialogContent>
+            <Grid container direction='column'>
+              <Grid item>
+                <TextField
+                  autoFocus
+                  margin='dense'
+                  id='NewPassword'
+                  label='New password'
+                  type='password'
+                  fullWidth
+                  onChange={(e) => setPasswordChange(e.target.value)}
+                />
+              </Grid>
+
+              <Grid item>
+                <TextField
+                  margin='dense'
+                  id='NewPasswordConfirm'
+                  label='Confirm new password'
+                  type='password'
+                  fullWidth
+                  onChange={(e) => setPasswordChangeConfirm(e.target.value)}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={closePasswordChangeDialog} color='error'>
+              Cancel
+            </Button>
+
+            <Button onClick={handleSendChangePassword} color='success'>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <SnackAlert open={changePasswordAlertOpen} severity='error'>
+          <Typography>{passwordError}</Typography>
+        </SnackAlert>
+
+        <SnackAlert open={joinAlert.open} severity={joinAlert.type}>
+          <Typography>{joinAlert.message}</Typography>
+        </SnackAlert>
       </Grid>
     </Container>
   );

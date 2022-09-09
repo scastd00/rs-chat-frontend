@@ -10,7 +10,7 @@ function DropDown({ title, children, drop, button }) {
     children :
     children?.map((child, index) => {
       return (
-        <Grid item xs={12} sx={{ my: 1.5 }} key={index}>
+        <Grid item key={index}>
           {child}
         </Grid>
       );
@@ -22,9 +22,7 @@ function DropDown({ title, children, drop, button }) {
         <IconButton sx={{ mr: 1 }} onClick={() => setDropped(!dropped)}>
           {dropped ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
         </IconButton>
-        {title}
-
-        {button}
+        {title} {button}
       </Typography>
 
       {!dropped ? (
