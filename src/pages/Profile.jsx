@@ -149,6 +149,7 @@ function Profile() {
 
               <Grid item>
                 <TextField
+                  size='small'
                   margin='dense'
                   id='chatCode'
                   label='Chat code'

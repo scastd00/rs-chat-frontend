@@ -41,6 +41,7 @@ function CreateSubjectDialog(props) {
         <TextField
           required
           fullWidth
+          size='small'
           autoFocus
           id='subjectName'
           label='Name'
@@ -54,6 +55,7 @@ function CreateSubjectDialog(props) {
           value={subjectProps.period}
           required
           fullWidth
+          size='small'
           id='subjectPeriod'
           label='Period'
           margin='dense'
@@ -72,6 +74,7 @@ function CreateSubjectDialog(props) {
           value={subjectProps.type}
           required
           fullWidth
+          size='small'
           id='subjectType'
           label='Type'
           margin='dense'
@@ -90,6 +93,7 @@ function CreateSubjectDialog(props) {
           value={subjectProps.credits}
           required
           fullWidth
+          size='small'
           id='subjectCredits'
           label='Credits'
           margin='dense'
@@ -110,6 +114,7 @@ function CreateSubjectDialog(props) {
           value={subjectProps.grade}
           required
           fullWidth
+          size='small'
           id='subjectGrade'
           label='Grade'
           margin='dense'
@@ -127,6 +132,7 @@ function CreateSubjectDialog(props) {
           value={subjectProps.degree}
           required
           fullWidth
+          size='small'
           id='subjectDegree'
           label='Degree'
           margin='dense'
