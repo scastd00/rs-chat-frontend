@@ -17,4 +17,12 @@ export default {
       headers(__token__),
     );
   },
+
+  forgotPassword(email) {
+    return Api.post('/forgotPassword', { email });
+  },
+
+  createPassword(formFields) {
+    return Api.post('/createPassword', formFields);
+  },
 };
