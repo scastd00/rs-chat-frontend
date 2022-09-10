@@ -57,6 +57,11 @@ function App(props) {
 }
 
 /*
+ Solved 404 response when accessing Vercel from other page:
+ https://t3.gg/blog/post/vite-vercel
+ */
+
+/*
  For more info see the following video
  https://www.youtube.com/watch?v=gFZiQnM3Is4
  */
