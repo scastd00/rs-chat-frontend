@@ -22,6 +22,7 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
+  const [remember, setRemember] = useState(false);
   const theme = useTheme();
 
   const setStateOfStore = ({ user, session, chats }) => {
@@ -44,6 +45,7 @@ function Login() {
       .login({
         username: data.get('username'),
         password: data.get('password'),
+        remember,
       })
       .then((res) => {
         setStateOfStore(res.data);
@@ -79,6 +81,7 @@ function Login() {
             margin='normal'
             required
             fullWidth
+            size='small'
             id='username'
             label='Username'
             name='username'
@@ -90,6 +93,7 @@ function Login() {
             margin='normal'
             required
             fullWidth
+            size='small'
             name='password'
             label='Password'
             type='password'
@@ -97,11 +101,8 @@ function Login() {
             autoComplete='current-password'
           />
 
-          {/*
-           Todo: Send API request with true in some field and make JWT token expire later
-           */}
           <FormControlLabel
-            control={<Checkbox value='remember' color='primary' />}
+            control={<Checkbox value='remember' color='primary' onChange={() => setRemember(!remember)} />}
             label='Remember me'
           />
 
@@ -116,13 +117,25 @@ function Login() {
 
           <Grid container>
             <Grid item xs>
-              <Link href='src/main/react/src/pages/Login#' variant='body2'>
+              <Link
+                component='button'
+                type='button'
+                variant='body2'
+                underline='hover'
+                onClick={() => navigate('/forgotPassword')}
+              >
                 Forgot password?
               </Link>
             </Grid>
 
             <Grid item>
-              <Link component='button' type='button' variant='body2' onClick={() => navigate('/register')}>
+              <Link
+                component='button'
+                type='button'
+                variant='body2'
+                underline='hover'
+                onClick={() => navigate('/register')}
+              >
                 {'Don\'t have an account? Sign Up'}
               </Link>
             </Grid>

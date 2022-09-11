@@ -5,6 +5,8 @@ import TermsAndConditions from '../pages/TermsAndConditions';
 import Profile from '../pages/Profile';
 import Home from '../pages/Home';
 import Chat from '../pages/Chat';
+import ForgotPassword from '../pages/ForgotPassword';
+import CreatePassword from '../pages/CreatePassword';
 import Administration from '../pages/Administration';
 import AdministerDegree from '../pages/administration/AdministerDegree';
 import AdministerSubject from '../pages/administration/AdministerSubject';
@@ -20,6 +22,8 @@ export const PUBLIC_ROUTES = [
   { path: '/register', component: Register, restricted: true },
   { path: '/privacy', component: PrivacyPolicy, restricted: false },
   { path: '/terms', component: TermsAndConditions, restricted: false },
+  { path: '/forgotPassword', component: ForgotPassword, restricted: true },
+  { path: '/createPassword', component: CreatePassword, restricted: false },
 ];
 
 export const PRIVATE_ROUTES = [

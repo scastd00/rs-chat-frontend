@@ -114,8 +114,8 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       <CssBaseline />
       <TextField
         margin='normal'
-        size='small'
         fullWidth
+        size='small'
         id='Text'
         label='Text'
         name='text'

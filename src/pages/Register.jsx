@@ -158,6 +158,7 @@ function Register() {
                   <TextField
                     required
                     fullWidth
+                    size='small'
                     id='email'
                     label='Email Address'
                     autoFocus
@@ -175,6 +176,7 @@ function Register() {
                     autoComplete='given-name'
                     name='username'
                     fullWidth
+                    size='small'
                     id='username'
                     label='Username'
                     onChange={() => setRegisterError('')}
@@ -191,6 +193,7 @@ function Register() {
                     required
                     name='fullName'
                     fullWidth
+                    size='small'
                     id='fullName'
                     label='Full name'
                     onChange={() => setRegisterError('')}
@@ -203,6 +206,7 @@ function Register() {
                   <TextField
                     required
                     fullWidth
+                    size='small'
                     name='password'
                     label='Password'
                     type={showPassword ? 'text' : 'password'}
@@ -222,6 +226,7 @@ function Register() {
                   <TextField
                     required
                     fullWidth
+                    size='small'
                     name='confirmPassword'
                     label='Confirm Password'
                     type={showPassword ? 'text' : 'password'}

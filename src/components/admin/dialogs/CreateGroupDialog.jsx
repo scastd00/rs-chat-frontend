@@ -33,6 +33,7 @@ function CreateGroupDialog(props) {
         <TextField
           required
           fullWidth
+          size='small'
           autoFocus
           id='GroupName'
           label='Group name'
