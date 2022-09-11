@@ -10,14 +10,12 @@ function ForgotPassword() {
   const [email, setEmail] = useState('');
 
   function handleSubmit() {
-    // Todo
     AuthService
       .forgotPassword(email)
       .then(() => {
         navigate('/createPassword');
       })
-      .catch(() => {
-      });
+      .catch(console.error);
   }
 
   return (

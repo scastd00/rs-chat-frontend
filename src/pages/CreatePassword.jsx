@@ -1,24 +1,37 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AuthService from '../services/AuthService';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 function CreatePassword() {
   const navigate = useNavigate();
+  const url = useLocation();
   const [formFields, setFormFields] = useState({ code: '', newPassword: '', confirmPassword: '' });
 
   function handleSubmit() {
-    // Todo
-
     AuthService
       .createPassword(formFields)
       .then(() => {
         navigate('/login');
       })
-      .catch(() => {
-      });
+      .catch(console.error);
   }
+
+  useEffect(() => {
+    if (url.search.length !== 0) {
+      let searches = url.search.split('?');
+      searches.shift();
+      searches = searches.map((search) => search.split('='));
+
+      searches.forEach((search) => {
+        // If the url contains a search with the name 'code', set the code field to the value
+        if (search[0] === 'code') {
+          setFormFields({ ...formFields, code: search[1] });
+        }
+      });
+    }
+  }, []);
 
   return (
     <Container sx={{ my: 2 }}>
@@ -42,7 +55,7 @@ function CreatePassword() {
             id='code'
             label='Code'
             name='code'
-            autoFocus
+            value={formFields.code}
             onChange={(e) => setFormFields({ ...formFields, code: e.target.value })}
           />
 

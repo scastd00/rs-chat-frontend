@@ -10,14 +10,6 @@ export default {
     return Api.post('/register', credentials);
   },
 
-  changePassword(username, newPassword, confirmPassword, __token__) {
-    return Api.put(
-      `/changePassword/${username}`,
-      { newPassword, confirmPassword },
-      headers(__token__),
-    );
-  },
-
   forgotPassword(email) {
     return Api.post('/forgotPassword', { email });
   },
