@@ -10,7 +10,7 @@ function Home() {
   const userState = useStore().getState().user;
   const navigate = useNavigate();
 
-  function connectToChatIfPossible(chatType, chatId) {
+  function connectToChat(chatType, chatId) {
     ChatService
       .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
       .then((res) => {
@@ -54,7 +54,7 @@ function Home() {
                                 variant='outlined'
                                 disableElevation
                                 color='secondary'
-                                onClick={() => connectToChatIfPossible(chatType, chatId)}
+                                onClick={() => connectToChat(chatType, chatId)}
                               >
                                 {name}
                               </Button>

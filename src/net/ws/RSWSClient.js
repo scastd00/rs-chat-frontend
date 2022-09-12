@@ -86,7 +86,7 @@ RSWSClient.prototype.connect = function() {
  * Disconnects the user from the server sending a message.
  */
 RSWSClient.prototype.disconnect = function() {
-  console.log('Disconnecting from server...');
+  console.log('Disconnecting from server..., this.connected: ', this.connected);
 
   if (!this.connected) {
     return;
@@ -107,6 +107,7 @@ RSWSClient.prototype.disconnect = function() {
   );
 
   this.socket.close(1000, 'Disconnected');
+  console.log('Disconnected from server');
 };
 
 /**

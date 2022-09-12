@@ -67,6 +67,9 @@ function Chat() {
 
   useEffect(() => {
     // On component mount
+
+    // We check here to prevent a user who doesn't have access to the chat to access it
+    // by changing the url.
     ChatService
       .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
       .then(response => {
