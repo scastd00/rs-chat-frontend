@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { ACTIVE_USERS_MESSAGE, GET_HISTORY_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 import FileService from '../services/FileService';
 
@@ -75,11 +75,21 @@ function Chat() {
       .then(response => {
         if (!response.data.canConnect) {
           client.disconnect();
-          navigate('/home'); // The socket will not be fully connected
+          navigate('/home');
         } else {
           setShowPage(true);
-          client.connect(); // The socket will be fully connected
           fetchChatInfo();
+
+          /*
+           * Client is already connected here.
+           * Get the history and active users. It is more secure to do it here.
+           * If done when the client is connected to the server, the server will send
+           * the history and active users to the client, and the messages
+           * can be scanned with WireShark (or other tools).
+           */
+
+          client.send('', GET_HISTORY_MESSAGE);
+          client.send('', ACTIVE_USERS_MESSAGE);
         }
       })
       .catch(err => {
