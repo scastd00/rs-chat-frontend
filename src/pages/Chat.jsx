@@ -71,15 +71,18 @@ function Chat() {
       .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
       .then(response => {
         if (!response.data.canConnect) {
+          client.disconnect();
           navigate('/home');
           return;
         }
 
         setShowPage(true);
-        client.connect();
         fetchChatInfo();
       })
-      .catch(err => checkResponse(err, navigate, dispatch));
+      .catch(err => {
+        client.disconnect();
+        checkResponse(err, navigate, dispatch);
+      });
 
     window.addEventListener('beforeunload', function() {
       client.disconnect(); // Executed when the page is reloaded

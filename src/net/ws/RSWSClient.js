@@ -22,6 +22,10 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
   this.pingInterval = null;
   this.connected = false;
+
+  this.socket.onopen = () => {
+    this.connect();
+  }
 }
 
 /**
@@ -52,6 +56,8 @@ RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
 };
 
 RSWSClient.prototype.connect = function() {
+  console.log('Connecting to server...');
+
   if (!this.connected) {
     this.connected = true;
 
@@ -80,6 +86,8 @@ RSWSClient.prototype.connect = function() {
  * Disconnects the user from the server sending a message.
  */
 RSWSClient.prototype.disconnect = function() {
+  console.log('Disconnecting from server...');
+
   if (!this.connected) {
     return;
   }
