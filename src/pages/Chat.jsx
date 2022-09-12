@@ -78,7 +78,7 @@ function Chat() {
           navigate('/home'); // The socket will not be fully connected
         } else {
           setShowPage(true);
-          // client.connect(); // The socket will be fully connected
+          client.connect(); // The socket will be fully connected
           fetchChatInfo();
         }
       })
