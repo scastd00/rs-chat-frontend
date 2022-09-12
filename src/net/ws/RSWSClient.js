@@ -84,6 +84,7 @@ RSWSClient.prototype.disconnect = function() {
     return;
   }
 
+  this.connected = false;
   clearInterval(this.pingInterval);
 
   this.send(
