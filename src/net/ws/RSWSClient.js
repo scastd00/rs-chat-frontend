@@ -23,6 +23,11 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
   this.pingInterval = null;
   this.connected = false;
+
+  this.socket.onopen = () => {
+    this.connect();
+    this.connected = true;
+  }
 }
 
 /**
