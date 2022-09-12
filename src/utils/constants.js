@@ -5,3 +5,5 @@ export const SUPPORTED_FILES = {
   'audio/*': ['.mp3', '.wav', '.ogg', '.flac', '.aac'],
   'application/pdf': ['.pdf'],
 };
+
+export const PING_INTERVAL = 30000;

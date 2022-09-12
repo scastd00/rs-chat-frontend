@@ -74,13 +74,12 @@ function Chat() {
       .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
       .then(response => {
         if (!response.data.canConnect) {
-          client.disconnect();
-          navigate('/home');
-          return;
+          navigate('/home'); // The socket will not be fully connected
+        } else {
+          setShowPage(true);
+          client.connect(); // The socket will be fully connected
+          fetchChatInfo();
         }
-
-        setShowPage(true);
-        fetchChatInfo();
       })
       .catch(err => {
         client.disconnect();

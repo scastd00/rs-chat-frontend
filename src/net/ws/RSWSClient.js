@@ -9,6 +9,7 @@ import {
   USER_LEFT,
 } from './MessageProps';
 import { createMessage, isActivityMessage } from '../../utils';
+import { PING_INTERVAL } from '../../utils/constants';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
@@ -22,10 +23,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
   this.pingInterval = null;
   this.connected = false;
-
-  this.socket.onopen = () => {
-    this.connect();
-  }
 }
 
 /**
@@ -56,8 +53,6 @@ RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
 };
 
 RSWSClient.prototype.connect = function() {
-  console.log('Connecting to server...');
-
   if (!this.connected) {
     this.connected = true;
 
@@ -78,21 +73,18 @@ RSWSClient.prototype.connect = function() {
 
     this.pingInterval = setInterval(() => {
       this.send('I send a ping message', PING_MESSAGE);
-    }, 30000);
+    }, PING_INTERVAL);
   }
-}
+};
 
 /**
  * Disconnects the user from the server sending a message.
  */
 RSWSClient.prototype.disconnect = function() {
-  console.log('Disconnecting from server..., this.connected: ', this.connected);
-
   if (!this.connected) {
     return;
   }
 
-  this.connected = false;
   clearInterval(this.pingInterval);
 
   this.send(
@@ -106,8 +98,8 @@ RSWSClient.prototype.disconnect = function() {
     ),
   );
 
+  this.connected = false;
   this.socket.close(1000, 'Disconnected');
-  console.log('Disconnected from server');
 };
 
 /**
