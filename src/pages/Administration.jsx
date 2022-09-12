@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, CssBaseline, Grid, IconButton } from '@mui/material';
+import { Container, CssBaseline, IconButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DegreeService from '../services/DegreeService';
 import { useDispatch, useStore } from 'react-redux';
@@ -32,30 +32,18 @@ function Administration() {
   useEffect(() => {
     DegreeService
       .getAllDegrees(userState.tokens.accessToken)
-      .then(res => {
-        setAllDegrees(res.data.degrees);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
+      .then(res => setAllDegrees(JSON.parse(res.data.degrees)))
+      .catch(err => checkResponse(err, navigate, dispatch));
 
     SubjectService
       .getAllSubjects(userState.tokens.accessToken)
-      .then(res => {
-        setAllSubjects(res.data.subjects);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
+      .then(res => setAllSubjects(JSON.parse(res.data.subjects)))
+      .catch(err => checkResponse(err, navigate, dispatch));
 
     GroupService
       .getAllGroups(userState.tokens.accessToken)
-      .then(res => {
-        setAllGroups(res.data.groups);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
+      .then(res => setAllGroups(JSON.parse(res.data.groups)))
+      .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
   function createAddButton(onClickCallback) {
