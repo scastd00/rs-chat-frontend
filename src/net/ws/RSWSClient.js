@@ -24,10 +24,10 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.pingInterval = null;
   this.connected = false;
 
-  // this.socket.onopen = () => {
-  //   this.connect();
-  //   this.connected = true;
-  // }
+  this.socket.onopen = () => {
+    //   this.connect();
+    //   this.connected = true;
+  };
 }
 
 /**
@@ -58,30 +58,30 @@ RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
 };
 
 RSWSClient.prototype.connect = function() {
-  this.socket.onopen = () => {
-    if (!this.connected) {
-      this.connected = true;
+  // this.socket.onopen = () => {
+  if (!this.connected) {
+    this.connected = true;
 
-      // Only executed one time
-      this.send(
-        createMessage(
-          this.username,
-          this.chatId,
-          this.sessionId,
-          USER_JOINED,
-          this.__token__,
-          'Hi',
-        ),
-      );
+    // Only executed one time
+    this.send(
+      createMessage(
+        this.username,
+        this.chatId,
+        this.sessionId,
+        USER_JOINED,
+        this.__token__,
+        'Hi',
+      ),
+    );
 
-      this.send('', GET_HISTORY_MESSAGE);
-      this.send('', ACTIVE_USERS_MESSAGE);
+    this.send('', GET_HISTORY_MESSAGE);
+    this.send('', ACTIVE_USERS_MESSAGE);
 
-      this.pingInterval = setInterval(() => {
-        this.send('I send a ping message', PING_MESSAGE);
-      }, PING_INTERVAL);
-    }
-  };
+    this.pingInterval = setInterval(() => {
+      this.send('I send a ping message', PING_MESSAGE);
+    }, PING_INTERVAL);
+  }
+  // };
 };
 
 /**
