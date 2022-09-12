@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { ACTIVE_USERS_MESSAGE, GET_HISTORY_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 import FileService from '../services/FileService';
 
@@ -87,9 +87,6 @@ function Chat() {
            * the history and active users to the client, and the messages
            * can be scanned with WireShark (or other tools).
            */
-
-          client.send('', GET_HISTORY_MESSAGE);
-          client.send('', ACTIVE_USERS_MESSAGE);
         }
       })
       .catch(err => {

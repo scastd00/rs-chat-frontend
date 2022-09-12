@@ -26,7 +26,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
 
   this.socket.onopen = () => {
     this.connect();
-    this.connected = true;
   };
 }
 
@@ -62,16 +61,9 @@ RSWSClient.prototype.connect = function() {
     this.connected = true;
 
     // Only executed one time
-    this.send(
-      createMessage(
-        this.username,
-        this.chatId,
-        this.sessionId,
-        USER_JOINED,
-        this.__token__,
-        'Hi',
-      ),
-    );
+    this.send('Hi', USER_JOINED);
+    this.send('', GET_HISTORY_MESSAGE);
+    this.send('', ACTIVE_USERS_MESSAGE);
 
     this.pingInterval = setInterval(() => {
       this.send('I send a ping message', PING_MESSAGE);
