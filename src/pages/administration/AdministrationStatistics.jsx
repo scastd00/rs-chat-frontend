@@ -4,7 +4,7 @@ import { useStore } from 'react-redux';
 import { useClipboard } from '../../hooks/useClipboard';
 import { Container, CssBaseline } from '@mui/material';
 
-function AdministrationUsers() {
+function AdministrationStatistics() {
   const userState = useStore().getState().user;
   const [navigate, dispatch] = useNavDis();
   const [copyToClipboard] = useClipboard();
@@ -16,4 +16,4 @@ function AdministrationUsers() {
   );
 }
 
-export default AdministrationUsers;
+export default AdministrationStatistics;

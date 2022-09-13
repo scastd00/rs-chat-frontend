@@ -30,7 +30,7 @@ function Home() {
               return React.cloneElement(
                 <DropDown title={capitalizeFirstLetter(chatType)} key={idx} drop={chatType === 'group'}>
                   {/* 4 columns -> 12 places : 3 places/column = 4 */}
-                  <Grid container spacing={0} sx={{ p: 0.5 }} columns={12}>
+                  <Grid container spacing={0} sx={{ p: 0.5 }}>
                     {
                       chatList.map(({ name, id: chatId }, idx2) => {
                         return (
