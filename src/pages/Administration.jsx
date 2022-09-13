@@ -1,101 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Container, CssBaseline, Grid, IconButton } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import DegreeService from '../services/DegreeService';
-import { useDispatch, useStore } from 'react-redux';
-import { checkResponse } from '../utils';
-import { useNavigate } from 'react-router';
-import SubjectService from '../services/SubjectService';
-import GroupService from '../services/GroupService';
-import {
-  AdministrationDegree,
-  AdministrationGroup,
-  AdministrationSubject,
-  AdministrationUser,
-} from '../components/admin';
-import { CreateDegreeDialog, CreateGroupDialog, CreateSubjectDialog } from '../components/admin/dialogs';
+import React from 'react';
+import { Button, Container, CssBaseline, Grid } from '@mui/material';
+import { useNavDis } from '../hooks/useNavDis';
+import BookIcon from '@mui/icons-material/Book';
+import SchoolIcon from '@mui/icons-material/School';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonIcon from '@mui/icons-material/Person';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 function Administration() {
-  const [allDegrees, setAllDegrees] = useState([]);
-  const [createDegreeDialogOpen, setCreateDegreeDialogOpen] = useState(false);
-
-  const [allSubjects, setAllSubjects] = useState([]);
-  const [createSubjectDialogOpen, setCreateSubjectDialogOpen] = useState(false);
-
-  const [allGroups, setAllGroups] = useState([]);
-  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
-
-  const userState = useStore().getState().user;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    DegreeService
-      .getAllDegrees(userState.tokens.accessToken)
-      .then(res => {
-        setAllDegrees(res.data.degrees);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-
-    SubjectService
-      .getAllSubjects(userState.tokens.accessToken)
-      .then(res => {
-        setAllSubjects(res.data.subjects);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-
-    GroupService
-      .getAllGroups(userState.tokens.accessToken)
-      .then(res => {
-        setAllGroups(res.data.groups);
-      })
-      .catch((err) => {
-        checkResponse(err, navigate, dispatch);
-      });
-  }, []);
-
-  function createAddButton(onClickCallback) {
-    return (
-      <IconButton onClick={onClickCallback} sx={{ mx: 1 }}>
-        <AddIcon fontSize='small' />
-      </IconButton>
-    );
-  }
-
-  const degreesButton = createAddButton(() => setCreateDegreeDialogOpen(true));
-  const subjectsButton = createAddButton(() => setCreateSubjectDialogOpen(true));
-  const groupsButton = createAddButton(() => setCreateGroupDialogOpen(true));
-  const usersButton = createAddButton(() => console.log('Pressed'));
+  const [navigate] = useNavDis();
+  const items = [
+    { name: 'degrees', icon: SchoolIcon },
+    { name: 'subjects', icon: BookIcon },
+    { name: 'groups', icon: GroupsIcon },
+    { name: 'users', icon: PersonIcon },
+    { name: 'statistics', icon: AnalyticsIcon },
+  ]
 
   return (
     <Container sx={{ py: 3 }} component='main'>
       <CssBaseline />
 
-      <AdministrationDegree button={degreesButton} allDegrees={allDegrees} />
-      <AdministrationSubject button={subjectsButton} allSubjects={allSubjects} />
-      <AdministrationGroup button={groupsButton} allGroups={allGroups} />
-      <AdministrationUser button={usersButton} />
-
-      <CreateDegreeDialog
-        open={createDegreeDialogOpen}
-        onClose={() => setCreateDegreeDialogOpen(false)}
-        onDegreeCreate={(newDegree) => setAllDegrees([...allDegrees, newDegree])}
-      />
-
-      <CreateSubjectDialog
-        open={createSubjectDialogOpen}
-        onClose={() => setCreateSubjectDialogOpen(false)}
-        allDegrees={allDegrees}
-      />
-
-      <CreateGroupDialog
-        open={createGroupDialogOpen}
-        onClose={() => setCreateGroupDialogOpen(false)}
-      />
+      <Grid container direction='row' spacing={3} sx={{ p: 0.5 }}>
+        {
+          items.map((item, index) => (
+            <Grid item xs={6} key={index}>
+              <Button
+                sx={{ py: 8 }}
+                variant='outlined'
+                fullWidth
+                color='primary'
+                onClick={() => navigate(`/administration/${item.name}`)}
+              >
+                {item.name} &nbsp;&nbsp; {item.icon && <item.icon />}
+              </Button>
+            </Grid>
+          ))
+        }
+      </Grid>
     </Container>
   );
 }

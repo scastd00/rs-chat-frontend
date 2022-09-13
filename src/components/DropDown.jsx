@@ -6,15 +6,16 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 function DropDown({ title, children, drop, button }) {
   const [dropped, setDropped] = useState(drop);
 
-  const childrenToRender = typeof children === 'object' ?
-    children :
-    children?.map((child, index) => {
-      return (
-        <Grid item key={index}>
-          {child}
-        </Grid>
-      );
-    });
+  const childrenToRender =
+    typeof children === 'object' ?
+      children :
+      children?.map((child, index) => {
+        return (
+          <Grid item key={index}>
+            {child}
+          </Grid>
+        );
+      });
 
   return (
     <CssBaseline>
@@ -28,7 +29,7 @@ function DropDown({ title, children, drop, button }) {
       {!dropped ? (
         ''
       ) : (
-        <Grid container sx={{ mx: 7 }}>
+        <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
           {childrenToRender}
         </Grid>
       )}
