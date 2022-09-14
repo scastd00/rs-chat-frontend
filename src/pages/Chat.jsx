@@ -129,12 +129,13 @@ function Chat() {
    * @param files The files to be sent.
    */
   function uploadFiles(files) {
-    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.tokens.accessToken));
+    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.tokens.accessToken));
 
     Promise
       .all(uploadPromises)
       .then(uploadedFiles => {
         uploadedFiles.forEach(file => {
+          file.data.metadata = JSON.parse(file.data.metadata); // Parse the string that is received from the server to not cause problems
           const message = client.prepareMessage(file.data, file.data.metadata.messageType);
 
           if (client.send(message)) {
