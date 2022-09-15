@@ -1,5 +1,5 @@
 import { logOut } from '../actions';
-import { USER_JOINED, USER_LEFT, USER_MESSAGES, UTF_8 } from '../net/ws/MessageProps';
+import { USER_JOINED, USER_LEFT, USER_MESSAGES } from '../net/ws/MessageProps';
 import dateFormat from 'dateformat';
 
 export function headers(__token__) {
@@ -53,11 +53,9 @@ export function checkResponse(error, navigate, dispatch) {
  * @param {string} type
  * @param {string} token
  * @param {string} content
- * @param {string} encoding
- * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {encoding: string, content: string}}}
+ * @returns {{headers: {username: string, chatId: string, sessionId: number, type: string, date: number, token: string}, body: {content: string}}}
  */
-export function createMessage(username, chatId, sessionId,
-                              type, token, content, encoding = UTF_8) {
+export function createMessage(username, chatId, sessionId, type, token, content) {
   return {
     headers: {
       username,
@@ -68,7 +66,6 @@ export function createMessage(username, chatId, sessionId,
       token: `Bearer ${token}`,
     },
     body: {
-      encoding,
       content,
     },
   };
