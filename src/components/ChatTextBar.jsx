@@ -16,8 +16,12 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { useDropzone } from 'react-dropzone';
 import { SUPPORTED_FILES } from '../utils/constants';
+import EmojiService from '../services/EmojiService';
+import { useStore } from 'react-redux';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
+  const userState = useStore().getState().user;
+
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
@@ -29,6 +33,8 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [uploadAttachmentDialog, setUploadAttachmentDialog] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [enableSendIcon, setEnableSendIcon] = useState(false);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [listOfEmojis, setListOfEmojis] = useState([]);
 
   useEffect(() => {
     setSelectedImages(acceptedFiles.map((file) => file));
@@ -44,10 +50,30 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     performMessageSend(); // Outside the if statement to be able to send attachments without text
   }
 
-  function handleSendEnter(evt) {
-    if (evt.code === 'Enter') {
+  function handleKeyDown(evt) {
+    if (evt.key === 'Enter') {
       performMessageSend();
+    } else if (evt.key === ':') {
+      EmojiService
+        .getRandomEmojis(userState.tokens.accessToken)
+        .then(res => {
+          setShowEmojis(true);
+          setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
+  }
+
+  function getEmojiIconFromUnicode(emoji) {
+    return {
+      ...emoji,
+      icon: emoji.unicode
+                 .split(' ')
+                 .map((u) => String.fromCodePoint(parseInt(u, 16)))
+                 .join(''),
+    };
   }
 
   function performMessageSend() {
@@ -109,9 +135,33 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       });
   }
 
+  function addEmojiToTextBox(evt) {
+    const selectedEmoji = evt.currentTarget.innerText;
+    setMessage(message + selectedEmoji);
+  }
+
+  // Todo: Add a useEffect to enable the send button when the message has some text (or emojis)
+  //  or when there are some attached files.
+
+
   return (
     <>
       <CssBaseline />
+
+      <Grid container spacing={1}>
+        {
+          listOfEmojis.map(emoji => {
+            return (
+              <Grid item key={emoji.id}>
+                <IconButton onClick={addEmojiToTextBox}>
+                  {emoji.icon}
+                </IconButton>
+              </Grid>
+            );
+          })
+        }
+      </Grid>
+
       <TextField
         margin='normal'
         fullWidth
@@ -120,7 +170,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         label='Text'
         name='text'
         color='secondary'
-        onKeyDown={handleSendEnter}
+        onKeyDown={handleKeyDown}
         onChange={(evt) => {
           setMessage(evt.target.value);
           setEnableSendIcon(evt.target.value.trim().length !== 0);
