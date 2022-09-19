@@ -33,6 +33,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [enableSendIcon, setEnableSendIcon] = useState(false);
   const [listOfEmojis, setListOfEmojis] = useState([]);
+  const [selectingEmoji, setSelectingEmoji] = useState(false);
 
   useEffect(() => {
     setSelectedImages(acceptedFiles.map(file => file));
@@ -61,6 +62,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         .getRandomEmojis(userState.tokens.accessToken)
         .then(res => {
           setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
+          setSelectingEmoji(true);
         })
         .catch((err) => {
           console.log(err);
@@ -136,7 +138,24 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function addEmojiToTextBox(evt) {
-    setMessage(message + evt.currentTarget.innerText);
+    const messageWithoutEmojiName = message.substring(0, message.lastIndexOf(':'));
+    setMessage(messageWithoutEmojiName + evt.currentTarget.innerText + ' ');
+    setListOfEmojis([]);
+    setSelectingEmoji(false);
+    document.getElementById('TextBox').focus();
+  }
+
+  function handleTextChange(evt) {
+    setMessage(evt.target.value);
+
+    if (selectingEmoji) {
+      const emojiName = evt.target.value.split(':').pop();
+
+      EmojiService
+        .getEmojiContainsString(emojiName, userState.tokens.accessToken)
+        .then(res => setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode)))
+        .catch(console.error);
+    }
   }
 
   return (
@@ -147,12 +166,12 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         margin='normal'
         fullWidth
         size='small'
-        id='Text'
+        id='TextBox'
         label='Text'
         name='text'
         color='secondary'
         onKeyDown={handleKeyDown}
-        onChange={(evt) => setMessage(evt.target.value)}
+        onChange={handleTextChange}
         autoComplete='off'
         autoFocus
         value={message}

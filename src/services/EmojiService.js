@@ -5,4 +5,8 @@ export default {
   getRandomEmojis(__token__) {
     return Api.get('/emojis/random', headers(__token__));
   },
+
+  getEmojiContainsString(string, __token__) {
+    return Api.get(`/emojis/${string}`, headers(__token__));
+  },
 };
