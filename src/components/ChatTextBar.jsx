@@ -143,20 +143,6 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     <>
       <CssBaseline />
 
-      <Grid container spacing={1}>
-        {
-          listOfEmojis.map(emoji => {
-            return (
-              <Grid item key={emoji.id}>
-                <IconButton onClick={addEmojiToTextBox}>
-                  {emoji.icon}
-                </IconButton>
-              </Grid>
-            );
-          })
-        }
-      </Grid>
-
       <TextField
         margin='normal'
         fullWidth
@@ -185,6 +171,20 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
           ),
         }}
       />
+
+      <Grid container spacing={1}>
+        {
+          listOfEmojis.map(emoji => {
+            return (
+              <Grid item key={emoji.id}>
+                <IconButton onClick={addEmojiToTextBox}>
+                  {emoji.icon}
+                </IconButton>
+              </Grid>
+            );
+          })
+        }
+      </Grid>
 
       <Dialog open={uploadAttachmentDialog} onClose={() => setUploadAttachmentDialog(false)}>
         <DialogContent>
