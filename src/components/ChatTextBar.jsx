@@ -9,6 +9,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Popover,
   TextField,
   Typography,
 } from '@mui/material';
@@ -22,6 +23,7 @@ import { useStore } from 'react-redux';
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const userState = useStore().getState().user;
 
+  const [anchorEl, setAnchorEl] = useState(null); // Only set once
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
@@ -55,6 +57,10 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function handleKeyDown(evt) {
+    if (!anchorEl) {
+      setAnchorEl(evt.currentTarget); // First time to have it stored to display the list of emojis
+    }
+
     if (evt.key === 'Enter') {
       performMessageSend();
     } else if (evt.key === ':') {
@@ -80,6 +86,13 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     };
   }
 
+  function resetAllStates() {
+    setMessage('');
+    setAttachedFiles([]);
+    setSelectedImages([]);
+    setSelectingEmoji(false);
+  }
+
   function performMessageSend() {
     // First send the text message if possible.
     if (message.trim().length !== 0) {
@@ -91,9 +104,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       sendFiles(attachedFiles);
     }
 
-    setMessage('');
-    setAttachedFiles([]);
-    setSelectedImages([]);
+    resetAllStates();
   }
 
   function handleDropzoneCloseWithFileRemoval() {
@@ -140,27 +151,78 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   function addEmojiToTextBox(evt) {
     const messageWithoutEmojiName = message.substring(0, message.lastIndexOf(':'));
     setMessage(messageWithoutEmojiName + evt.currentTarget.innerText + ' ');
-    setListOfEmojis([]);
     setSelectingEmoji(false);
     document.getElementById('TextBox').focus();
   }
 
   function handleTextChange(evt) {
-    setMessage(evt.target.value);
+    const evtValue = evt.target.value;
+    setMessage(evtValue);
 
     if (selectingEmoji) {
-      const emojiName = evt.target.value.split(':').pop();
+      if (!evtValue.includes(':')) {
+        setSelectingEmoji(false);
+        return;
+      }
+
+      const emojiName = evtValue.split(':').pop() // Get the string from the ':' to the end of the string
+                                .split(' ').shift(); // Get the first word (the one closer to ':')
+
+      if (emojiName.length === 0) {
+        return;
+      }
 
       EmojiService
         .getEmojiContainsString(emojiName, userState.tokens.accessToken)
         .then(res => setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode)))
-        .catch(console.error);
+        .catch(() => {
+          setSelectingEmoji(false);
+        });
     }
+  }
+
+  // Todo: when cancel or completed the emoji, the remaining text should remain intact. (With regex could be done, maybe)
+  // Todo: list of emojis is not cleared to not produce visualization problems
+
+  function handleCancelAddEmoji() {
+    setSelectingEmoji(false);
+    setMessage(message.substring(0, message.lastIndexOf(':')));
   }
 
   return (
     <>
       <CssBaseline />
+
+      <Popover
+        open={selectingEmoji}
+        anchorEl={anchorEl}
+        onFocusCapture={evt => evt.preventDefault()}
+        disableEnforceFocus={true}
+        disableAutoFocus={true}
+        onClose={handleCancelAddEmoji}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Grid container direction='row' spacing={0.5}>
+          {
+            listOfEmojis.map(emoji => {
+              return (
+                <Grid item key={emoji.id}>
+                  <IconButton onClick={addEmojiToTextBox}>
+                    {emoji.icon}
+                  </IconButton>
+                </Grid>
+              );
+            })
+          }
+        </Grid>
+      </Popover>
 
       <TextField
         margin='normal'
@@ -190,20 +252,6 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
           ),
         }}
       />
-
-      <Grid container spacing={1}>
-        {
-          listOfEmojis.map(emoji => {
-            return (
-              <Grid item key={emoji.id}>
-                <IconButton onClick={addEmojiToTextBox}>
-                  {emoji.icon}
-                </IconButton>
-              </Grid>
-            );
-          })
-        }
-      </Grid>
 
       <Dialog open={uploadAttachmentDialog} onClose={() => setUploadAttachmentDialog(false)}>
         <DialogContent>
