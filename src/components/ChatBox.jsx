@@ -15,8 +15,8 @@ function ChatBox({ messages }) {
     <Container
       maxWidth='lg'
       sx={{
-        maxHeight: 800,
-        minHeight: 800,
+        maxHeight: 775,
+        minHeight: 775,
         bgcolor: 'chatBackground.main',
         border: '1px solid',
         borderColor: 'primary.main',

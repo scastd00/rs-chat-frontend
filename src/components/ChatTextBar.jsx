@@ -9,6 +9,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Popover,
   TextField,
   Typography,
 } from '@mui/material';
@@ -16,23 +17,34 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachmentIcon from '@mui/icons-material/Attachment';
 import { useDropzone } from 'react-dropzone';
 import { SUPPORTED_FILES } from '../utils/constants';
+import EmojiService from '../services/EmojiService';
+import { useStore } from 'react-redux';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
+  const userState = useStore().getState().user;
+
+  const [anchorEl, setAnchorEl] = useState(null); // Only set once
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
     accept: SUPPORTED_FILES,
   });
   const [dropzoneHover, setDropzoneHover] = useState('grey');
-  // const [filesError, setFilesError] = useState({ show: false, text: 'Hola' });
   const [selectedImages, setSelectedImages] = useState([]);
   const [uploadAttachmentDialog, setUploadAttachmentDialog] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [enableSendIcon, setEnableSendIcon] = useState(false);
+  const [listOfEmojis, setListOfEmojis] = useState([]);
+  const [selectingEmoji, setSelectingEmoji] = useState(false);
 
   useEffect(() => {
-    setSelectedImages(acceptedFiles.map((file) => file));
+    setSelectedImages(acceptedFiles.map(file => file));
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    // Enable send icon when message is not empty (or images are attached)
+    setEnableSendIcon(message.trim().length > 0 || attachedFiles.length > 0);
+  }, [message, attachedFiles]);
 
   function handleSendButton(evt) {
     evt.currentTarget
@@ -44,10 +56,41 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     performMessageSend(); // Outside the if statement to be able to send attachments without text
   }
 
-  function handleSendEnter(evt) {
-    if (evt.code === 'Enter') {
-      performMessageSend();
+  function handleKeyDown(evt) {
+    if (!anchorEl) {
+      setAnchorEl(evt.currentTarget); // First time to have it stored to display the list of emojis
     }
+
+    if (evt.key === 'Enter') {
+      performMessageSend();
+    } else if (evt.key === ':') {
+      EmojiService
+        .getRandomEmojis(userState.tokens.accessToken)
+        .then(res => {
+          setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
+          setSelectingEmoji(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
+
+  function getEmojiIconFromUnicode(emoji) {
+    return {
+      ...emoji,
+      icon: emoji.unicode
+                 .split(' ')
+                 .map((u) => String.fromCodePoint(parseInt(u, 16)))
+                 .join(''),
+    };
+  }
+
+  function resetAllStates() {
+    setMessage('');
+    setAttachedFiles([]);
+    setSelectedImages([]);
+    setSelectingEmoji(false);
   }
 
   function performMessageSend() {
@@ -61,10 +104,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       sendFiles(attachedFiles);
     }
 
-    setMessage('');
-    setAttachedFiles([]);
-    setSelectedImages([]);
-    setEnableSendIcon(false);
+    resetAllStates();
   }
 
   function handleDropzoneCloseWithFileRemoval() {
@@ -101,7 +141,6 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       .all(promises)
       .then(files => {
         setAttachedFiles(files);
-        setEnableSendIcon(true);
         setTimeout(() => setSelectedImages([]), 200);
       })
       .catch((err) => {
@@ -109,22 +148,93 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       });
   }
 
+  function addEmojiToTextBox(evt) {
+    const messageWithoutEmojiName = message.substring(0, message.lastIndexOf(':'));
+    setMessage(messageWithoutEmojiName + evt.currentTarget.innerText + ' ');
+    setSelectingEmoji(false);
+    document.getElementById('TextBox').focus();
+  }
+
+  function handleTextChange(evt) {
+    const evtValue = evt.target.value;
+    setMessage(evtValue);
+
+    if (selectingEmoji) {
+      if (!evtValue.includes(':')) {
+        setSelectingEmoji(false);
+        return;
+      }
+
+      const emojiName = evtValue.split(':').pop() // Get the string from the ':' to the end of the string
+                                .split(' ').shift(); // Get the first word (the one closer to ':')
+
+      if (emojiName.length === 0) {
+        return;
+      }
+
+      EmojiService
+        .getEmojiContainsString(emojiName, userState.tokens.accessToken)
+        .then(res => setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode)))
+        .catch(() => {
+          setSelectingEmoji(false);
+        });
+    }
+  }
+
+  // Todo: when cancel or completed the emoji, the remaining text should remain intact. (With regex could be done, maybe)
+  // Todo: list of emojis is not cleared to not produce visualization problems
+
+  function handleCancelAddEmoji() {
+    setSelectingEmoji(false);
+    setMessage(message.substring(0, message.lastIndexOf(':')));
+  }
+
   return (
     <>
       <CssBaseline />
+
+      <Popover
+        open={selectingEmoji}
+        anchorEl={anchorEl}
+        onFocusCapture={evt => evt.preventDefault()}
+        disableEnforceFocus={true}
+        disableAutoFocus={true}
+        onClose={handleCancelAddEmoji}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}
+        transformOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Grid container direction='row' spacing={0.5}>
+          {
+            listOfEmojis.map(emoji => {
+              return (
+                <Grid item key={emoji.id}>
+                  <IconButton onClick={addEmojiToTextBox}>
+                    {emoji.icon}
+                  </IconButton>
+                </Grid>
+              );
+            })
+          }
+        </Grid>
+      </Popover>
+
       <TextField
         margin='normal'
         fullWidth
         size='small'
-        id='Text'
+        id='TextBox'
         label='Text'
         name='text'
         color='secondary'
-        onKeyDown={handleSendEnter}
-        onChange={(evt) => {
-          setMessage(evt.target.value);
-          setEnableSendIcon(evt.target.value.trim().length !== 0);
-        }}
+        onKeyDown={handleKeyDown}
+        onChange={handleTextChange}
+        autoComplete='off'
         autoFocus
         value={message}
         InputProps={{
