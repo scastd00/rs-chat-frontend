@@ -19,6 +19,7 @@ import { useDropzone } from 'react-dropzone';
 import { SUPPORTED_FILES } from '../utils/constants';
 import EmojiService from '../services/EmojiService';
 import { useStore } from 'react-redux';
+import { EmojiEmotions } from '@mui/icons-material';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const userState = useStore().getState().user;
@@ -224,34 +225,43 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         </Grid>
       </Popover>
 
-      <TextField
-        margin='normal'
-        fullWidth
-        size='small'
-        id='TextBox'
-        label='Text'
-        name='text'
-        color='secondary'
-        onKeyDown={handleKeyDown}
-        onChange={handleTextChange}
-        autoComplete='off'
-        autoFocus
-        value={message}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton onClick={() => setUploadAttachmentDialog(true)}>
-                <Badge badgeContent={attachedFiles.length} color='primary'>
-                  <AttachmentIcon sx={{ transform: 'rotate(-45deg)' }} />
-                </Badge>
-              </IconButton>
-              <IconButton onClick={handleSendButton} disabled={!enableSendIcon}>
-                <SendIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
+      <Grid container alignItems='center' justifyContent='center' spacing={1} sx={{ mt: 1 }}>
+        <Grid item>
+          <IconButton onClick={() => setSelectingEmoji(true)}>
+            <EmojiEmotions />
+          </IconButton>
+        </Grid>
+
+        <Grid item xs>
+          <TextField
+            fullWidth
+            size='small'
+            id='TextBox'
+            label='Text'
+            name='text'
+            color='secondary'
+            onKeyDown={handleKeyDown}
+            onChange={handleTextChange}
+            autoComplete='off'
+            autoFocus
+            value={message}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton onClick={() => setUploadAttachmentDialog(true)}>
+                    <Badge badgeContent={attachedFiles.length} color='primary'>
+                      <AttachmentIcon sx={{ transform: 'rotate(-45deg)' }} />
+                    </Badge>
+                  </IconButton>
+                  <IconButton onClick={handleSendButton} disabled={!enableSendIcon}>
+                    <SendIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+      </Grid>
 
       <Dialog open={uploadAttachmentDialog} onClose={() => setUploadAttachmentDialog(false)}>
         <DialogContent>
