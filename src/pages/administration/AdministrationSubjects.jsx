@@ -34,7 +34,7 @@ function AdministrationSubjects() {
     <Container>
       <CssBaseline />
 
-      <Button onClick={() => setCreateSubjectDialogOpen(true)}>Add</Button>
+      <Button sx={{ mt: 2 }} onClick={() => setCreateSubjectDialogOpen(true)}>Add</Button>
 
       <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
         {

@@ -31,7 +31,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     accept: SUPPORTED_FILES,
   });
   const [dropzoneHover, setDropzoneHover] = useState('grey');
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadAttachmentDialog, setUploadAttachmentDialog] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [enableSendIcon, setEnableSendIcon] = useState(false);
@@ -39,7 +39,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [selectingEmoji, setSelectingEmoji] = useState(false);
 
   useEffect(() => {
-    setSelectedImages(acceptedFiles.map(file => file));
+    setSelectedFiles(acceptedFiles.map(file => file));
   }, [acceptedFiles]);
 
   useEffect(() => {
@@ -58,22 +58,13 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function handleKeyDown(evt) {
-    if (!anchorEl) {
-      setAnchorEl(evt.currentTarget); // First time to have it stored to display the list of emojis
-    }
+    // Todo: set it when the emoji button is clicked
+    // if (!anchorEl) {
+    //   setAnchorEl(evt.currentTarget); // First time to have it stored to display the list of emojis
+    // }
 
     if (evt.key === 'Enter') {
       performMessageSend();
-    } else if (evt.key === ':') {
-      EmojiService
-        .getRandomEmojis(userState.tokens.accessToken)
-        .then(res => {
-          setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
-          setSelectingEmoji(true);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     }
   }
 
@@ -90,7 +81,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   function resetAllStates() {
     setMessage('');
     setAttachedFiles([]);
-    setSelectedImages([]);
+    setSelectedFiles([]);
     setSelectingEmoji(false);
   }
 
@@ -108,14 +99,14 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     resetAllStates();
   }
 
-  function handleDropzoneCloseWithFileRemoval() {
+  function closeDropzone() {
     setUploadAttachmentDialog(false);
   }
 
-  function handleAttachments() {
+  function attachFiles() {
     setUploadAttachmentDialog(false);
 
-    const promises = selectedImages.map(file =>
+    const promises = selectedFiles.map(file =>
       new Promise((resolve, reject) => {
         const reader = new FileReader();
 
@@ -142,7 +133,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       .all(promises)
       .then(files => {
         setAttachedFiles(files);
-        setTimeout(() => setSelectedImages([]), 200);
+        setTimeout(() => setSelectedFiles([]), 200);
       })
       .catch((err) => {
         console.log('err', err);
@@ -150,44 +141,26 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function addEmojiToTextBox(evt) {
-    const messageWithoutEmojiName = message.substring(0, message.lastIndexOf(':'));
-    setMessage(messageWithoutEmojiName + evt.currentTarget.innerText + ' ');
+    setMessage(message + evt.currentTarget.innerText + ' ');
     setSelectingEmoji(false);
     document.getElementById('TextBox').focus();
-  }
-
-  function handleTextChange(evt) {
-    const evtValue = evt.target.value;
-    setMessage(evtValue);
-
-    if (selectingEmoji) {
-      if (!evtValue.includes(':')) {
-        setSelectingEmoji(false);
-        return;
-      }
-
-      const emojiName = evtValue.split(':').pop() // Get the string from the ':' to the end of the string
-                                .split(' ').shift(); // Get the first word (the one closer to ':')
-
-      if (emojiName.length === 0) {
-        return;
-      }
-
-      EmojiService
-        .getEmojiContainsString(emojiName, userState.tokens.accessToken)
-        .then(res => setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode)))
-        .catch(() => {
-          setSelectingEmoji(false);
-        });
-    }
   }
 
   // Todo: when cancel or completed the emoji, the remaining text should remain intact. (With regex could be done, maybe)
   // Todo: list of emojis is not cleared to not produce visualization problems
 
-  function handleCancelAddEmoji() {
-    setSelectingEmoji(false);
-    setMessage(message.substring(0, message.lastIndexOf(':')));
+  function showEmojisFromButton(evt) {
+    setAnchorEl(evt.currentTarget);
+
+    EmojiService
+      .getRandomEmojis(10, userState.tokens.accessToken)
+      .then(res => {
+        setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
+        setSelectingEmoji(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   return (
@@ -200,7 +173,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         onFocusCapture={evt => evt.preventDefault()}
         disableEnforceFocus={true}
         disableAutoFocus={true}
-        onClose={handleCancelAddEmoji}
+        onClose={() => setSelectingEmoji(false)}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
@@ -227,7 +200,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
 
       <Grid container alignItems='center' justifyContent='center' spacing={1} sx={{ mt: 1 }}>
         <Grid item>
-          <IconButton onClick={() => setSelectingEmoji(true)}>
+          <IconButton onClick={showEmojisFromButton}>
             <EmojiEmotions />
           </IconButton>
         </Grid>
@@ -241,7 +214,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
             name='text'
             color='secondary'
             onKeyDown={handleKeyDown}
-            onChange={handleTextChange}
+            onChange={(evt) => setMessage(evt.target.value)}
             autoComplete='off'
             autoFocus
             value={message}
@@ -282,11 +255,11 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
                 </Typography>
               </div>
               {
-                selectedImages.length > 0 && (
+                selectedFiles.length > 0 && (
                   <ul>
                     {
-                      selectedImages.map((imageFile) => {
-                        return <li key={imageFile.name}>{imageFile.name}</li>;
+                      selectedFiles.map(file => {
+                        return <li key={file.name}>{file.name}</li>;
                       })
                     }
                   </ul>
@@ -297,8 +270,8 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         </DialogContent>
 
         <DialogActions>
-          <Button color='error' onClick={handleDropzoneCloseWithFileRemoval}>Cancel</Button>
-          <Button color='success' onClick={handleAttachments}>Attach</Button>
+          <Button color='error' onClick={closeDropzone}>Cancel</Button>
+          <Button color='success' onClick={attachFiles}>Attach</Button>
         </DialogActions>
       </Dialog>
     </>
