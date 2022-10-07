@@ -27,7 +27,7 @@ function AdministrationGroups() {
     <Container>
       <CssBaseline />
 
-      <Button onClick={() => setCreateGroupDialogOpen(true)}>Add</Button>
+      <Button sx={{ mt: 2 }} onClick={() => setCreateGroupDialogOpen(true)}>Add</Button>
 
       <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
         {
