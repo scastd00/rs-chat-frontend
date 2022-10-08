@@ -12,12 +12,14 @@ import { checkResponse } from '../utils';
 import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 import FileService from '../services/FileService';
+import { useAudio } from '../hooks/useAudio';
 
 function Chat() {
   const { id } = useParams();
   const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
 
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
@@ -106,6 +108,7 @@ function Chat() {
       handleError,
       displayActiveUsers,
       handleHistory,
+      toggle,
     );
 
     return () => {

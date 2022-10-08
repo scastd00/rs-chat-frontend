@@ -11,10 +11,10 @@ export default createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#e7a09b',
+      main: '#ffada5',
     },
     secondary: {
-      main: '#648888',
+      main: '#66bdbd',
     },
     error: {
       main: '#f44336',

@@ -37,7 +37,7 @@ function Home() {
                           <Grid item container key={idx2} xs={3} sx={{ p: 1 }} justifyContent='center'>
                             <Link style={{ display: 'block' }} underline='none'>
                               <Button
-                                variant='outlined'
+                                variant='contained'
                                 disableElevation
                                 color='secondary'
                                 onClick={() => navigate(`/chat/${chatType}-${chatId}`)}
