@@ -3,6 +3,7 @@ import { Container, Grid } from '@mui/material';
 import UserMessage from './UserMessage';
 import ServerMessage from './ServerMessage';
 import { isUserMessage } from '../utils';
+import { getWindowSize } from '../utils/constants';
 
 function ChatBox({ messages }) {
   const divRef = useRef(null);
@@ -15,8 +16,8 @@ function ChatBox({ messages }) {
     <Container
       maxWidth='lg'
       sx={{
-        maxHeight: 775,
-        minHeight: 775,
+        minHeight: getWindowSize().innerHeight - 200,
+        maxHeight: getWindowSize().innerHeight - 200,
         bgcolor: 'chatBackground.main',
         border: '1px solid',
         borderColor: 'primary.main',
