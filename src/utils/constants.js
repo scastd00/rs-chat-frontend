@@ -7,3 +7,8 @@ export const SUPPORTED_FILES = {
 };
 
 export const PING_INTERVAL = 30000;
+
+export function getWindowSize() {
+  const { innerWidth, innerHeight } = window;
+  return { innerWidth, innerHeight };
+}

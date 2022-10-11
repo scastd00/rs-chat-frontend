@@ -1,6 +1,8 @@
 import { createTheme } from '@mui/material/styles';
+import { breakpointValues } from './constants';
 
 export default createTheme({
+  breakpoints: breakpointValues,
   mixins: {
     toolbar: {
       minHeight: 60,
@@ -11,10 +13,10 @@ export default createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: '#e7a09b',
+      main: '#ffada5',
     },
     secondary: {
-      main: '#648888',
+      main: '#66bdbd',
     },
     error: {
       main: '#f44336',

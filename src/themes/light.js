@@ -1,6 +1,8 @@
 import { createTheme } from '@mui/material/styles';
+import { breakpointValues } from './constants';
 
 export default createTheme({
+  breakpoints: breakpointValues,
   mixins: {
     toolbar: {
       minHeight: 60,

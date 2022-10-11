@@ -9,7 +9,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Popover,
   TextField,
   Typography,
 } from '@mui/material';
@@ -20,6 +19,7 @@ import { SUPPORTED_FILES } from '../utils/constants';
 import EmojiService from '../services/EmojiService';
 import { useStore } from 'react-redux';
 import { EmojiEmotions } from '@mui/icons-material';
+import EmojiPopover from './EmojiPopover';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const userState = useStore().getState().user;
@@ -167,36 +167,13 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     <>
       <CssBaseline />
 
-      <Popover
-        open={selectingEmoji}
+      <EmojiPopover
         anchorEl={anchorEl}
-        onFocusCapture={evt => evt.preventDefault()}
-        disableEnforceFocus={true}
-        disableAutoFocus={true}
         onClose={() => setSelectingEmoji(false)}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-        transformOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
-        }}
-      >
-        <Grid container direction='row' spacing={0.5}>
-          {
-            listOfEmojis.map(emoji => {
-              return (
-                <Grid item key={emoji.id}>
-                  <IconButton onClick={addEmojiToTextBox}>
-                    {emoji.icon}
-                  </IconButton>
-                </Grid>
-              );
-            })
-          }
-        </Grid>
-      </Popover>
+        open={selectingEmoji}
+        listOfEmojis={listOfEmojis}
+        addEmojiToTextBox={addEmojiToTextBox}
+      />
 
       <Grid container alignItems='center' justifyContent='center' spacing={1} sx={{ mt: 1 }}>
         <Grid item>

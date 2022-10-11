@@ -12,12 +12,15 @@ import { checkResponse } from '../utils';
 import { TEXT_MESSAGE } from '../net/ws/MessageProps';
 import ActiveUsers from '../components/ActiveUsers';
 import FileService from '../services/FileService';
+import { useAudio } from '../hooks/useAudio';
+import useAdapt from '../hooks/useAdapt';
 
 function Chat() {
   const { id } = useParams();
   const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
 
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
@@ -106,6 +109,7 @@ function Chat() {
       handleError,
       displayActiveUsers,
       handleHistory,
+      toggle,
     );
 
     return () => {
@@ -148,40 +152,38 @@ function Chat() {
       });
   }
 
+  const { direction } = useAdapt();
+
   return (
-    <Grid container>
-      <CssBaseline />
+    <CssBaseline>
+      {showPage && (
+        <Grid container direction={direction}>
+          <Grid item xs>
+            <Container component='main' sx={{ pt: 1 }}>
+              <CssBaseline />
 
-      {
-        showPage && (
-          <>
-            <Grid item xs>
-              <Container component='main' sx={{ pt: 1 }}>
-                <CssBaseline />
-
-                <Grid container direction='column' spacing={1}>
-                  <Grid item>
-                    <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
-                  </Grid>
-
-                  <Grid item>
-                    <ChatBox messages={queue} />
-                  </Grid>
-
-                  <Grid item>
-                    <ChatTextBar sendTextMessage={sendTextMessage} sendFiles={uploadFiles} />
-                  </Grid>
+              <Grid container direction='column' spacing={1}>
+                <Grid item>
+                  <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
                 </Grid>
-              </Container>
-            </Grid>
 
-            <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
-              <ActiveUsers activeUsers={activeUsers} />
-            </Grid>
-          </>
-        )
-      }
-    </Grid>
+                <Grid item>
+                  <ChatBox messages={queue} />
+                </Grid>
+
+                <Grid item>
+                  <ChatTextBar sendTextMessage={sendTextMessage} sendFiles={uploadFiles} />
+                </Grid>
+              </Grid>
+            </Container>
+          </Grid>
+
+          <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
+            <ActiveUsers activeUsers={activeUsers} />
+          </Grid>
+        </Grid>
+      )}
+    </CssBaseline>
   );
 }
 

@@ -108,7 +108,7 @@ RSWSClient.prototype.disconnect = function() {
  * @param {function(string[]): void} historyCallback
  */
 RSWSClient.prototype.onMessage = function(
-  displayCallback, errorCallback, activeUsersCallback, historyCallback,
+  displayCallback, errorCallback, activeUsersCallback, historyCallback, playSoundOnMessage,
 ) {
   // Todo: function to parse messages (base64 -> binary)
 
@@ -132,6 +132,7 @@ RSWSClient.prototype.onMessage = function(
       // Do nothing
     } else {
       displayCallback(parsedMessage);
+      playSoundOnMessage();
 
       // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
       // to the server to get the updated list of active users.
