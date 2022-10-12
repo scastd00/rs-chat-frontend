@@ -21,7 +21,7 @@ function AdministrationGroups() {
       .getAllGroups(userState.tokens.accessToken)
       .then(res => setAllGroups(JSON.parse(res.data.groups)))
       .catch(err => checkResponse(err, navigate, dispatch));
-  })
+  }, []);
 
   return (
     <Container>
@@ -48,6 +48,7 @@ function AdministrationGroups() {
       <CreateGroupDialog
         open={createGroupDialogOpen}
         onClose={() => setCreateGroupDialogOpen(false)}
+        addToVisibleList={group => setAllGroups([...allGroups, group])}
       />
     </Container>
   );

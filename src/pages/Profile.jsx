@@ -3,10 +3,6 @@ import {
   Button,
   Container,
   CssBaseline,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   Divider,
   Grid,
   List,
@@ -175,7 +171,7 @@ function Profile() {
             {
               sessions.map((session, index) => (
                 React.cloneElement(
-                  <ListItem key={index} sx={{ height: 30 }}>
+                  <ListItem key={index} sx={{ height: 30, ml: 6 }}>
                     <ListItemIcon sx={{ mr: -2 }}>
                       <ArrowRightIcon />
                     </ListItemIcon>
