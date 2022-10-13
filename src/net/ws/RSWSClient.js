@@ -100,18 +100,15 @@ RSWSClient.prototype.disconnect = function() {
  * Establishes a function that will be executed each time the socket
  * receives a message.
  *
- * @param {function(string): void} displayCallback function to execute when
- * receiving a message.
- * @param {function(): void} errorCallback function to execute when an
- * error message is received.
- * @param {function(string[]): void} activeUsersCallback
- * @param {function(string[]): void} historyCallback
+ * @param {function(string): void} displayCallback function to execute when receiving a message.
+ * @param {function(): void} errorCallback function to execute when an error message is received.
+ * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
+ * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
+ * @param {function(): void} playSoundOnMessage function to execute when a message is received.
  */
 RSWSClient.prototype.onMessage = function(
   displayCallback, errorCallback, activeUsersCallback, historyCallback, playSoundOnMessage,
 ) {
-  // Todo: function to parse messages (base64 -> binary)
-
   this.socket.onmessage = (message) => {
     if (!this.connected) {
       return;
