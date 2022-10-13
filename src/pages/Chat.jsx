@@ -10,7 +10,7 @@ import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
 import { TEXT_MESSAGE } from '../net/ws/MessageProps';
-import ActiveUsers from '../components/ActiveUsers';
+import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
@@ -24,6 +24,7 @@ function Chat() {
 
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const userState = useStore().getState().user;
   const [client] = useState(() => new RSWSClient(
     userState.user.username,
@@ -62,6 +63,15 @@ function Chat() {
           name: res.data.name,
           metadata: JSON.parse(res.data.metadata),
         });
+      })
+      .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    ChatService
+      .getAllUsersOfChat(chatId, userState.tokens.accessToken)
+      .then(res => {
+        setAllUsers(res.data.users);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -179,7 +189,7 @@ function Chat() {
           </Grid>
 
           <Grid item m={1} xs={2} sx={{ border: '1px solid', borderColor: 'secondary.main' }}>
-            <ActiveUsers activeUsers={activeUsers} />
+            <UsersList activeUsers={activeUsers} allUsers={allUsers} />
           </Grid>
         </Grid>
       )}
