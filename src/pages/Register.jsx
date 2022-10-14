@@ -17,17 +17,15 @@ import {
   useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { setAvailableChats, setSessionId, setTokens, setUser } from '../actions';
 import AuthService from '../services/AuthService';
 import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
 import { PuffLoader } from 'react-spinners';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Register() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
 
   const [registerError, setRegisterError] = useState('');
   const [password, setPassword] = useState('');
