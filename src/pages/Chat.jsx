@@ -20,6 +20,7 @@ function Chat() {
   const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // Todo: host this resource in home server
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
 
   const [showPage, setShowPage] = useState(false);

@@ -9,12 +9,12 @@ import {
   USER_LEFT,
 } from './MessageProps';
 import { createMessage, isActivityMessage } from '../../utils';
-import { PING_INTERVAL } from '../../utils/constants';
+import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
-    ? 'wss://rschat-ws-back.herokuapp.com/ws/rschat'
-    : 'ws://localhost:8080/ws/rschat';
+    ? `ws://${PROD_HOST}/ws/rschat` // Todo: check if we can use wss
+    : `ws://${DEV_HOST}/ws/rschat`;
 
   this.socket = new WebSocket(url);
   this.username = username;
