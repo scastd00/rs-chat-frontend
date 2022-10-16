@@ -7,10 +7,9 @@ export function useAudio(url) {
   const toggle = () => setPlaying(!playing);
 
   useEffect(() => {
-      audio.volume = 0.1;
-      playing ? audio.play() : audio.pause();
-    }, [playing],
-  );
+    audio.volume = 0.1;
+    playing ? audio.play() : audio.pause();
+  }, [playing]);
 
   useEffect(() => {
     audio.addEventListener('ended', () => setPlaying(false));
@@ -21,4 +20,4 @@ export function useAudio(url) {
   }, []);
 
   return [playing, toggle];
-};
+}

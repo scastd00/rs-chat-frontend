@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { DEV_HOST, PROD_HOST } from '../utils/constants';
 
 const Api = axios.create({
   baseURL: import.meta.env.PROD
-    ? 'https://rschat-ws-back.herokuapp.com/api/v1'
-    : 'http://127.0.0.1:8080/api/v1',
+    ? `http://${PROD_HOST}/api/v1`
+    : `http://${DEV_HOST}/api/v1`,
 });
 
 export default Api;

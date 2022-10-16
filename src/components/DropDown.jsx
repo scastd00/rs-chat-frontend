@@ -29,7 +29,7 @@ function DropDown({ title, children, drop, button }) {
       {!dropped ? (
         ''
       ) : (
-        <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
+        <Grid container direction='column' spacing={1} py={1}>
           {childrenToRender}
         </Grid>
       )}

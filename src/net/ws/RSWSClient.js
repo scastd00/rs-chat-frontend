@@ -9,12 +9,12 @@ import {
   USER_LEFT,
 } from './MessageProps';
 import { createMessage, isActivityMessage } from '../../utils';
-import { PING_INTERVAL } from '../../utils/constants';
+import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
-    ? 'wss://rschat-ws-back.herokuapp.com/ws/rschat'
-    : 'ws://localhost:8080/ws/rschat';
+    ? `ws://${PROD_HOST}/ws/rschat` // Todo: check if we can use wss
+    : `ws://${DEV_HOST}/ws/rschat`;
 
   this.socket = new WebSocket(url);
   this.username = username;
@@ -100,18 +100,15 @@ RSWSClient.prototype.disconnect = function() {
  * Establishes a function that will be executed each time the socket
  * receives a message.
  *
- * @param {function(string): void} displayCallback function to execute when
- * receiving a message.
- * @param {function(): void} errorCallback function to execute when an
- * error message is received.
- * @param {function(string[]): void} activeUsersCallback
- * @param {function(string[]): void} historyCallback
+ * @param {function(string): void} displayCallback function to execute when receiving a message.
+ * @param {function(): void} errorCallback function to execute when an error message is received.
+ * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
+ * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
+ * @param {function(): void} playSoundOnMessage function to execute when a message is received.
  */
 RSWSClient.prototype.onMessage = function(
   displayCallback, errorCallback, activeUsersCallback, historyCallback, playSoundOnMessage,
 ) {
-  // Todo: function to parse messages (base64 -> binary)
-
   this.socket.onmessage = (message) => {
     if (!this.connected) {
       return;

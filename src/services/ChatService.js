@@ -13,4 +13,8 @@ export default {
   userCanConnect(chatId, userId, __token__) {
     return Api.post(`/chat/connect/${chatId}`, { userId }, headers(__token__));
   },
+
+  getAllUsersOfChat(chatId, __token__) {
+    return Api.get(`/chat/users/${chatId}`, headers(__token__));
+  },
 };

@@ -17,6 +17,7 @@ import AdministrationSubjects from '../pages/administration/AdministrationSubjec
 import AdministrationGroups from '../pages/administration/AdministrationGroups';
 import AdministrationUsers from '../pages/administration/AdministrationUsers';
 import AdministrationStatistics from '../pages/administration/AdministrationStatistics';
+import AdministrationAddUser from '../pages/administration/AdministrationAddUser';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -42,6 +43,7 @@ export const ADMINISTRATION_ROUTES = [
   { path: '/administration/groups', component: AdministrationGroups },
   { path: '/administration/group/:id', component: AdministerGroup },
   { path: '/administration/users', component: AdministrationUsers },
+  { path: '/administration/users/addUser', component: AdministrationAddUser },
   { path: '/administration/user/:id', component: AdministerUser },
   { path: '/administration/statistics', component: AdministrationStatistics },
 ];

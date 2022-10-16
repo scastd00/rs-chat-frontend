@@ -1,5 +1,4 @@
 import Api from './Api';
-import { headers } from '../utils';
 
 export default {
   login(credentials) {
