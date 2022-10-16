@@ -13,7 +13,7 @@ import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
-    ? `ws://${PROD_HOST}/ws/rschat` // Todo: check if we can use wss
+    ? `wss://${PROD_HOST}/ws/rschat` // Todo: check if we can use wss
     : `ws://${DEV_HOST}/ws/rschat`;
 
   this.socket = new WebSocket(url);
