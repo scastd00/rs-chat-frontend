@@ -14,4 +14,4 @@ export function getWindowSize() {
 }
 
 export const PROD_HOST = `${import.meta.env.VITE_SERVER_HOST}:4040`;
-export const DEV_HOST = `127.0.0.1:4041`;
+export const DEV_HOST = `${import.meta.env.VITE_SERVER_HOST}:4041`;

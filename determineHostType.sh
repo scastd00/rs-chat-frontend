@@ -12,7 +12,7 @@ main() {
     echo 'VITE_SERVER_HOST=192.168.0.100' >.env
   else
     # The computer is away home
-    echo 'VITE_SERVER_HOST=rs-server-ast.duckdns.org' >.env
+    echo 'VITE_SERVER_HOST=rs-chat.duckdns.org' >.env
   fi
 }
 
