@@ -4,9 +4,9 @@ import DegreeService from '../../../services/DegreeService';
 import { checkResponse } from '../../../utils';
 import { useStore } from 'react-redux';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import Link from '@mui/material/Link';
 import { useClipboard } from '../../../hooks/useClipboard';
 import { CreateDegreeDialog } from '../../../components/admin/dialogs';
+import AdministrationListItem from '../../../components/admin/AdministrationListItem';
 
 function AdministrationDegrees() {
   const userState = useStore().getState().user;
@@ -19,7 +19,9 @@ function AdministrationDegrees() {
   useEffect(() => {
     DegreeService
       .getAllDegrees(userState.tokens.accessToken)
-      .then(res => setAllDegrees(JSON.parse(res.data.degrees)))
+      .then(res => {
+        setAllDegrees(JSON.parse(res.data.degrees));
+      })
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
@@ -29,17 +31,16 @@ function AdministrationDegrees() {
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateDegreeDialogOpen(true)}>Add</Button>
 
-      <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
+      <Grid container direction='column' py={1}>
         {
           allDegrees.map(deg => (
             <Grid item key={deg.id}>
-              <Link
-                sx={{ cursor: 'pointer', color: 'text.primary' }}
-                underline='hover'
-                onClick={() => copyToClipboard(deg.invitationCode)}
-              >
-                {deg.name}
-              </Link>
+              <AdministrationListItem
+                id={deg.id}
+                type='degrees'
+                name={deg.name}
+                invitationCode={deg.invitationCode}
+              />
             </Grid>
           ))
         }
@@ -48,7 +49,7 @@ function AdministrationDegrees() {
       <CreateDegreeDialog
         open={createDegreeDialogOpen}
         onClose={() => setCreateDegreeDialogOpen(false)}
-        onDegreeCreate={(newDegree) => setAllDegrees([...allDegrees, newDegree])}
+        addToVisibleList={(newDegree) => setAllDegrees([...allDegrees, newDegree])}
       />
     </Container>
   );

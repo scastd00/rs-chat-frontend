@@ -3,11 +3,11 @@ import { useNavDis } from '../../../hooks/useNavDis';
 import SubjectService from '../../../services/SubjectService';
 import { checkResponse } from '../../../utils';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import Link from '@mui/material/Link';
 import { CreateSubjectDialog } from '../../../components/admin/dialogs';
 import { useClipboard } from '../../../hooks/useClipboard';
 import { useStore } from 'react-redux';
 import DegreeService from '../../../services/DegreeService';
+import AdministrationListItem from '../../../components/admin/AdministrationListItem';
 
 function AdministrationSubjects() {
   const userState = useStore().getState().user;
@@ -36,17 +36,16 @@ function AdministrationSubjects() {
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateSubjectDialogOpen(true)}>Add</Button>
 
-      <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
+      <Grid container direction='column' py={1}>
         {
           allSubjects.map(sub => (
             <Grid item key={sub.id}>
-              <Link
-                sx={{ cursor: 'pointer', color: 'text.primary' }}
-                underline='hover'
-                onClick={() => copyToClipboard(sub.invitationCode)}
-              >
-                {sub.name}
-              </Link>
+              <AdministrationListItem
+                id={sub.id}
+                type='subjects'
+                name={sub.name}
+                invitationCode={sub.invitationCode}
+              />
             </Grid>
           ))
         }
@@ -55,6 +54,7 @@ function AdministrationSubjects() {
       <CreateSubjectDialog
         open={createSubjectDialogOpen}
         onClose={() => setCreateSubjectDialogOpen(false)}
+        addToVisibleList={subject => setAllSubjects([...allSubjects, subject])}
         allDegrees={allDegrees}
       />
     </Container>

@@ -12,10 +12,13 @@ function CreateGroupDialog({ open, onClose, addToVisibleList }) {
   const dispatch = useDispatch();
 
   const handleGroupCreation = () => {
+    if (groupProps.name.trim().length === 0)
+      return;
+
     GroupService
       .addGroup(groupProps, userState.tokens.accessToken)
       .then(res => {
-        addToVisibleList(JSON.parse(res.data.data));
+        addToVisibleList(JSON.parse(res.data.group));
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
