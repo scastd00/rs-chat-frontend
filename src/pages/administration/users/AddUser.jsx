@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { useStore } from 'react-redux';
-import { useNavDis } from '../../hooks/useNavDis';
-import { Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
+import { useNavDis } from '../../../hooks/useNavDis';
+import {
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  Link,
+  MenuItem,
+  Typography,
+} from '@mui/material';
 import TextField from '@mui/material/TextField';
-import UserService from '../../services/UserService';
-import { checkResponse } from '../../utils';
-import SnackAlert from '../../components/SnackAlert';
+import UserService from '../../../services/UserService';
+import { checkResponse } from '../../../utils';
+import SnackAlert from '../../../components/SnackAlert';
 
-function AdministrationAddUser(props) {
+function AddUser() {
   const userState = useStore().getState().user;
   const [navigate, dispatch] = useNavDis();
   const [formData, setFormData] = useState({
@@ -16,6 +26,8 @@ function AdministrationAddUser(props) {
     fullName: '',
     password: '',
     confirmPassword: '',
+    role: 'STUDENT',
+    agreeTerms: false,
   });
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -29,6 +41,8 @@ function AdministrationAddUser(props) {
           fullName: '',
           password: '',
           confirmPassword: '',
+          role: '',
+          agreeTerms: true,
         });
       })
       .catch(err => {
@@ -126,6 +140,44 @@ function AdministrationAddUser(props) {
             onChange={(evt) => setFormData({ ...formData, confirmPassword: evt.target.value })}
           />
         </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            select
+            value={formData.role}
+            required
+            fullWidth
+            size='small'
+            id='role'
+            label='Role'
+            margin='dense'
+            onChange={(evt) => setFormData({ ...formData, role: evt.target.value })}
+          >
+            <MenuItem value='STUDENT'>Student</MenuItem>
+            <MenuItem value='TEACHER'>Teacher</MenuItem>
+            <MenuItem value='ADMINISTRATOR'>Administrator</MenuItem>
+          </TextField>
+        </Grid>
+
+        <Grid item xs={12}>
+          <FormControlLabel
+            onChange={(event) => setFormData({ ...formData, agreeTerms: event.target.checked })}
+            checked={formData.agreeTerms}
+            control={<Checkbox value='terms' color='primary' />}
+            label={
+              <Typography fontSize={14}>
+                Registering means you that the user has read and agree to the{' '}
+                <Link underline='hover' style={{ cursor: 'pointer' }} onClick={() => navigate('/terms')}>
+                  Terms of Service
+                </Link> and{' '}
+                <Link underline='hover' style={{ cursor: 'pointer' }} onClick={() => navigate('/privacy')}>
+                  Privacy Policy
+                </Link>
+                .
+              </Typography>
+            }
+          />
+        </Grid>
       </Grid>
 
       <Grid container spacing={2}>
@@ -133,7 +185,7 @@ function AdministrationAddUser(props) {
           <Button color='success' variant='contained' onClick={handleConfirm}>Confirm</Button>
         </Grid>
         <Grid item>
-          <Button color='error' variant='contained'>Cancel</Button>
+          <Button color='error' variant='contained' onClick={() => navigate('/administration/users')}>Cancel</Button>
         </Grid>
       </Grid>
 
@@ -144,4 +196,4 @@ function AdministrationAddUser(props) {
   );
 }
 
-export default AdministrationAddUser;
+export default AddUser;

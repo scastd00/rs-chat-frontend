@@ -255,8 +255,7 @@ function Register() {
                     Registering means you that you have read and agree to the{' '}
                     <Link underline='hover' style={{ cursor: 'pointer' }} onClick={() => navigate('/terms')}>
                       Terms of Service
-                    </Link>{' '}
-                    and{' '}
+                    </Link> and{' '}
                     <Link underline='hover' style={{ cursor: 'pointer' }} onClick={() => navigate('/privacy')}>
                       Privacy Policy
                     </Link>

@@ -1,18 +1,17 @@
 import React from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
-import { useStore } from 'react-redux';
+import { useNavDis } from '../../../hooks/useNavDis';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
 
 function AdministrationUsers() {
-  const userState = useStore().getState().user;
-  const [navigate, dispatch] = useNavDis();
+  const [navigate] = useNavDis();
 
   /*
    * Map that allows to create routes inside /administration/users
    * The key is the route path and the value is the button text.
    */
   const userFunctionalities = {
-    addUser: 'Add user',
+    add: 'Add user',
+    list: 'List all users',
   };
 
   return (
@@ -22,7 +21,7 @@ function AdministrationUsers() {
       <Grid container direction='column' spacing={3}>
         {
           Object.entries(userFunctionalities).map(([key, value]) => (
-            <Grid item>
+            <Grid item key={key}>
               <Button
                 sx={{ py: 8 }}
                 variant='outlined'

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
-import SubjectService from '../../services/SubjectService';
-import { checkResponse } from '../../utils';
+import { useNavDis } from '../../../hooks/useNavDis';
+import SubjectService from '../../../services/SubjectService';
+import { checkResponse } from '../../../utils';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
 import Link from '@mui/material/Link';
-import { CreateSubjectDialog } from '../../components/admin/dialogs';
-import { useClipboard } from '../../hooks/useClipboard';
+import { CreateSubjectDialog } from '../../../components/admin/dialogs';
+import { useClipboard } from '../../../hooks/useClipboard';
 import { useStore } from 'react-redux';
-import DegreeService from '../../services/DegreeService';
+import DegreeService from '../../../services/DegreeService';
 
 function AdministrationSubjects() {
   const userState = useStore().getState().user;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import { useNavDis } from '../hooks/useNavDis';
+import { useNavDis } from '../../hooks/useNavDis';
 import BookIcon from '@mui/icons-material/Book';
 import SchoolIcon from '@mui/icons-material/School';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -21,7 +21,7 @@ function Administration() {
     <Container sx={{ py: 3 }} component='main'>
       <CssBaseline />
 
-      <Grid container direction='row' spacing={3} sx={{ p: 0.5 }}>
+      <Grid container direction='row' spacing={3}>
         {
           items.map((item, index) => (
             <Grid item xs={6} key={index}>

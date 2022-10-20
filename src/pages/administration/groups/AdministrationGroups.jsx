@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
+import { useNavDis } from '../../../hooks/useNavDis';
 import { useStore } from 'react-redux';
-import { useClipboard } from '../../hooks/useClipboard';
-import GroupService from '../../services/GroupService';
-import { checkResponse } from '../../utils';
+import { useClipboard } from '../../../hooks/useClipboard';
+import GroupService from '../../../services/GroupService';
+import { checkResponse } from '../../../utils';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import { CreateGroupDialog } from '../../components/admin/dialogs';
+import { CreateGroupDialog } from '../../../components/admin/dialogs';
 import Link from '@mui/material/Link';
 
 function AdministrationGroups() {

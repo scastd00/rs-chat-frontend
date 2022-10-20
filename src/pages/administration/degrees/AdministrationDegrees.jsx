@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
-import DegreeService from '../../services/DegreeService';
-import { checkResponse } from '../../utils';
+import { useNavDis } from '../../../hooks/useNavDis';
+import DegreeService from '../../../services/DegreeService';
+import { checkResponse } from '../../../utils';
 import { useStore } from 'react-redux';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
 import Link from '@mui/material/Link';
-import { useClipboard } from '../../hooks/useClipboard';
-import { CreateDegreeDialog } from '../../components/admin/dialogs';
+import { useClipboard } from '../../../hooks/useClipboard';
+import { CreateDegreeDialog } from '../../../components/admin/dialogs';
 
 function AdministrationDegrees() {
   const userState = useStore().getState().user;

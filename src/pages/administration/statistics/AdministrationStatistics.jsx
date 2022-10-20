@@ -1,7 +1,7 @@
 import React from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
+import { useNavDis } from '../../../hooks/useNavDis';
 import { useStore } from 'react-redux';
-import { useClipboard } from '../../hooks/useClipboard';
+import { useClipboard } from '../../../hooks/useClipboard';
 import { Container, CssBaseline } from '@mui/material';
 
 function AdministrationStatistics() {

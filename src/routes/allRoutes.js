@@ -7,17 +7,18 @@ import Home from '../pages/Home';
 import Chat from '../pages/Chat';
 import ForgotPassword from '../pages/ForgotPassword';
 import CreatePassword from '../pages/CreatePassword';
-import Administration from '../pages/Administration';
-import AdministerDegree from '../pages/administration/AdministerDegree';
-import AdministerSubject from '../pages/administration/AdministerSubject';
-import AdministerGroup from '../pages/administration/AdministerGroup';
-import AdministerUser from '../pages/administration/AdministerUser';
-import AdministrationDegrees from '../pages/administration/AdministrationDegrees';
-import AdministrationSubjects from '../pages/administration/AdministrationSubjects';
-import AdministrationGroups from '../pages/administration/AdministrationGroups';
-import AdministrationUsers from '../pages/administration/AdministrationUsers';
-import AdministrationStatistics from '../pages/administration/AdministrationStatistics';
-import AdministrationAddUser from '../pages/administration/AdministrationAddUser';
+import Administration from '../pages/administration/Administration';
+import AdministrationDegrees from '../pages/administration/degrees/AdministrationDegrees';
+import AdministrationSubjects from '../pages/administration/subjects/AdministrationSubjects';
+import AdministrationGroups from '../pages/administration/groups/AdministrationGroups';
+import AdministrationUsers from '../pages/administration/users/AdministrationUsers';
+import AdministrationStatistics from '../pages/administration/statistics/AdministrationStatistics';
+import AddUser from '../pages/administration/users/AddUser';
+import EditUser from '../pages/administration/users/EditUser';
+import ListUsers from '../pages/administration/users/ListUsers';
+import EditDegree from '../pages/administration/degrees/EditDegree';
+import EditSubject from '../pages/administration/subjects/EditSubject';
+import EditGroup from '../pages/administration/groups/EditGroup';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -37,13 +38,14 @@ export const PRIVATE_ROUTES = [
 export const ADMINISTRATION_ROUTES = [
   { path: '/administration', component: Administration },
   { path: '/administration/degrees', component: AdministrationDegrees },
-  { path: '/administration/degree/:id', component: AdministerDegree },
+  { path: '/administration/degrees/edit/:id', component: EditDegree },
   { path: '/administration/subjects', component: AdministrationSubjects },
-  { path: '/administration/subject/:id', component: AdministerSubject },
+  { path: '/administration/subjects/edit/:id', component: EditSubject },
   { path: '/administration/groups', component: AdministrationGroups },
-  { path: '/administration/group/:id', component: AdministerGroup },
+  { path: '/administration/groups/edit/:id', component: EditGroup },
   { path: '/administration/users', component: AdministrationUsers },
-  { path: '/administration/users/addUser', component: AdministrationAddUser },
-  { path: '/administration/user/:id', component: AdministerUser },
+  { path: '/administration/users/add', component: AddUser },
+  { path: '/administration/users/edit/:id', component: EditUser },
+  { path: '/administration/users/list', component: ListUsers },
   { path: '/administration/statistics', component: AdministrationStatistics },
 ];
