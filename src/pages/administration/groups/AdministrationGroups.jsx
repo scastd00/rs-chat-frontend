@@ -23,6 +23,15 @@ function AdministrationGroups() {
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
+  function handleDeleteGroup(id) {
+    GroupService
+      .deleteGroup(id, userState.tokens.accessToken)
+      .then(() => {
+        setAllGroups(allGroups.filter(group => group.id !== id));
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
   return (
     <Container>
       <CssBaseline />
@@ -38,6 +47,7 @@ function AdministrationGroups() {
                 type='groups'
                 name={group.name}
                 invitationCode={group.invitationCode}
+                deleteFn={() => handleDeleteGroup(group.id)}
               />
             </Grid>
           ))

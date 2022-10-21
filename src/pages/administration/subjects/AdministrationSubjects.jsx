@@ -30,6 +30,15 @@ function AdministrationSubjects() {
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
+  function handleDeleteSubject(id) {
+    SubjectService
+      .deleteSubject(id, userState.tokens.accessToken)
+      .then(() => {
+        setAllSubjects(allSubjects.filter(subject => subject.id !== id));
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
   return (
     <Container>
       <CssBaseline />
@@ -38,13 +47,14 @@ function AdministrationSubjects() {
 
       <Grid container direction='column' py={1}>
         {
-          allSubjects.map(sub => (
-            <Grid item key={sub.id}>
+          allSubjects.map(subject => (
+            <Grid item key={subject.id}>
               <AdministrationListItem
-                id={sub.id}
+                id={subject.id}
                 type='subjects'
-                name={sub.name}
-                invitationCode={sub.invitationCode}
+                name={subject.name}
+                invitationCode={subject.invitationCode}
+                deleteFn={() => handleDeleteSubject(subject.id)}
               />
             </Grid>
           ))

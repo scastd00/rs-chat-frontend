@@ -13,4 +13,8 @@ export default {
   addDegree(data, __token__) {
     return Api.post('/degree/save', data, headers(__token__));
   },
+
+  deleteDegree(id, __token__) {
+    return Api.delete(`/degree/delete/${id}`, headers(__token__));
+  },
 };

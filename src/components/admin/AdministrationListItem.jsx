@@ -3,7 +3,7 @@ import { Button, CssBaseline, Grid, Typography } from '@mui/material';
 import { useClipboard } from '../../hooks/useClipboard';
 import { useNavDis } from '../../hooks/useNavDis';
 
-function AdministrationListItem({ id, type, name, description, invitationCode }) {
+function AdministrationListItem({ id, type, name, description, invitationCode, deleteFn }) {
   const [copyToClipboard] = useClipboard();
   const [navigate] = useNavDis();
 
@@ -26,7 +26,7 @@ function AdministrationListItem({ id, type, name, description, invitationCode })
       <Grid item>
         <Button color='info' onClick={() => copyToClipboard(invitationCode)}>Copy code</Button>
         <Button onClick={() => navigate(`/administration/${type}/edit/${id}`)}>Edit</Button>
-        <Button color='error' onClick={() => console.log('Delete')}>Delete</Button>
+        <Button color='error' onClick={deleteFn}>Delete</Button>
       </Grid>
     </Grid>
   );

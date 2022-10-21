@@ -25,6 +25,15 @@ function AdministrationDegrees() {
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
+  function handleDeleteDegree(id) {
+    DegreeService
+      .deleteDegree(id, userState.tokens.accessToken)
+      .then(() => {
+        setAllDegrees(allDegrees.filter(degree => degree.id !== id));
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
   return (
     <Container>
       <CssBaseline />
@@ -33,13 +42,14 @@ function AdministrationDegrees() {
 
       <Grid container direction='column' py={1}>
         {
-          allDegrees.map(deg => (
-            <Grid item key={deg.id}>
+          allDegrees.map(degree => (
+            <Grid item key={degree.id}>
               <AdministrationListItem
-                id={deg.id}
+                id={degree.id}
                 type='degrees'
-                name={deg.name}
-                invitationCode={deg.invitationCode}
+                name={degree.name}
+                invitationCode={degree.invitationCode}
+                deleteFn={() => handleDeleteDegree(degree.id)}
               />
             </Grid>
           ))
