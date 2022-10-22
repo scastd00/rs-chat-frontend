@@ -17,19 +17,19 @@ function UsersList({ activeUsers, allUsers }) {
     <Container component='main' sx={{ py: 1 }}>
       <Grid container spacing={1} justifyContent='flex-start' alignItems='center'>
         <Grid item>
-          <Typography variant='h5'>
-            {typeOfUsers} users
-          </Typography>
-        </Grid>
-
-        <Grid item>
           <IconButton size='small' variant='outlined' onClick={switchUserList}>
             <PeopleIcon />
           </IconButton>
         </Grid>
+
+        <Grid item>
+          <Typography variant='h5'>
+            {typeOfUsers} users
+          </Typography>
+        </Grid>
       </Grid>
 
-      <Divider sx={{ my: 0.5 }} hidden={activeUsers.length === 0} />
+      <Divider sx={{ my: 0.5 }} hidden={userListToShow().length === 0} />
 
       {
         userListToShow().map((username) => {
