@@ -13,19 +13,18 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import { useDispatch, useStore } from 'react-redux';
+import { useStore } from 'react-redux';
 import UserService from '../services/UserService';
 import { checkResponse } from '../utils';
-import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 import SnackAlert from '../components/SnackAlert';
 import AuthService from '../services/AuthService';
 import ChatService from '../services/ChatService';
 import { setAvailableChats } from '../actions';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Profile() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
 
   const userState = useStore().getState().user;
   const dividerSx = { my: 2, opacity: 1 };
@@ -62,7 +61,6 @@ function Profile() {
       .then(res => {
         setChatCode('');
         showInvitationCodeAlert('success', 'Joined to chat ' + res.data.name);
-
 
         ChatService
           .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)

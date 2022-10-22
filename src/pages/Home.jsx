@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
 import { useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
 import DropDown from '../components/DropDown';
 import { capitalizeFirstLetter } from '../utils';
+import ChatService from '../services/ChatService';
+import { setAvailableChats } from '../actions';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Home() {
   const userState = useStore().getState().user;
-  const navigate = useNavigate();
+  const [navigate, dispatch] = useNavDis();
+  const [chats, setChats] = useState({});
+
+  useEffect(() => {
+    ChatService
+      .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
+      .then(chatsRes => {
+        setChats(chatsRes.data.chats);
+        dispatch(setAvailableChats(chatsRes.data.chats));
+      })
+      .catch(err => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <Container sx={{ my: 2 }}>
@@ -26,7 +41,7 @@ function Home() {
 
         <Grid item>
           {
-            Object.entries(userState.chats).map(([chatType, chatList], idx) => {
+            Object.entries(chats).map(([chatType, chatList], idx) => {
               return React.cloneElement(
                 <DropDown title={capitalizeFirstLetter(chatType)} key={idx} drop={chatType === 'group'}>
                   {/* 4 columns -> 12 places : 3 places/column = 4 */}
