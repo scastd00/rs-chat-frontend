@@ -19,6 +19,7 @@ import ListUsers from '../pages/administration/users/ListUsers';
 import EditDegree from '../pages/administration/degrees/EditDegree';
 import EditSubject from '../pages/administration/subjects/EditSubject';
 import EditGroup from '../pages/administration/groups/EditGroup';
+import Logout from '../pages/Logout';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -33,6 +34,7 @@ export const PRIVATE_ROUTES = [
   { path: '/home', component: Home },
   { path: '/profile', component: Profile },
   { path: '/chat/:id', component: Chat },
+  { path: '/logout', component: Logout },
 ];
 
 export const ADMINISTRATION_ROUTES = [

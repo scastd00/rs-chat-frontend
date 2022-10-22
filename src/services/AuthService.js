@@ -1,8 +1,13 @@
 import Api from './Api';
+import { headers } from '../utils';
 
 export default {
   login(credentials) {
     return Api.post('/login', credentials);
+  },
+
+  logout(__token__, fromAllSessions) {
+    return Api.post('/logout', { fromAllSessions }, headers(__token__));
   },
 
   register(credentials) {
