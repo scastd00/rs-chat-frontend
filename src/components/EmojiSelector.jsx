@@ -23,25 +23,36 @@ function EmojiSelector({ anchorEl, open, onClose, addEmojiToTextBox }) {
   const userState = useStore().getState().user;
   const [navigate, dispatch] = useNavDis();
   const [tabPosition, setTabPosition] = useState(0);
-  const handleChange = (event, newValue) => {
-    setTabPosition(newValue);
-  };
   const [currentEmojis, setCurrentEmojis] = useState({
     category: categories[tabPosition],
     emojis: [],
   });
+  const [allEmojisByCategory, setAllEmojisByCategory] = useState(
+    Object.assign(...categories.map(k => ({ [k]: [] }))), // Default to empty array for each category to be able to load the page
+  );
+
+  const handleChange = (event, newValue) => {
+    setTabPosition(newValue);
+  };
 
   useEffect(() => {
     EmojiService
-      .getEmojisByCategory(categories[tabPosition], userState.tokens.accessToken)
+      .getEmojisGroupedByCategory(userState.tokens.accessToken)
       .then(res => {
-        console.log(res.data.emojis);
+        setAllEmojisByCategory(res.data.emojis);
         setCurrentEmojis({
           category: categories[tabPosition],
-          emojis: res.data.emojis,
+          emojis: res.data.emojis[categories[tabPosition]],
         });
       })
       .catch(err => checkResponse(err, navigate, dispatch));
+  }, []);
+
+  useEffect(() => {
+    setCurrentEmojis({
+      category: categories[tabPosition],
+      emojis: allEmojisByCategory[categories[tabPosition]],
+    });
   }, [tabPosition]);
 
   return (
@@ -93,7 +104,6 @@ function EmojiSelector({ anchorEl, open, onClose, addEmojiToTextBox }) {
         <Grid container direction='row' spacing={0.5}>
           {
             currentEmojis.emojis.map(emoji => {
-              console.log(emoji.unicode);
               return (
                 <Grid item key={emoji.id}>
                   <Tooltip title={emoji.name}>
