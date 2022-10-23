@@ -9,4 +9,8 @@ export default {
   getEmojiContainsString(string, __token__) {
     return Api.get(`/emojis/${string}`, headers(__token__));
   },
+
+  getEmojisByCategory(category, __token__) {
+    return Api.get(`/emojis/category/${category}`, headers(__token__));
+  },
 };
