@@ -14,5 +14,5 @@ export default function useAdapt() {
     return () => window.removeEventListener('resize', handleResize);
   }, [window.innerWidth]);
 
-  return { direction };
+  return [direction];
 }

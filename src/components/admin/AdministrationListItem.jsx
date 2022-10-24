@@ -10,7 +10,7 @@ function AdministrationListItem({ id, type, name, description, invitationCode, d
   return (
     <Grid
       container
-      sx={{ border: '1px solid', borderColor: '#505050', borderRadius: '5px', p: 1 }}
+      sx={{ border: '1px solid', borderColor: '#505050', borderRadius: '5px', p: 1, px: 2 }}
       alignItems='center'
     >
       <CssBaseline />
@@ -24,7 +24,7 @@ function AdministrationListItem({ id, type, name, description, invitationCode, d
       </Grid>
 
       <Grid item>
-        <Button color='info' onClick={() => copyToClipboard(invitationCode)}>Copy code</Button>
+        {invitationCode && <Button color='info' onClick={() => copyToClipboard(invitationCode)}>Copy code</Button>}
         <Button onClick={() => navigate(`/administration/${type}/edit/${id}`)}>Edit</Button>
         <Button color='error' onClick={deleteFn}>Delete</Button>
       </Grid>

@@ -13,4 +13,8 @@ export default {
   createUser(user, __token__) {
     return Api.post('/user/save', { user }, headers(__token__));
   },
+
+  getAll(__token__) {
+    return Api.get('/users', headers(__token__));
+  },
 };
