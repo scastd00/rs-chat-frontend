@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
 import { useStore } from 'react-redux';
 import DropDown from '../components/DropDown';
-import { capitalizeFirstLetter } from '../utils';
+import { capitalizeFirstLetter, checkResponse } from '../utils';
 import ChatService from '../services/ChatService';
 import { setAvailableChats } from '../actions';
 import { useNavDis } from '../hooks/useNavDis';
@@ -20,7 +20,7 @@ function Home() {
         dispatch(setAvailableChats(chatsRes.data.chats));
       })
       .catch(err => {
-        console.error(err);
+        checkResponse(err, navigate, dispatch);
       });
   }, []);
 
