@@ -38,7 +38,7 @@ function AdministrationGroups() {
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateGroupDialogOpen(true)}>Add</Button>
 
-      <Grid container direction='column' py={1}>
+      <Grid container direction='column' py={1} spacing={2}>
         {
           allGroups.map(group => (
             <Grid item key={group.id}>

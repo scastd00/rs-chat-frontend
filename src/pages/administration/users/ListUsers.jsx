@@ -4,6 +4,7 @@ import { useNavDis } from '../../../hooks/useNavDis';
 import { Container, CssBaseline, Grid, Typography } from '@mui/material';
 import UserService from '../../../services/UserService';
 import AdministrationListItem from '../../../components/admin/AdministrationListItem';
+import { checkResponse } from '../../../utils';
 
 function ListUsers() {
   const userState = useStore().getState().user;
@@ -14,7 +15,7 @@ function ListUsers() {
     UserService
       .getAll(userState.tokens.accessToken)
       .then(res => setUsers(res.data.data))
-      .catch(err => console.log(err));
+      .catch(err => checkResponse(err, dispatch, navigate));
   }, []);
 
   return (
@@ -25,15 +26,16 @@ function ListUsers() {
         Users (Total: {users.length})
       </Typography>
 
-      <Grid container direction='column' py={1}>
+      <Grid container direction='column' py={1} spacing={2}>
         {
           users.map(user => (
             <Grid item key={user.id}>
               <AdministrationListItem
                 id={user.id}
-                type='degrees'
+                type='users'
                 name={user.username}
-                description={user.email}
+                description={'Email: ' + user.email}
+                invitationCode={user.username}
                 // deleteFn={() => handleDeleteDegree(user.id)}
               />
             </Grid>
