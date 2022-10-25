@@ -45,7 +45,7 @@ function AdministrationSubjects() {
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateSubjectDialogOpen(true)}>Add</Button>
 
-      <Grid container direction='column' py={1}>
+      <Grid container direction='column' py={1} spacing={2}>
         {
           allSubjects.map(subject => (
             <Grid item key={subject.id}>

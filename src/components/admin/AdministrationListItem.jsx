@@ -10,17 +10,14 @@ function AdministrationListItem({ id, type, name, description, invitationCode, d
   return (
     <Grid
       container
-      sx={{ border: '1px solid', borderColor: '#505050', borderRadius: '5px', p: 1, px: 2 }}
+      sx={{ border: '1px solid', borderColor: '#50505f', borderRadius: '5px', p: 1.5, px: 2.5 }}
       alignItems='center'
     >
       <CssBaseline />
 
       <Grid item xs>
-        <Typography>{name}</Typography>
-      </Grid>
-
-      <Grid item xs>
-        <Typography>{description ?? 'Description unavailable'}</Typography>
+        <Typography variant='h5' mb={0.5}>{name}</Typography>
+        <Typography variant='body2'>{description ?? 'Description unavailable'}</Typography>
       </Grid>
 
       <Grid item>

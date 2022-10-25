@@ -40,7 +40,7 @@ function AdministrationDegrees() {
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateDegreeDialogOpen(true)}>Add</Button>
 
-      <Grid container direction='column' py={1}>
+      <Grid container direction='column' py={1} spacing={2}>
         {
           allDegrees.map(degree => (
             <Grid item key={degree.id}>
