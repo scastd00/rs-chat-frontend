@@ -7,7 +7,7 @@ import {
   TEXT_MESSAGE,
   USER_JOINED,
   USER_LEFT,
-} from './MessageProps';
+} from './MessageTypes';
 import { createMessage, isActivityMessage } from '../../utils';
 import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
 

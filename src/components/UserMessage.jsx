@@ -1,12 +1,21 @@
 import React from 'react';
 import { Grid, Paper, Tooltip, Typography } from '@mui/material';
 import { fullPrettyDate, prettyDate } from '../utils';
-import { AUDIO_MESSAGE, IMAGE_MESSAGE, TEXT_MESSAGE, VIDEO_MESSAGE } from '../net/ws/MessageProps';
+import {
+  AUDIO_MESSAGE,
+  IMAGE_MESSAGE,
+  PDF_MESSAGE,
+  TEXT_DOC_MESSAGE,
+  TEXT_MESSAGE,
+  VIDEO_MESSAGE,
+} from '../net/ws/MessageTypes';
 import TextChatCard from './cards/TextChatCard';
 import ImageChatCard from './cards/ImageChatCard';
 import AudioChatCard from './cards/AudioChatCard';
 import VideoChatCard from './cards/VideoChatCard';
 import ErrorChatCard from './cards/ErrorChatCard';
+import PdfChatCard from './cards/PdfChatCard';
+import TextDocChatCard from './cards/TextDocChatCard';
 
 function UserMessage({ message }) {
   return (
@@ -42,6 +51,12 @@ function UserMessage({ message }) {
 
               case VIDEO_MESSAGE:
                 return <VideoChatCard data={message.body.content} />;
+
+              case PDF_MESSAGE:
+                return <PdfChatCard data={message.body.content} />;
+
+              case TEXT_DOC_MESSAGE:
+                return <TextDocChatCard data={message.body.content} />;
 
               default:
                 return <ErrorChatCard />;

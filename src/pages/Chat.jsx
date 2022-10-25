@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
 import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
