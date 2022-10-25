@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
+import { useNavDis } from '../../../hooks/useNavDis';
 import { useStore } from 'react-redux';
-import { useClipboard } from '../../hooks/useClipboard';
-import GroupService from '../../services/GroupService';
-import { checkResponse } from '../../utils';
+import { useClipboard } from '../../../hooks/useClipboard';
+import GroupService from '../../../services/GroupService';
+import { checkResponse } from '../../../utils';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import { CreateGroupDialog } from '../../components/admin/dialogs';
-import Link from '@mui/material/Link';
+import { CreateGroupDialog } from '../../../components/admin/dialogs';
+import AdministrationListItem from '../../../components/admin/AdministrationListItem';
 
 function AdministrationGroups() {
   const userState = useStore().getState().user;
@@ -23,23 +23,32 @@ function AdministrationGroups() {
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
+  function handleDeleteGroup(id) {
+    GroupService
+      .deleteGroup(id, userState.tokens.accessToken)
+      .then(() => {
+        setAllGroups(allGroups.filter(group => group.id !== id));
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
   return (
     <Container>
       <CssBaseline />
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateGroupDialogOpen(true)}>Add</Button>
 
-      <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
+      <Grid container direction='column' py={1}>
         {
           allGroups.map(group => (
             <Grid item key={group.id}>
-              <Link
-                sx={{ cursor: 'pointer', color: 'text.primary' }}
-                underline='hover'
-                onClick={() => copyToClipboard(group.invitationCode)}
-              >
-                {group.name}
-              </Link>
+              <AdministrationListItem
+                id={group.id}
+                type='groups'
+                name={group.name}
+                invitationCode={group.invitationCode}
+                deleteFn={() => handleDeleteGroup(group.id)}
+              />
             </Grid>
           ))
         }

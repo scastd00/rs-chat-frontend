@@ -82,3 +82,9 @@ export function isActivityMessage(type) {
 export function isUserMessage(type) {
   return USER_MESSAGES.includes(type);
 }
+
+export function getEmojiFromUnicode(unicode) {
+  return unicode.split(' ')
+                .map(u => String.fromCodePoint(parseInt(u, 16)))
+                .join('');
+}

@@ -163,7 +163,7 @@ function Chat() {
       });
   }
 
-  const { direction } = useAdapt();
+  const [direction] = useAdapt();
 
   return (
     <CssBaseline>

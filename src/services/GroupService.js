@@ -9,4 +9,8 @@ export default {
   addGroup(data, __token__) {
     return Api.post('/group/save', data, headers(__token__));
   },
+
+  deleteGroup(id, __token__) {
+    return Api.delete(`/group/delete/${id}`, headers(__token__));
+  },
 };

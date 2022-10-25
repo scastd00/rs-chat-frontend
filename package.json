@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "dev": "./determineHostType.sh && vite",
+    "dev": "./determine_host_type.sh && vite",
     "build": "vite build",
     "preview": "vite preview"
   },

@@ -19,7 +19,8 @@ import { SUPPORTED_FILES } from '../utils/constants';
 import EmojiService from '../services/EmojiService';
 import { useStore } from 'react-redux';
 import { EmojiEmotions } from '@mui/icons-material';
-import EmojiPopover from './EmojiPopover';
+import EmojiSelector from './EmojiSelector';
+import { getEmojiFromUnicode } from '../utils';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const userState = useStore().getState().user;
@@ -71,10 +72,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   function getEmojiIconFromUnicode(emoji) {
     return {
       ...emoji,
-      icon: emoji.unicode
-                 .split(' ')
-                 .map((u) => String.fromCodePoint(parseInt(u, 16)))
-                 .join(''),
+      icon: getEmojiFromUnicode(emoji.unicode),
     };
   }
 
@@ -142,7 +140,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
 
   function addEmojiToTextBox(evt) {
     setMessage(message + evt.currentTarget.innerText + ' ');
-    setSelectingEmoji(false);
+    // Todo: set the emoji in next to the cursor position
     document.getElementById('TextBox').focus();
   }
 
@@ -167,7 +165,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     <>
       <CssBaseline />
 
-      <EmojiPopover
+      <EmojiSelector
         anchorEl={anchorEl}
         onClose={() => setSelectingEmoji(false)}
         open={selectingEmoji}

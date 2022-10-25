@@ -1,40 +1,44 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, TextField } from '@mui/material';
-import * as PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import SubjectService from '../../../services/SubjectService';
 import { checkResponse } from '../../../utils';
 import { useDispatch, useStore } from 'react-redux';
 import { useNavigate } from 'react-router';
 
-function CreateSubjectDialog(props) {
-  const [subjectProps, setSubjectProps] = useState({
+function CreateSubjectDialog({ open, onClose, addToVisibleList, allDegrees }) {
+  const defaultValues = {
     name: '',
     period: 'A',
-    type: 'TR',
+    type: 'FB',
     credits: 6,
     grade: 1,
     degree: '',
-  });
+  };
+  const [subjectProps, setSubjectProps] = useState(defaultValues);
 
   const userState = useStore().getState().user;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubjectCreation = () => {
+    if (subjectProps.name.trim().length === 0 || subjectProps.degree.trim().length === 0)
+      return;
+
     SubjectService
       .addSubject(subjectProps, userState.tokens.accessToken)
       .then(res => {
-        console.log(res);
+        addToVisibleList(JSON.parse(res.data.subject));
+        setSubjectProps(defaultValues);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
       });
 
-    props.onClose(); // Close the dialog from here
+    onClose(); // Close the dialog from here
   };
 
   return (
-    <Dialog open={props.open} onClose={props.onClose}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Create subject</DialogTitle>
 
       <DialogContent>
@@ -141,7 +145,7 @@ function CreateSubjectDialog(props) {
           }}
         >
           {
-            props.allDegrees.map(degree => (
+            allDegrees.map(degree => (
               React.cloneElement(
                 <MenuItem key={degree.id} value={degree.name}>
                   {degree.name}
@@ -154,16 +158,10 @@ function CreateSubjectDialog(props) {
 
       <DialogActions>
         <Button color='success' onClick={handleSubjectCreation}>Ok</Button>
-        <Button color='error' onClick={props.onClose}>Cancel</Button>
+        <Button color='error' onClick={onClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
   );
 }
-
-CreateSubjectDialog.propTypes = {
-  open: PropTypes.bool,
-  onClose: PropTypes.func,
-  allDegrees: PropTypes.arrayOf(PropTypes.any),
-};
 
 export default CreateSubjectDialog;

@@ -9,4 +9,8 @@ export default {
   addSubject(data, __token__) {
     return Api.post('/subject/save', data, headers(__token__));
   },
+
+  deleteSubject(id, __token__) {
+    return Api.delete(`/subject/delete/${id}`, headers(__token__));
+  },
 };

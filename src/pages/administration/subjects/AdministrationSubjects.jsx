@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavDis } from '../../hooks/useNavDis';
-import SubjectService from '../../services/SubjectService';
-import { checkResponse } from '../../utils';
+import { useNavDis } from '../../../hooks/useNavDis';
+import SubjectService from '../../../services/SubjectService';
+import { checkResponse } from '../../../utils';
 import { Button, Container, CssBaseline, Grid } from '@mui/material';
-import Link from '@mui/material/Link';
-import { CreateSubjectDialog } from '../../components/admin/dialogs';
-import { useClipboard } from '../../hooks/useClipboard';
+import { CreateSubjectDialog } from '../../../components/admin/dialogs';
+import { useClipboard } from '../../../hooks/useClipboard';
 import { useStore } from 'react-redux';
-import DegreeService from '../../services/DegreeService';
+import DegreeService from '../../../services/DegreeService';
+import AdministrationListItem from '../../../components/admin/AdministrationListItem';
 
 function AdministrationSubjects() {
   const userState = useStore().getState().user;
@@ -30,23 +30,32 @@ function AdministrationSubjects() {
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
+  function handleDeleteSubject(id) {
+    SubjectService
+      .deleteSubject(id, userState.tokens.accessToken)
+      .then(() => {
+        setAllSubjects(allSubjects.filter(subject => subject.id !== id));
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
   return (
     <Container>
       <CssBaseline />
 
       <Button sx={{ mt: 2 }} onClick={() => setCreateSubjectDialogOpen(true)}>Add</Button>
 
-      <Grid container sx={{ mx: 6 }} direction='column' spacing={1} py={1}>
+      <Grid container direction='column' py={1}>
         {
-          allSubjects.map(sub => (
-            <Grid item key={sub.id}>
-              <Link
-                sx={{ cursor: 'pointer', color: 'text.primary' }}
-                underline='hover'
-                onClick={() => copyToClipboard(sub.invitationCode)}
-              >
-                {sub.name}
-              </Link>
+          allSubjects.map(subject => (
+            <Grid item key={subject.id}>
+              <AdministrationListItem
+                id={subject.id}
+                type='subjects'
+                name={subject.name}
+                invitationCode={subject.invitationCode}
+                deleteFn={() => handleDeleteSubject(subject.id)}
+              />
             </Grid>
           ))
         }
@@ -55,6 +64,7 @@ function AdministrationSubjects() {
       <CreateSubjectDialog
         open={createSubjectDialogOpen}
         onClose={() => setCreateSubjectDialogOpen(false)}
+        addToVisibleList={subject => setAllSubjects([...allSubjects, subject])}
         allDegrees={allDegrees}
       />
     </Container>

@@ -13,5 +13,5 @@ export function getWindowSize() {
   return { innerWidth, innerHeight };
 }
 
-export const PROD_HOST = `${import.meta.env.VITE_SERVER_HOST}:4040`;
-export const DEV_HOST = `${import.meta.env.VITE_SERVER_HOST}:4041`;
+export const PROD_HOST = `${import.meta.env.VITE_PROD_HOST}:4040`;
+export const DEV_HOST = `${import.meta.env.VITE_DEV_HOST}:4041`;
