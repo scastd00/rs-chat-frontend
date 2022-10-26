@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, CssBaseline, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  Container,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Typography,
+} from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
@@ -40,6 +51,9 @@ function Chat() {
     name: '',
     metadata: {},
   });
+  const [leaveChatDialog, setLeaveChatDialog] = useState(false);
+
+  const [direction] = useAdapt();
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
@@ -163,7 +177,15 @@ function Chat() {
       });
   }
 
-  const [direction] = useAdapt();
+  function handleLeaveChat() {
+    ChatService
+      .leaveChat(chatId, userState.user.id, userState.tokens.accessToken)
+      .then(() => {
+        client.disconnect();
+        navigate('/home');
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
 
   return (
     <CssBaseline>
@@ -174,8 +196,18 @@ function Chat() {
               <CssBaseline />
 
               <Grid container direction='column' spacing={1}>
-                <Grid item>
-                  <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+                <Grid item container direction='row' justifyContent='space-between' alignItems='center'>
+                  <Grid item>
+                    <Typography variant='h5'>
+                      Current chat: {chatInfo.name}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item>
+                    <Button color='error' onClick={() => setLeaveChatDialog(true)}>
+                      Leave chat
+                    </Button>
+                  </Grid>
                 </Grid>
 
                 <Grid item>
@@ -194,6 +226,19 @@ function Chat() {
           </Grid>
         </Grid>
       )}
+
+      <Dialog open={leaveChatDialog} onClose={() => setLeaveChatDialog(false)}>
+        <DialogTitle>Leave chat</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to leave this chat?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color='success' onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
+          <Button color='error' onClick={handleLeaveChat}>Leave</Button>
+        </DialogActions>
+      </Dialog>
     </CssBaseline>
   );
 }
