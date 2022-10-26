@@ -9,6 +9,10 @@ import ToolBar from './layouts/ToolBar';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './routes/AdminRoute';
 import { ADMINISTRATION_ROUTES, PRIVATE_ROUTES, PUBLIC_ROUTES } from './routes/allRoutes';
+import { pdfjs } from 'react-pdf';
+
+// Config for global use
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'; // Options prop does not work, this solves the errors
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
