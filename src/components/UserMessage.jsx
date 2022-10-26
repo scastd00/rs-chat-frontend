@@ -16,15 +16,14 @@ import VideoChatCard from './cards/VideoChatCard';
 import ErrorChatCard from './cards/ErrorChatCard';
 import PdfChatCard from './cards/PdfChatCard';
 import TextDocChatCard from './cards/TextDocChatCard';
+import ClickableUsername from './ClickableUsername';
 
 function UserMessage({ message }) {
   return (
     <Paper sx={{ px: 2, py: 0.5 }} elevation={5}>
       <Grid container direction='row'>
         <Grid item mr={1.5}>
-          <Typography>
-            {message.headers.username}
-          </Typography>
+          <ClickableUsername username={message.headers.username} />
         </Grid>
 
         <Grid item>

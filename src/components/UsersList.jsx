@@ -1,6 +1,7 @@
-import { Container, Divider, Grid, IconButton, Link, Typography } from '@mui/material';
+import { Container, Divider, Grid, IconButton, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import PeopleIcon from '@mui/icons-material/People';
+import ClickableUsername from './ClickableUsername';
 
 function UsersList({ activeUsers, allUsers }) {
   const [typeOfUsers, setTypeOfUsers] = useState('Active');
@@ -32,22 +33,7 @@ function UsersList({ activeUsers, allUsers }) {
       <Divider sx={{ my: 0.5 }} hidden={userListToShow().length === 0} />
 
       {
-        userListToShow().map((username) => {
-          // Current user is filtered by the server
-          return React.cloneElement(
-            <Typography key={username}>
-              <b>{'· '}</b>
-              <Link
-                underline='hover'
-                component='button'
-                variant='body1'
-                color='text.primary'
-              >
-                {username}
-              </Link>
-            </Typography>,
-          );
-        })
+        userListToShow().map((username, idx) => <ClickableUsername key={idx} username={username} />)
       }
     </Container>
   );
