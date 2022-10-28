@@ -16,7 +16,7 @@ function CreateGroupDialog({ open, onClose, addToVisibleList }) {
       return;
 
     GroupService
-      .addGroup(groupProps, userState.tokens.accessToken)
+      .addGroup(groupProps, userState.token)
       .then(res => {
         addToVisibleList(JSON.parse(res.data.group));
       })

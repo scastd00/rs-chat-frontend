@@ -13,7 +13,7 @@ function ListUsers() {
 
   useEffect(() => {
     UserService
-      .getAll(userState.tokens.accessToken)
+      .getAll(userState.token)
       .then(res => setUsers(res.data.data))
       .catch(err => checkResponse(err, dispatch, navigate));
   }, []);

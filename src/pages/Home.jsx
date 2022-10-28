@@ -14,7 +14,7 @@ function Home() {
 
   useEffect(() => {
     ChatService
-      .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
+      .getAllChatsOfUser(userState.user.username, userState.token)
       .then(chatsRes => {
         setChats(chatsRes.data.chats);
         dispatch(setAvailableChats(chatsRes.data.chats));

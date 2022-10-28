@@ -37,7 +37,7 @@ function EmojiSelector({ anchorEl, open, onClose, addEmojiToTextBox }) {
 
   useEffect(() => {
     EmojiService
-      .getEmojisGroupedByCategory(userState.tokens.accessToken)
+      .getEmojisGroupedByCategory(userState.token)
       .then(res => {
         setAllEmojisByCategory(res.data.emojis);
         setCurrentEmojis({

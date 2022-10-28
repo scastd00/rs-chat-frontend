@@ -151,7 +151,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     setAnchorEl(evt.currentTarget);
 
     EmojiService
-      .getRandomEmojis(10, userState.tokens.accessToken)
+      .getRandomEmojis(10, userState.token)
       .then(res => {
         setListOfEmojis(res.data.emojis.map(getEmojiIconFromUnicode));
         setSelectingEmoji(true);

@@ -18,7 +18,7 @@ function AdministrationDegrees() {
 
   useEffect(() => {
     DegreeService
-      .getAllDegrees(userState.tokens.accessToken)
+      .getAllDegrees(userState.token)
       .then(res => {
         setAllDegrees(JSON.parse(res.data.degrees));
       })
@@ -27,7 +27,7 @@ function AdministrationDegrees() {
 
   function handleDeleteDegree(id) {
     DegreeService
-      .deleteDegree(id, userState.tokens.accessToken)
+      .deleteDegree(id, userState.token)
       .then(() => {
         setAllDegrees(allDegrees.filter(degree => degree.id !== id));
       })

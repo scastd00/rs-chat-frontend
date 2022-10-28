@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
 import { useDispatch } from 'react-redux';
-import { setAvailableChats, setSessionId, setTokens, setUser } from '../actions';
+import { setAvailableChats, setSessionId, setToken, setUser } from '../actions';
 import { PuffLoader } from 'react-spinners';
 import { useTheme } from '@mui/material';
 
@@ -27,10 +27,7 @@ function Login() {
 
   const setStateOfStore = ({ user, session, chats }) => {
     dispatch(setUser(user));
-    dispatch(setTokens({
-      accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
-    }));
+    dispatch(setToken(session.token));
     dispatch(setSessionId(session.id));
     dispatch(setAvailableChats(chats));
   };

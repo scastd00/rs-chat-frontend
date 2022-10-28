@@ -13,7 +13,7 @@ function Logout() {
 
   function handleLogout() {
     AuthService
-      .logout(userState.tokens.accessToken, logOutFromAllSessions)
+      .logout(userState.token, logOutFromAllSessions)
       .catch(err => checkResponse(err, navigate, dispatch));
 
     dispatch(logOut());

@@ -42,7 +42,7 @@ function Chat() {
     userState.user.username,
     id,
     userState.sessionId,
-    userState.tokens.accessToken,
+    userState.token,
     dispatch,
     navigate,
   ));
@@ -72,7 +72,7 @@ function Chat() {
 
   function fetchChatInfo() {
     ChatService
-      .getChatInfo(chatId, userState.tokens.accessToken)
+      .getChatInfo(chatId, userState.token)
       .then(res => {
         setChatInfo({
           name: res.data.name,
@@ -84,7 +84,7 @@ function Chat() {
       });
 
     ChatService
-      .getAllUsersOfChat(chatId, userState.tokens.accessToken)
+      .getAllUsersOfChat(chatId, userState.token)
       .then(res => {
         setAllUsers(res.data.users);
       })
@@ -99,7 +99,7 @@ function Chat() {
     // We check here to prevent a user who doesn't have access to the chat to access it
     // by changing the url.
     ChatService
-      .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
+      .userCanConnect(chatId, userState.user.id, userState.token)
       .then(response => {
         if (!response.data.canConnect) {
           client.disconnect();
@@ -158,7 +158,7 @@ function Chat() {
    * @param files The files to be sent.
    */
   function uploadFiles(files) {
-    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.tokens.accessToken));
+    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.token));
 
     Promise
       .all(uploadPromises)
@@ -179,7 +179,7 @@ function Chat() {
 
   function handleLeaveChat() {
     ChatService
-      .leaveChat(chatId, userState.user.id, userState.tokens.accessToken)
+      .leaveChat(chatId, userState.user.id, userState.token)
       .then(() => {
         client.disconnect();
         navigate('/home');

@@ -35,7 +35,7 @@ function Profile() {
 
   useEffect(() => {
     UserService
-      .openedSessions(userState.user.username, userState.tokens.accessToken)
+      .openedSessions(userState.user.username, userState.token)
       .then((res) => {
         setSessions(res.data.sessions);
       })
@@ -57,13 +57,13 @@ function Profile() {
 
   function handleJoinChat() {
     UserService
-      .joinToChat(userState.user.id, chatCode, userState.tokens.accessToken)
+      .joinToChat(userState.user.id, chatCode, userState.token)
       .then(res => {
         setChatCode('');
         showInvitationCodeAlert('success', 'Joined to chat ' + res.data.name);
 
         ChatService
-          .getAllChatsOfUser(userState.user.username, userState.tokens.accessToken)
+          .getAllChatsOfUser(userState.user.username, userState.token)
           .then(chatsRes => {
             dispatch(setAvailableChats(chatsRes.data.chats));
           })
