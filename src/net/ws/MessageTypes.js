@@ -1,3 +1,8 @@
+export const USER_CONNECTED = 'USER_CONNECTED';
+export const USER_DISCONNECTED = 'USER_DISCONNECTED';
+export const USER_TYPING = 'USER_TYPING';
+export const USER_STOPPED_TYPING = 'USER_STOPPED_TYPING';
+
 export const USER_JOINED = 'USER_JOINED';
 export const USER_LEFT = 'USER_LEFT';
 
@@ -14,6 +19,7 @@ export const ERROR_MESSAGE = 'ERROR_MESSAGE';
 export const GET_HISTORY_MESSAGE = 'GET_HISTORY';
 export const PING_MESSAGE = 'PING';
 export const PONG_MESSAGE = 'PONG';
+export const RESTART_MESSAGE = 'RESTART';
 
 export const USER_MESSAGES = [
   TEXT_MESSAGE, IMAGE_MESSAGE, AUDIO_MESSAGE,

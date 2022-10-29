@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
+import { RESTART_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageTypes';
 import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
@@ -31,7 +31,6 @@ function Chat() {
   const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Todo: host this resource in home server
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
 
   const [showPage, setShowPage] = useState(false);
@@ -105,6 +104,7 @@ function Chat() {
           client.disconnect();
           navigate('/home');
         } else {
+          client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
           setShowPage(true);
           fetchChatInfo();
 
@@ -138,8 +138,9 @@ function Chat() {
     );
 
     return () => {
-      // On component unmount
-      client.disconnect(); // Executed when the page is changed
+      // On component unmount (executed when the page is changed)
+      client.disconnectFromChat();
+      client.disconnect();
     };
   }, []);
 
@@ -206,6 +207,9 @@ function Chat() {
                   <Grid item>
                     <Button color='error' onClick={() => setLeaveChatDialog(true)}>
                       Leave chat
+                    </Button>
+                    <Button color='error' onClick={() => client.send('Restart', RESTART_MESSAGE)}>
+                      Restart
                     </Button>
                   </Grid>
                 </Grid>
