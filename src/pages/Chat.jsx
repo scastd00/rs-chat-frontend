@@ -104,7 +104,7 @@ function Chat() {
           client.disconnect();
           navigate('/home');
         } else {
-          client.connect();
+          // client.connect();
           client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
           setShowPage(true);
           fetchChatInfo();

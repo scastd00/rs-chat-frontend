@@ -82,12 +82,14 @@ RSWSClient.prototype.disconnect = function() {
   if (!this.connected) {
     return;
   }
-
-  this.disconnectFromChat(); // No problem by calling this here.
-  clearInterval(this.pingInterval);
-  this.send('', USER_DISCONNECTED);
-
   this.connected = false;
+
+  // this.disconnectFromChat();
+  this.connectedToChat = false;
+  this.send('', USER_LEFT);
+  this.send('', USER_DISCONNECTED);
+  clearInterval(this.pingInterval);
+
   this.socket.close(1000, 'Disconnected');
 };
 
