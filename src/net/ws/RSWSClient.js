@@ -82,14 +82,12 @@ RSWSClient.prototype.disconnect = function() {
   if (!this.connected) {
     return;
   }
-  this.connected = false;
 
-  // this.disconnectFromChat();
-  this.connectedToChat = false;
-  this.send('', USER_LEFT);
-  this.send('', USER_DISCONNECTED);
   clearInterval(this.pingInterval);
+  this.disconnectFromChat();
+  this.send('', USER_DISCONNECTED);
 
+  this.connected = false;
   this.socket.close(1000, 'Disconnected');
 };
 
@@ -97,7 +95,7 @@ RSWSClient.prototype.disconnect = function() {
  * Connects the user to the chat.
  */
 RSWSClient.prototype.connectToChat = function() {
-  if (this.connectedToChat) {
+  if (!this.connected || this.connectedToChat) {
     return;
   }
 
@@ -116,8 +114,8 @@ RSWSClient.prototype.disconnectFromChat = function() {
     return;
   }
 
-  this.connectedToChat = false;
   this.send('', USER_LEFT);
+  this.connectedToChat = false;
 };
 
 /**

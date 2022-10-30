@@ -32,7 +32,6 @@ function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
-
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -42,8 +41,6 @@ function Chat() {
     id,
     userState.sessionId,
     userState.token,
-    dispatch,
-    navigate,
   ));
   const [queue, setQueue] = useState([]);
   const [chatInfo, setChatInfo] = useState({
@@ -51,7 +48,6 @@ function Chat() {
     metadata: {},
   });
   const [leaveChatDialog, setLeaveChatDialog] = useState(false);
-
   const [direction] = useAdapt();
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
@@ -103,20 +99,19 @@ function Chat() {
         if (!response.data.canConnect) {
           client.disconnect();
           navigate('/home');
-        } else {
-          // client.connect();
-          client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
-          setShowPage(true);
-          fetchChatInfo();
-
-          /*
-           * Client is already connected here.
-           * Get the history and active users. It is more secure to do it here.
-           * If done when the client is connected to the server, the server will send
-           * the history and active users to the client, and the messages
-           * can be scanned with WireShark (or other tools).
-           */
+          return;
         }
+
+        setShowPage(true);
+        fetchChatInfo();
+
+        /*
+         * Client is already connected here.
+         * Get the history and active users. It is more secure to do it here.
+         * If done when the client is connected to the server, the server will send
+         * the history and active users to the client, and the messages
+         * can be scanned with WireShark (or other tools).
+         */
       })
       .catch(err => {
         client.disconnect();
@@ -143,6 +138,10 @@ function Chat() {
       client.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
+  }, [client.connected]);
 
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
