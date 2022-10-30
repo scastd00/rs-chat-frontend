@@ -104,6 +104,7 @@ function Chat() {
           client.disconnect();
           navigate('/home');
         } else {
+          client.connect();
           client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
           setShowPage(true);
           fetchChatInfo();
@@ -139,7 +140,6 @@ function Chat() {
 
     return () => {
       // On component unmount (executed when the page is changed)
-      client.disconnectFromChat();
       client.disconnect();
     };
   }, []);

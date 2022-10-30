@@ -83,6 +83,7 @@ RSWSClient.prototype.disconnect = function() {
     return;
   }
 
+  this.disconnectFromChat(); // No problem by calling this here.
   clearInterval(this.pingInterval);
   this.send('', USER_DISCONNECTED);
 
@@ -113,8 +114,8 @@ RSWSClient.prototype.disconnectFromChat = function() {
     return;
   }
 
-  this.send('', USER_LEFT);
   this.connectedToChat = false;
+  this.send('', USER_LEFT);
 };
 
 /**
