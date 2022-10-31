@@ -104,14 +104,6 @@ function Chat() {
 
         setShowPage(true);
         fetchChatInfo();
-
-        /*
-         * Client is already connected here.
-         * Get the history and active users. It is more secure to do it here.
-         * If done when the client is connected to the server, the server will send
-         * the history and active users to the client, and the messages
-         * can be scanned with WireShark (or other tools).
-         */
       })
       .catch(err => {
         client.disconnect();
@@ -140,7 +132,7 @@ function Chat() {
   }, []);
 
   useEffect(() => {
-    client.connectToChat(); // Before showing the page, we connect to the chat to get all connected users and messages
+    client.connectToChat(); // We connect to the chat to get all the connected users and messages
   }, [client.connected]);
 
   function sendTextMessage(textMessage) {

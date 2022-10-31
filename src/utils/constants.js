@@ -3,7 +3,7 @@ export const SUPPORTED_FILES = {
   'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.svg'],
   'video/*': ['.mp4', '.mov', '.avi', '.wmv', '.flv', '.webm'],
   'audio/*': ['.mp3', '.wav', '.ogg', '.flac', '.aac'],
-  'application/pdf': ['.pdf'],
+  'application/*': ['.pdf'],
 };
 
 export const PING_INTERVAL = 30000;

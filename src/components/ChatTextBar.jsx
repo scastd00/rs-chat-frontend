@@ -59,11 +59,6 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function handleKeyDown(evt) {
-    // Todo: set it when the emoji button is clicked
-    // if (!anchorEl) {
-    //   setAnchorEl(evt.currentTarget); // First time to have it stored to display the list of emojis
-    // }
-
     if (evt.key === 'Enter') {
       performMessageSend();
     }
@@ -131,7 +126,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       .all(promises)
       .then(files => {
         setAttachedFiles(files);
-        setTimeout(() => setSelectedFiles([]), 200);
+        setTimeout(() => setSelectedFiles([]), 200); // To prevent showing the hide animation
       })
       .catch((err) => {
         console.log('err', err);
