@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Button,
@@ -15,7 +15,6 @@ import {
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
-import RSWSClient from '../net/ws/RSWSClient';
 import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
@@ -25,6 +24,7 @@ import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
+import { WebSocketContext } from '../utils/constants';
 
 function Chat() {
   const { id } = useParams();
@@ -36,12 +36,6 @@ function Chat() {
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const userState = useStore().getState().user;
-  const [client] = useState(() => new RSWSClient(
-    userState.user.username,
-    id,
-    userState.sessionId,
-    userState.token,
-  ));
   const [queue, setQueue] = useState([]);
   const [chatInfo, setChatInfo] = useState({
     name: '',
@@ -49,6 +43,14 @@ function Chat() {
   });
   const [leaveChatDialog, setLeaveChatDialog] = useState(false);
   const [direction] = useAdapt();
+
+  // WebSocket client from context
+  const client = useContext(WebSocketContext);
+  client.setUsername(userState.user.username);
+  client.setChatId(id);
+  client.setSessionId(userState.sessionId);
+  client.setToken(userState.token);
+  client.connectToChat();
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
@@ -97,7 +99,7 @@ function Chat() {
       .userCanConnect(chatId, userState.user.id, userState.token)
       .then(response => {
         if (!response.data.canConnect) {
-          client.disconnect();
+          client.disconnectFromChat();
           navigate('/home');
           return;
         }
@@ -106,12 +108,12 @@ function Chat() {
         fetchChatInfo();
       })
       .catch(err => {
-        client.disconnect();
+        client.disconnectFromChat();
         checkResponse(err, navigate, dispatch);
       });
 
     window.addEventListener('beforeunload', function() {
-      client.disconnect(); // Executed when the page is reloaded
+      client.disconnectFromChat(); // Executed when the page is reloaded
     });
 
     // This is executed before any message is sent to the server
@@ -127,7 +129,7 @@ function Chat() {
 
     return () => {
       // On component unmount (executed when the page is changed)
-      client.disconnect();
+      client.disconnectFromChat();
     };
   }, []);
 
@@ -173,7 +175,7 @@ function Chat() {
     ChatService
       .leaveChat(chatId, userState.user.id, userState.token)
       .then(() => {
-        client.disconnect();
+        client.disconnectFromChat();
         navigate('/home');
       })
       .catch(err => checkResponse(err, navigate, dispatch));

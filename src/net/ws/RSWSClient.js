@@ -32,6 +32,22 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   };
 }
 
+RSWSClient.prototype.setUsername = function(username) {
+  this.username = username;
+};
+
+RSWSClient.prototype.setChatId = function(chatId) {
+  this.chatId = chatId;
+};
+
+RSWSClient.prototype.setSessionId = function(sessionId) {
+  this.sessionId = sessionId;
+};
+
+RSWSClient.prototype.setToken = function(__token__) {
+  this.__token__ = __token__;
+};
+
 /**
  * Sends a messageContent to the connected server (string or JSON).
  *
