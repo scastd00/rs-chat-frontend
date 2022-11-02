@@ -6,16 +6,24 @@ import SchoolIcon from '@mui/icons-material/School';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PersonIcon from '@mui/icons-material/Person';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import MessageIcon from '@mui/icons-material/Message';
+import DescriptionIcon from '@mui/icons-material/Description';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 function Administration() {
   const [navigate] = useNavDis();
   const items = [
-    { name: 'degrees', icon: SchoolIcon },
-    { name: 'subjects', icon: BookIcon },
-    { name: 'groups', icon: GroupsIcon },
-    { name: 'users', icon: PersonIcon },
-    { name: 'statistics', icon: AnalyticsIcon },
-  ]
+    { displayName: 'Degrees', route: 'degrees', icon: SchoolIcon },
+    { displayName: 'Subjects', route: 'subjects', icon: BookIcon },
+    { displayName: 'Groups', route: 'groups', icon: GroupsIcon },
+    { displayName: 'Users', route: 'users', icon: PersonIcon },
+    { displayName: 'Statistics', route: 'statistics', icon: AnalyticsIcon },
+    { displayName: 'Global info message', route: 'message', icon: MessageIcon },
+    { displayName: 'Logs', route: 'logs', icon: DescriptionIcon },
+    { displayName: 'Settings', route: 'settings', icon: SettingsIcon },
+    // { displayName: 'About', route: 'about', icon: SettingsIcon },
+    // { displayName: 'Help', route: 'help', icon: SettingsIcon },
+  ];
 
   return (
     <Container sx={{ py: 3 }} component='main'>
@@ -30,9 +38,9 @@ function Administration() {
                 variant='outlined'
                 fullWidth
                 color='primary'
-                onClick={() => navigate(`/administration/${item.name}`)}
+                onClick={() => navigate(`/administration/${item.route}`)}
               >
-                {item.name} &nbsp;&nbsp; {item.icon && <item.icon />}
+                {item.displayName} &nbsp;&nbsp; {item.icon && <item.icon />}
               </Button>
             </Grid>
           ))

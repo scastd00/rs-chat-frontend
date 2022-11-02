@@ -1,45 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, CssBaseline, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  Container,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Grid,
+  Typography,
+} from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useDispatch, useStore } from 'react-redux';
-import RSWSClient from '../net/ws/RSWSClient';
 import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageProps';
+import { RESTART_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageTypes';
 import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
+import { WebSocketContext } from '../utils/constants';
 
 function Chat() {
   const { id } = useParams();
   const [, chatId] = id.split('-');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // Todo: host this resource in home server
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
-
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const userState = useStore().getState().user;
-  const [client] = useState(() => new RSWSClient(
-    userState.user.username,
-    id,
-    userState.sessionId,
-    userState.tokens.accessToken,
-    dispatch,
-    navigate,
-  ));
   const [queue, setQueue] = useState([]);
   const [chatInfo, setChatInfo] = useState({
     name: '',
     metadata: {},
   });
+  const [leaveChatDialog, setLeaveChatDialog] = useState(false);
+  const [direction] = useAdapt();
+
+  // WebSocket client from context
+  const client = useContext(WebSocketContext);
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
@@ -58,7 +64,7 @@ function Chat() {
 
   function fetchChatInfo() {
     ChatService
-      .getChatInfo(chatId, userState.tokens.accessToken)
+      .getChatInfo(chatId, userState.token)
       .then(res => {
         setChatInfo({
           name: res.data.name,
@@ -70,7 +76,7 @@ function Chat() {
       });
 
     ChatService
-      .getAllUsersOfChat(chatId, userState.tokens.accessToken)
+      .getAllUsersOfChat(chatId, userState.token)
       .then(res => {
         setAllUsers(res.data.users);
       })
@@ -85,31 +91,30 @@ function Chat() {
     // We check here to prevent a user who doesn't have access to the chat to access it
     // by changing the url.
     ChatService
-      .userCanConnect(chatId, userState.user.id, userState.tokens.accessToken)
+      .userCanConnect(chatId, userState.user.id, userState.token)
       .then(response => {
         if (!response.data.canConnect) {
-          client.disconnect();
+          client.disconnectFromChat();
           navigate('/home');
-        } else {
-          setShowPage(true);
-          fetchChatInfo();
-
-          /*
-           * Client is already connected here.
-           * Get the history and active users. It is more secure to do it here.
-           * If done when the client is connected to the server, the server will send
-           * the history and active users to the client, and the messages
-           * can be scanned with WireShark (or other tools).
-           */
+          return;
         }
+
+        client.setUsername(userState.user.username);
+        client.setChatId(id);
+        client.setSessionId(userState.sessionId);
+        client.setToken(userState.token);
+        client.connect(); // If not connected (due to page refresh), we connect to the chat
+        client.connectToChat();
+        setShowPage(true);
+        fetchChatInfo();
       })
       .catch(err => {
-        client.disconnect();
+        client.disconnectFromChat();
         checkResponse(err, navigate, dispatch);
       });
 
     window.addEventListener('beforeunload', function() {
-      client.disconnect(); // Executed when the page is reloaded
+      client.disconnectFromChat(); // Executed when the page is reloaded
     });
 
     // This is executed before any message is sent to the server
@@ -124,10 +129,14 @@ function Chat() {
     );
 
     return () => {
-      // On component unmount
-      client.disconnect(); // Executed when the page is changed
+      // On component unmount (executed when the page is changed)
+      client.disconnectFromChat();
     };
   }, []);
+
+  // useEffect(() => {
+  //   client.connectToChat(); // We connect to the chat to get all the connected users and messages
+  // }, [client.connected]);
 
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
@@ -144,7 +153,7 @@ function Chat() {
    * @param files The files to be sent.
    */
   function uploadFiles(files) {
-    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.tokens.accessToken));
+    const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.token));
 
     Promise
       .all(uploadPromises)
@@ -163,7 +172,15 @@ function Chat() {
       });
   }
 
-  const [direction] = useAdapt();
+  function handleLeaveChat() {
+    ChatService
+      .leaveChat(chatId, userState.user.id, userState.token)
+      .then(() => {
+        client.disconnectFromChat();
+        navigate('/home');
+      })
+      .catch(err => checkResponse(err, navigate, dispatch));
+  }
 
   return (
     <CssBaseline>
@@ -174,8 +191,21 @@ function Chat() {
               <CssBaseline />
 
               <Grid container direction='column' spacing={1}>
-                <Grid item>
-                  <Typography variant='h5'>Current chat: {chatInfo.name}</Typography>
+                <Grid item container direction='row' justifyContent='space-between' alignItems='center'>
+                  <Grid item>
+                    <Typography variant='h5'>
+                      Current chat: {chatInfo.name}
+                    </Typography>
+                  </Grid>
+
+                  <Grid item>
+                    <Button color='error' onClick={() => setLeaveChatDialog(true)}>
+                      Leave chat
+                    </Button>
+                    <Button color='error' onClick={() => client.send('Restart', RESTART_MESSAGE)}>
+                      Restart
+                    </Button>
+                  </Grid>
                 </Grid>
 
                 <Grid item>
@@ -194,6 +224,19 @@ function Chat() {
           </Grid>
         </Grid>
       )}
+
+      <Dialog open={leaveChatDialog} onClose={() => setLeaveChatDialog(false)}>
+        <DialogTitle>Leave chat</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to leave this chat?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color='success' onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
+          <Button color='error' onClick={handleLeaveChat}>Leave</Button>
+        </DialogActions>
+      </Dialog>
     </CssBaseline>
   );
 }

@@ -33,7 +33,7 @@ function AddUser() {
 
   function handleConfirm() {
     UserService
-      .createUser(formData, userState.tokens.accessToken)
+      .createUser(formData, userState.token)
       .then(_ => {
         setFormData({
           email: '',

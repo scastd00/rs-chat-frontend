@@ -1,5 +1,5 @@
 import { logOut } from '../actions';
-import { USER_JOINED, USER_LEFT, USER_MESSAGES } from '../net/ws/MessageProps';
+import { USER_JOINED, USER_LEFT, USER_MESSAGES } from '../net/ws/MessageTypes';
 import dateFormat from 'dateformat';
 
 export function headers(__token__) {

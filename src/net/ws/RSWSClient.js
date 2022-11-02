@@ -5,9 +5,11 @@ import {
   PING_MESSAGE,
   PONG_MESSAGE,
   TEXT_MESSAGE,
+  USER_CONNECTED,
+  USER_DISCONNECTED,
   USER_JOINED,
   USER_LEFT,
-} from './MessageProps';
+} from './MessageTypes';
 import { createMessage, isActivityMessage } from '../../utils';
 import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
 
@@ -23,11 +25,28 @@ function RSWSClient(username, chatId, sessionId, __token__) {
   this.__token__ = __token__;
   this.pingInterval = null;
   this.connected = false;
+  this.connectedToChat = false;
 
   this.socket.onopen = () => {
     this.connect();
   };
 }
+
+RSWSClient.prototype.setUsername = function(username) {
+  this.username = username;
+};
+
+RSWSClient.prototype.setChatId = function(chatId) {
+  this.chatId = chatId;
+};
+
+RSWSClient.prototype.setSessionId = function(sessionId) {
+  this.sessionId = sessionId;
+};
+
+RSWSClient.prototype.setToken = function(__token__) {
+  this.__token__ = __token__;
+};
 
 /**
  * Sends a messageContent to the connected server (string or JSON).
@@ -56,19 +75,20 @@ RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
   return true;
 };
 
+/**
+ * Establishes the connection with the server.
+ */
 RSWSClient.prototype.connect = function() {
-  if (!this.connected) {
-    this.connected = true;
-
-    // Only executed one time
-    this.send('Hi', USER_JOINED);
-    this.send('', GET_HISTORY_MESSAGE);
-    this.send('', ACTIVE_USERS_MESSAGE);
-
-    this.pingInterval = setInterval(() => {
-      this.send('I send a ping message', PING_MESSAGE);
-    }, PING_INTERVAL);
+  if (this.connected) {
+    return;
   }
+
+  this.connected = true;
+  this.send('', USER_CONNECTED);
+
+  this.pingInterval = setInterval(() => {
+    this.send('I am a ping message', PING_MESSAGE);
+  }, PING_INTERVAL);
 };
 
 /**
@@ -80,20 +100,42 @@ RSWSClient.prototype.disconnect = function() {
   }
 
   clearInterval(this.pingInterval);
-
-  this.send(
-    createMessage(
-      this.username,
-      this.chatId,
-      this.sessionId,
-      USER_LEFT,
-      this.__token__,
-      'Bye',
-    ),
-  );
+  this.disconnectFromChat();
+  this.send('', USER_DISCONNECTED);
 
   this.connected = false;
   this.socket.close(1000, 'Disconnected');
+};
+
+/**
+ * Connects the user to the chat.
+ */
+RSWSClient.prototype.connectToChat = function() {
+  if (!this.connected || this.connectedToChat) {
+    return;
+  }
+
+  this.connectedToChat = true;
+
+  this.send('', USER_JOINED);
+  this.send('', GET_HISTORY_MESSAGE);
+  this.send('', ACTIVE_USERS_MESSAGE);
+};
+
+/**
+ * Disconnects the user from the chat.
+ */
+RSWSClient.prototype.disconnectFromChat = function() {
+  if (!this.connectedToChat) {
+    return;
+  }
+
+  this.send('', USER_LEFT);
+  this.setUsername('');
+  this.setChatId('');
+  this.setSessionId('0');
+  this.setToken('empty');
+  this.connectedToChat = false;
 };
 
 /**

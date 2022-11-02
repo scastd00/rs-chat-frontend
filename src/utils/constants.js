@@ -1,3 +1,5 @@
+import { createContext } from 'react';
+
 export const SUPPORTED_FILES = {
   'text/*': ['.txt', '.md', '.csv', '.tsv', '.xml', '.json'],
   'image/*': ['.jpg', '.jpeg', '.png', '.gif', '.svg'],
@@ -15,3 +17,5 @@ export function getWindowSize() {
 
 export const PROD_HOST = `${import.meta.env.VITE_PROD_HOST}:4040`;
 export const DEV_HOST = `${import.meta.env.VITE_DEV_HOST}:4041`;
+
+export const WebSocketContext = createContext(null);

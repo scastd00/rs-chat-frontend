@@ -17,7 +17,7 @@ import {
   useTheme,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { setAvailableChats, setSessionId, setTokens, setUser } from '../actions';
+import { setAvailableChats, setSessionId, setToken, setUser } from '../actions';
 import AuthService from '../services/AuthService';
 import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
@@ -40,10 +40,7 @@ function Register() {
 
   const setStateOfStore = ({ user, session, chats }) => {
     dispatch(setUser(user));
-    dispatch(setTokens({
-      accessToken: session.accessToken,
-      refreshToken: session.refreshToken,
-    }));
+    dispatch(setToken(session.token));
     dispatch(setSessionId(session.id));
     dispatch(setAvailableChats(chats));
   };

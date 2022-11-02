@@ -18,14 +18,14 @@ function AdministrationGroups() {
 
   useEffect(() => {
     GroupService
-      .getAllGroups(userState.tokens.accessToken)
+      .getAllGroups(userState.token)
       .then(res => setAllGroups(JSON.parse(res.data.groups)))
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
   function handleDeleteGroup(id) {
     GroupService
-      .deleteGroup(id, userState.tokens.accessToken)
+      .deleteGroup(id, userState.token)
       .then(() => {
         setAllGroups(allGroups.filter(group => group.id !== id));
       })

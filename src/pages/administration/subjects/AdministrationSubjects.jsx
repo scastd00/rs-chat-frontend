@@ -20,19 +20,19 @@ function AdministrationSubjects() {
 
   useEffect(() => {
     SubjectService
-      .getAllSubjects(userState.tokens.accessToken)
+      .getAllSubjects(userState.token)
       .then(res => setAllSubjects(JSON.parse(res.data.subjects)))
       .catch(err => checkResponse(err, navigate, dispatch));
 
     DegreeService
-      .getAllDegrees(userState.tokens.accessToken)
+      .getAllDegrees(userState.token)
       .then(res => setAllDegrees(JSON.parse(res.data.degrees)))
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 
   function handleDeleteSubject(id) {
     SubjectService
-      .deleteSubject(id, userState.tokens.accessToken)
+      .deleteSubject(id, userState.token)
       .then(() => {
         setAllSubjects(allSubjects.filter(subject => subject.id !== id));
       })

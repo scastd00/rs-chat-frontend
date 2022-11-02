@@ -17,4 +17,8 @@ export default {
   getAllUsersOfChat(chatId, __token__) {
     return Api.get(`/chat/users/${chatId}`, headers(__token__));
   },
+
+  leaveChat(chatId, userId, __token__) {
+    return Api.post(`/chat/leave/${chatId}`, { userId }, headers(__token__));
+  },
 };

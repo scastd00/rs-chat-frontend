@@ -59,5 +59,11 @@ export default createTheme({
     spinner: {
       main: '#29b6f6',
     },
+    status: {
+      online: '#00be1f',
+      away: '#ffa726',
+      busy: '#f44336',
+      offline: '#bdbdbd',
+    },
   },
 });

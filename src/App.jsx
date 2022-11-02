@@ -9,10 +9,18 @@ import ToolBar from './layouts/ToolBar';
 import PrivateRoute from './routes/PrivateRoute';
 import AdminRoute from './routes/AdminRoute';
 import { ADMINISTRATION_ROUTES, PRIVATE_ROUTES, PUBLIC_ROUTES } from './routes/allRoutes';
+import { pdfjs } from 'react-pdf';
+import RSWSClient from './net/ws/RSWSClient';
+import { WebSocketContext } from './utils/constants';
+
+// Config for global use
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'; // Options prop does not work, this solves the errors
 
 function App(props) {
   // Theme detector -> https://medium.com/hypersphere-codes/detecting-system-theme-in-javascript-css-react-f6b961916d48
   const [darkTheme, setDarkTheme] = useState(props.theme.isDarkTheme);
+
+  const [client] = useState(() => new RSWSClient('', '', '0', 'empty'));
 
   useEffect(() => {
     // If darkTheme parameter is changed, every change
@@ -24,32 +32,34 @@ function App(props) {
     <ThemeProvider theme={darkTheme ? dark : light}>
       <div className='App'>
         <Router>
-          <ToolBar />
+          <WebSocketContext.Provider value={client}>
+            <ToolBar />
 
-          <Routes>
-            {/* Go to log in by default if the user is not logged in */}
-            <Route path='/' element={<Navigate to='/login' />} />
+            <Routes>
+              {/* Go to log in by default if the user is not logged in */}
+              <Route path='/' element={<Navigate to='/login' />} />
 
-            {
-              PUBLIC_ROUTES.map(({ path, component, restricted }, index) => (
-                <Route key={index}
-                       path={path}
-                       element={<PublicRoute component={component} restricted={restricted} />} />
-              ))
-            }
+              {
+                PUBLIC_ROUTES.map(({ path, component, restricted }, index) => (
+                  <Route key={index}
+                         path={path}
+                         element={<PublicRoute component={component} restricted={restricted} />} />
+                ))
+              }
 
-            {
-              PRIVATE_ROUTES.map(({ path, component }, index) => (
-                <Route key={index} path={path} element={<PrivateRoute component={component} />} />
-              ))
-            }
+              {
+                PRIVATE_ROUTES.map(({ path, component }, index) => (
+                  <Route key={index} path={path} element={<PrivateRoute component={component} />} />
+                ))
+              }
 
-            {
-              ADMINISTRATION_ROUTES.map(({ path, component }, index) => (
-                <Route key={index} path={path} element={<AdminRoute component={component} />} />
-              ))
-            }
-          </Routes>
+              {
+                ADMINISTRATION_ROUTES.map(({ path, component }, index) => (
+                  <Route key={index} path={path} element={<AdminRoute component={component} />} />
+                ))
+              }
+            </Routes>
+          </WebSocketContext.Provider>
         </Router>
       </div>
     </ThemeProvider>

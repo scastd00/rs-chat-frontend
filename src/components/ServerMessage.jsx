@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
-import { SERVER_INFO_MESSAGE, USER_JOINED, USER_LEFT } from '../net/ws/MessageProps';
+import { SERVER_INFO_MESSAGE, USER_CONNECTED, USER_JOINED, USER_LEFT } from '../net/ws/MessageTypes';
 import ErrorChatCard from './cards/ErrorChatCard';
 import UserEventChatCard from './cards/UserEventChatCard';
 import TextChatCard from './cards/TextChatCard';
@@ -25,6 +25,7 @@ function ServerMessage({ message }) {
         <Grid item xs>
           {(() => {
             switch (message.headers.type) {
+              case USER_CONNECTED:
               case USER_JOINED:
                 return <UserEventChatCard text={message.body.content} connected />;
 

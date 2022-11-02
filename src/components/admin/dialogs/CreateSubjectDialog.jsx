@@ -25,7 +25,7 @@ function CreateSubjectDialog({ open, onClose, addToVisibleList, allDegrees }) {
       return;
 
     SubjectService
-      .addSubject(subjectProps, userState.tokens.accessToken)
+      .addSubject(subjectProps, userState.token)
       .then(res => {
         addToVisibleList(JSON.parse(res.data.subject));
         setSubjectProps(defaultValues);

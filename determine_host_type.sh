@@ -11,26 +11,26 @@
 #  None
 #######################################
 function main() {
+  local hostname
+  hostname=$(hostname -I)
+
   # Check if the computer is at home
-  if [[ $(hostname -I) =~ ^192\.168\.0\..* ]]; then
+  if [[ "$hostname" =~ ^192\.168\.0\..* ]]; then
     # The computer is at home
-    echo 'You are at home'
     echo 'VITE_PROD_HOST=192.168.0.100' >.env
     echo 'VITE_DEV_HOST=127.0.0.1' >>.env
     exit 0
   fi
 
   # The computer is away home
-  if [[ $(hostname -I) =~ ^192\.*\.*\.* ]]; then
+  if [[ "$hostname" =~ ^192\.*\.*\.* || "$hostname" =~ ^10\.*\.*\.* ]]; then
     # The computer is connected to the mobile network
-    echo 'You are connected to the mobile network'
     echo 'VITE_PROD_HOST=rs-chat.duckdns.org' >.env
     echo 'VITE_DEV_HOST=127.0.0.1' >>.env
     exit 0
   fi
 
   # The computer is deployed in Vercel
-  echo 'You are deployed in Vercel'
   echo 'VITE_PROD_HOST=rs-chat.duckdns.org' >.env
   echo 'VITE_DEV_HOST=rs-chat.duckdns.org' >>.env
 }

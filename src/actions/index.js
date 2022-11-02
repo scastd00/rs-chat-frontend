@@ -9,8 +9,8 @@ export const setSessionId = createAction(SET_SESSION_ID, (sessionId) => {
   return { payload: sessionId };
 });
 
-export const setTokens = createAction(SET_USER_TOKEN, (tokens) => {
-  return { payload: tokens };
+export const setToken = createAction(SET_USER_TOKEN, (token) => {
+  return { payload: token };
 });
 
 export const setAvailableChats = createAction(SET_AVAILABLE_CHATS, (chats) => {

@@ -20,6 +20,7 @@ import EditDegree from '../pages/administration/degrees/EditDegree';
 import EditSubject from '../pages/administration/subjects/EditSubject';
 import EditGroup from '../pages/administration/groups/EditGroup';
 import Logout from '../pages/Logout';
+import GlobalInfoSender from '../pages/administration/GlobalInfoSender';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -50,4 +51,5 @@ export const ADMINISTRATION_ROUTES = [
   { path: '/administration/users/edit/:id', component: EditUser },
   { path: '/administration/users/list', component: ListUsers },
   { path: '/administration/statistics', component: AdministrationStatistics },
+  { path: '/administration/message', component: GlobalInfoSender },
 ];

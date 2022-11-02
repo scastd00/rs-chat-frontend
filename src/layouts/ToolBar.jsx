@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { AppBar, Button, Grid, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
-import { useNavigate } from 'react-router';
-import { connect, useDispatch, useStore } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
+import { AppBar, Button, Divider, Grid, Icon, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { connect, useStore } from 'react-redux';
 import { changeTheme } from '../actions';
 import HomeTwoToneIcon from '@mui/icons-material/HomeTwoTone';
 import DarkModeTwoToneIcon from '@mui/icons-material/DarkModeTwoTone';
@@ -12,6 +11,9 @@ import AccountCircleTwoToneIcon from '@mui/icons-material/AccountCircleTwoTone';
 import LightModeTwoToneIcon from '@mui/icons-material/LightModeTwoTone';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
+import { WebSocketContext } from '../utils/constants';
+import { useNavDis } from '../hooks/useNavDis';
+import StatusDot from '../icons/StatusDot';
 
 function ToolBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -19,8 +21,12 @@ function ToolBar(props) {
   const open = Boolean(anchorEl);
   const state = useStore().getState();
   const userState = props.data;
-
+  const client = useContext(WebSocketContext);
   const [darkMode, setDarkMode] = useState(state.theme.isDarkTheme);
+  const [connectionState, setConnectionState] = useState({
+    toServer: client.connected,
+    toChat: client.connectedToChat,
+  });
 
   useEffect(() => {
     setDarkMode(state.theme.isDarkTheme);
@@ -34,8 +40,7 @@ function ToolBar(props) {
     setAnchorEl(null);
   };
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
   const [username, setUsername] = useState('');
 
   useEffect(() => {
@@ -49,17 +54,76 @@ function ToolBar(props) {
     }
   }, [props.data.user]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setConnectionState({
+        toServer: client.connected,
+        toChat: client.connectedToChat,
+      });
+    }, 1000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   return (
     <AppBar position='relative'>
       <Toolbar>
-        <Grid container direction='row' justifyContent='space-between' alignItems='center'>
+        <Grid container justifyContent='space-between' alignItems='center'>
           <Grid item>
-            <Grid container spacing={2}>
+            <Grid container spacing={2} alignItems='center'>
               <Grid item>
                 <Button variant='text' disabled={!loggedIn} color='secondary' onClick={() => navigate('/home')}>
                   <HomeTwoToneIcon sx={{ mr: 1 }} fontSize='medium' />
                   Home
                 </Button>
+              </Grid>
+
+              <Grid item>
+                <Divider orientation='vertical' />
+              </Grid>
+
+              <Grid item>
+                <Typography>Server status</Typography>
+
+                <Grid container alignItems='center'
+                      sx={{ color: client.connected ? 'status.online' : 'status.offline' }}>
+                  <Grid item>
+                    <Icon>
+                      <StatusDot />
+                    </Icon>
+                  </Grid>
+
+                  <Grid item>
+                    <Typography>
+                      {client.connected ? 'Connected' : 'Disconnected'}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid item>
+                <Divider orientation='vertical' />
+              </Grid>
+
+              <Grid item>
+                <Typography>Chat status</Typography>
+
+                <Grid container alignItems='center'
+                      sx={{ color: client.connectedToChat ? 'status.online' : 'status.offline' }}>
+                  <Grid item>
+                    <Icon>
+                      <StatusDot />
+                    </Icon>
+                  </Grid>
+
+                  <Grid item>
+                    <Typography>
+                      {client.connectedToChat ? 'Connected to ' + client.chatId : 'Disconnected'}
+                    </Typography>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
