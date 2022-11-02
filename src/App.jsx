@@ -32,9 +32,9 @@ function App(props) {
     <ThemeProvider theme={darkTheme ? dark : light}>
       <div className='App'>
         <Router>
-          <ToolBar />
-
           <WebSocketContext.Provider value={client}>
+            <ToolBar />
+
             <Routes>
               {/* Go to log in by default if the user is not logged in */}
               <Route path='/' element={<Navigate to='/login' />} />

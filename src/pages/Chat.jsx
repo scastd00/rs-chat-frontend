@@ -46,11 +46,6 @@ function Chat() {
 
   // WebSocket client from context
   const client = useContext(WebSocketContext);
-  client.setUsername(userState.user.username);
-  client.setChatId(id);
-  client.setSessionId(userState.sessionId);
-  client.setToken(userState.token);
-  client.connectToChat();
 
   const addMessageToQueue = (message) => setQueue(prevState => [message, ...prevState]);
 
@@ -104,6 +99,12 @@ function Chat() {
           return;
         }
 
+        client.setUsername(userState.user.username);
+        client.setChatId(id);
+        client.setSessionId(userState.sessionId);
+        client.setToken(userState.token);
+        client.connect(); // If not connected (due to page refresh), we connect to the chat
+        client.connectToChat();
         setShowPage(true);
         fetchChatInfo();
       })
@@ -133,9 +134,9 @@ function Chat() {
     };
   }, []);
 
-  useEffect(() => {
-    client.connectToChat(); // We connect to the chat to get all the connected users and messages
-  }, [client.connected]);
+  // useEffect(() => {
+  //   client.connectToChat(); // We connect to the chat to get all the connected users and messages
+  // }, [client.connected]);
 
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);

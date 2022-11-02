@@ -131,6 +131,10 @@ RSWSClient.prototype.disconnectFromChat = function() {
   }
 
   this.send('', USER_LEFT);
+  this.setUsername('');
+  this.setChatId('');
+  this.setSessionId('0');
+  this.setToken('empty');
   this.connectedToChat = false;
 };
 
