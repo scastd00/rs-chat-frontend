@@ -18,8 +18,14 @@ export function prettyDate(date) {
   return dateFormat(date, 'HH:MM');
 }
 
-export function parseDateForInput(date) {
-  return dateFormat(date, 'isoDate');
+/**
+ * Formats the date with ISO 8601 format.
+ *
+ * @param {dayjs.Dayjs} dayjs - The date to format.
+ * @returns {string} The formatted date.
+ */
+export function isoDate(dayjs) {
+  return dayjs.format();
 }
 
 /**

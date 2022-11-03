@@ -1,7 +1,7 @@
 import React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
-import { SERVER_INFO_MESSAGE, USER_CONNECTED, USER_JOINED, USER_LEFT } from '../net/ws/MessageTypes';
+import { INFO_MESSAGE, USER_CONNECTED, USER_JOINED, USER_LEFT } from '../net/ws/MessageTypes';
 import ErrorChatCard from './cards/ErrorChatCard';
 import UserEventChatCard from './cards/UserEventChatCard';
 import TextChatCard from './cards/TextChatCard';
@@ -32,7 +32,7 @@ function ServerMessage({ message }) {
               case USER_LEFT:
                 return <UserEventChatCard text={message.body.content} />;
 
-              case SERVER_INFO_MESSAGE:
+              case INFO_MESSAGE:
                 return <TextChatCard text={message.body.content} serverInfo />;
 
               default:

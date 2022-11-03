@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { RESTART_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageTypes';
+import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
 import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
@@ -134,10 +134,6 @@ function Chat() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   client.connectToChat(); // We connect to the chat to get all the connected users and messages
-  // }, [client.connected]);
-
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
 
@@ -201,9 +197,6 @@ function Chat() {
                   <Grid item>
                     <Button color='error' onClick={() => setLeaveChatDialog(true)}>
                       Leave chat
-                    </Button>
-                    <Button color='error' onClick={() => client.send('Restart', RESTART_MESSAGE)}>
-                      Restart
                     </Button>
                   </Grid>
                 </Grid>

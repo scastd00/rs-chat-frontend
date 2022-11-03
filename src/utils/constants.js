@@ -18,4 +18,7 @@ export function getWindowSize() {
 export const PROD_HOST = `${import.meta.env.VITE_PROD_HOST}:4040`;
 export const DEV_HOST = `${import.meta.env.VITE_DEV_HOST}:4041`;
 
+/**
+ * @type {React.Context<RSWSClient>}
+ */
 export const WebSocketContext = createContext(null);
