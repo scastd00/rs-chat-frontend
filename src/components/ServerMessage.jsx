@@ -7,6 +7,18 @@ import UserEventChatCard from './cards/UserEventChatCard';
 import TextChatCard from './cards/TextChatCard';
 
 function ServerMessage({ message }) {
+  function messageColor(type) {
+    switch (type) {
+      case INFO_MESSAGE:
+        return 'message.info';
+      case MAINTENANCE_MESSAGE:
+        return 'message.warning';
+      case RESTART_MESSAGE:
+      default:
+        return 'message.error';
+    }
+  }
+
   return (
     <Paper sx={{ px: 2, py: 0.5, background: 'transparent', textAlign: 'center' }} elevation={0}>
       <Grid container direction='column'>
@@ -34,7 +46,7 @@ function ServerMessage({ message }) {
               case MAINTENANCE_MESSAGE:
               case RESTART_MESSAGE:
               case INFO_MESSAGE:
-                return <TextChatCard text={message.body.content} serverInfo />;
+                return <TextChatCard text={message.body.content} customColor={messageColor(message.headers.type)} />;
 
               default:
                 return <ErrorChatCard />;

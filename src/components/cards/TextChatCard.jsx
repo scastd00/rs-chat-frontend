@@ -1,13 +1,13 @@
 import React from 'react';
 import { Grid, Typography } from '@mui/material';
 
-function TextChatCard({ text, serverInfo }) {
+function TextChatCard({ text, customColor }) {
   return (
     <Grid container>
       <Grid item xs zeroMinWidth>
         <Typography
           style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
-          sx={serverInfo ? { color: 'message.info' } : {}}
+          sx={customColor ? { color: customColor } : {}}
         >
           {text}
         </Typography>
