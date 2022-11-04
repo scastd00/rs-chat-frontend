@@ -1,6 +1,7 @@
 import { logOut } from '../actions';
 import { USER_JOINED, USER_LEFT, USER_MESSAGES } from '../net/ws/MessageTypes';
 import dateFormat from 'dateformat';
+import dayjs from 'dayjs';
 
 export function headers(__token__) {
   return {
@@ -68,7 +69,7 @@ export function createMessage(username, chatId, sessionId, type, token, content)
       chatId,
       sessionId,
       type,
-      date: Date.now(),
+      date: dayjs().valueOf(),
       token: `Bearer ${token}`,
     },
     body: {

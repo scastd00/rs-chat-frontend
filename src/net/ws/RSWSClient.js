@@ -159,25 +159,36 @@ RSWSClient.prototype.onMessage = function(
     const parsedMessage = JSON.parse(message.data);
     const { headers, body } = parsedMessage;
 
-    if (headers.type === ERROR_MESSAGE) {
-      errorCallback();
-    } else if (headers.type === ACTIVE_USERS_MESSAGE) {
-      // String containing an array of usernames
-      activeUsersCallback(JSON.parse(body.content));
-    } else if (headers.type === GET_HISTORY_MESSAGE) {
-      const messages = JSON.parse(body.content);
-      historyCallback(messages);
-    } else if (headers.type === PONG_MESSAGE) {
-      // Do nothing
-    } else {
-      displayCallback(parsedMessage);
-      playSoundOnMessage();
+    switch (headers.type) {
+      case ERROR_MESSAGE:
+        errorCallback();
+        break;
 
-      // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
-      // to the server to get the updated list of active users.
-      if (isActivityMessage(headers.type)) {
-        this.send('', ACTIVE_USERS_MESSAGE);
-      }
+      case ACTIVE_USERS_MESSAGE:
+        // String containing an array of usernames
+        activeUsersCallback(JSON.parse(body.content));
+        break;
+
+      case GET_HISTORY_MESSAGE:
+        historyCallback(JSON.parse(body.content));
+        break;
+
+      case PING_MESSAGE:
+      case PONG_MESSAGE:
+      case USER_CONNECTED:
+      case USER_DISCONNECTED:
+        // No-op
+        break;
+
+      default:
+        displayCallback(parsedMessage);
+        playSoundOnMessage();
+
+        // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
+        // to the server to get the updated list of active users.
+        if (isActivityMessage(headers.type)) {
+          this.send('', ACTIVE_USERS_MESSAGE);
+        }
     }
   };
 };
