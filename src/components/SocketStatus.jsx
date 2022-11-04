@@ -60,7 +60,7 @@ function SocketStatus() {
 
           <Grid item>
             <Typography>
-              {client.connectedToChat ? 'Connected to ' + client.chatId : 'Disconnected'}
+              {client.connectedToChat ? 'Connected' : 'Disconnected'}
             </Typography>
           </Grid>
         </Grid>

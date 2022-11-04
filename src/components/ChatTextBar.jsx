@@ -39,6 +39,10 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [listOfEmojis, setListOfEmojis] = useState([]);
   const [selectingEmoji, setSelectingEmoji] = useState(false);
 
+  const inputRef = React.useRef();
+  const [selectionStart, setSelectionStart] = React.useState();
+  const updateSelectionStart = () => setSelectionStart(inputRef.current.selectionStart);
+
   useEffect(() => {
     setSelectedFiles(acceptedFiles.map(file => file));
   }, [acceptedFiles]);
@@ -134,13 +138,14 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   }
 
   function addEmojiToTextBox(evt) {
-    setMessage(message + evt.currentTarget.innerText + ' ');
-    // Todo: set the emoji in next to the cursor position
+    const firstPart = message.substring(0, selectionStart);
+    const secondPart = message.substring(selectionStart, message.length);
+
+    setMessage(firstPart + evt.currentTarget.innerText + secondPart);
     document.getElementById('TextBox').focus();
   }
 
-  // Todo: when cancel or completed the emoji, the remaining text should remain intact. (With regex could be done, maybe)
-  // Todo: list of emojis is not cleared to not produce visualization problems
+  // Note: list of emojis is not cleared to prevent visualization problems
 
   function showEmojisFromButton(evt) {
     setAnchorEl(evt.currentTarget);
@@ -185,6 +190,8 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
             color='secondary'
             onKeyDown={handleKeyDown}
             onChange={(evt) => setMessage(evt.target.value)}
+            onSelect={updateSelectionStart}
+            inputRef={inputRef}
             autoComplete='off'
             autoFocus
             value={message}

@@ -85,7 +85,6 @@ function TermsAndConditions() {
         inappropriate, offensive or causes breach of these Terms and Conditions. Our Terms and Conditions were created
         with the help of the <a href='https://www.terms-conditions-generator.com'>Terms Conditions Generator</a>.
       </p>
-      {/*Todo: DELETE CREATED WITH THE HELP OF...*/}
 
       <p>You warrant and represent that:</p>
 
