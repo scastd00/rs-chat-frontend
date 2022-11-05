@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Badge,
   Button,
@@ -21,11 +21,14 @@ import { useStore } from 'react-redux';
 import { EmojiEmotions } from '@mui/icons-material';
 import EmojiSelector from './EmojiSelector';
 import { getEmojiFromUnicode } from '../utils';
+import CommandPopover from './CommandPopover';
 
 function ChatTextBar({ sendTextMessage, sendFiles }) {
   const userState = useStore().getState().user;
+  const textFieldRef = useRef();
 
-  const [anchorEl, setAnchorEl] = useState(null); // Only set once
+  const [emojiAnchorEl, setEmojiAnchorEl] = useState(null); // Only set once
+  const [selectingEmoji, setSelectingEmoji] = useState(false);
   const [message, setMessage] = useState('');
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     multiple: true,
@@ -37,10 +40,12 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const [attachedFiles, setAttachedFiles] = useState([]);
   const [enableSendIcon, setEnableSendIcon] = useState(false);
   const [listOfEmojis, setListOfEmojis] = useState([]);
-  const [selectingEmoji, setSelectingEmoji] = useState(false);
 
-  const inputRef = React.useRef();
-  const [selectionStart, setSelectionStart] = React.useState();
+  const [insertingCommand, setInsertingCommand] = useState(false);
+  const [commandAnchorEl, setCommandAnchorEl] = useState(null);
+
+  const inputRef = useRef();
+  const [selectionStart, setSelectionStart] = useState();
   const updateSelectionStart = () => setSelectionStart(inputRef.current.selectionStart);
 
   useEffect(() => {
@@ -51,6 +56,13 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     // Enable send icon when message is not empty (or images are attached)
     setEnableSendIcon(message.trim().length > 0 || attachedFiles.length > 0);
   }, [message, attachedFiles]);
+
+  useEffect(() => {
+    if (message.charAt(selectionStart) === '/') {
+      setInsertingCommand(true);
+      setCommandAnchorEl(textFieldRef.current);
+    }
+  }, [message]);
 
   function handleSendButton(evt) {
     evt.currentTarget
@@ -142,13 +154,12 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     const secondPart = message.substring(selectionStart, message.length);
 
     setMessage(firstPart + evt.currentTarget.innerText + secondPart);
-    document.getElementById('TextBox').focus();
   }
 
   // Note: list of emojis is not cleared to prevent visualization problems
 
   function showEmojisFromButton(evt) {
-    setAnchorEl(evt.currentTarget);
+    setEmojiAnchorEl(evt.currentTarget);
 
     EmojiService
       .getRandomEmojis(10, userState.token)
@@ -161,16 +172,31 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
       });
   }
 
+  function onCommandClick(command) {
+    const firstPart = message.substring(0, selectionStart);
+    const secondPart = message.substring(selectionStart, message.length);
+
+    setMessage(firstPart + command + secondPart);
+    setInsertingCommand(false);
+  }
+
   return (
     <>
       <CssBaseline />
 
       <EmojiSelector
-        anchorEl={anchorEl}
+        anchorEl={emojiAnchorEl}
         onClose={() => setSelectingEmoji(false)}
         open={selectingEmoji}
         listOfEmojis={listOfEmojis}
         addEmojiToTextBox={addEmojiToTextBox}
+      />
+
+      <CommandPopover
+        open={insertingCommand}
+        anchorEl={commandAnchorEl}
+        onClose={() => setInsertingCommand(false)}
+        onCommandClick={onCommandClick}
       />
 
       <Grid container alignItems='center' justifyContent='center' spacing={1} sx={{ mt: 1 }}>
@@ -192,6 +218,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
             onChange={(evt) => setMessage(evt.target.value)}
             onSelect={updateSelectionStart}
             inputRef={inputRef}
+            ref={textFieldRef}
             autoComplete='off'
             autoFocus
             value={message}
