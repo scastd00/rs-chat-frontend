@@ -1,3 +1,5 @@
+import { COMMAND_MESSAGE, MENTION_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageTypes';
+
 /**
  * Reads every part of a message and returns an array of tokens.
  *
@@ -6,17 +8,21 @@
  */
 function createTokens(message) {
   const tokens = [];
-  const splitMessage = message.trim().split(/(\s+)/); // Split on whitespace
+  const strings = message.split(/(\s+)/); // Split on whitespace
 
-  for (const token of splitMessage) {
-    if (token.startsWith('/')) {
-      tokens.push({ type: 'command', value: token });
-    } else if (token.startsWith('@')) {
-      tokens.push({ type: 'mention', value: token });
-    } else {
-      tokens.push({ type: 'text', value: token });
-    }
-  }
+  strings.filter(str => str.length > 0)
+         .forEach(str => {
+           switch (str.charAt(0)) {
+             case '/':
+               tokens.push({ type: COMMAND_MESSAGE, value: str });
+               break;
+             case '@':
+               tokens.push({ type: MENTION_MESSAGE, value: str });
+               break;
+             default:
+               tokens.push({ type: TEXT_MESSAGE, value: str });
+           }
+         });
 
   return tokens;
 }
@@ -32,22 +38,22 @@ function createMessagesForString(message) {
   const messages = [];
   let textMessage = '';
 
-  // We only create messages and specify the type of the message.
+  // We only create messages and specify the type and value of the message.
   // The messages are created later with the use of the Message class and
   // sent to the server through the WebSocket.
 
-  for (const token of tokens) {
+  tokens.forEach(token => {
     textMessage += token.value; // Add the full token (also whitespaces) to the base message
 
-    if (token.type === 'command') {
-      messages.push({ type: 'command', value: token.value });
-    } else if (token.type === 'mention') {
-      messages.push({ type: 'mention', value: token.value });
-    } else {
-      messages.push({ type: 'text', value: token.value });
+    if (token.type !== TEXT_MESSAGE) {
+      messages.push({ type: token.type, value: token.value });
     }
-  }
+  });
 
+  messages.unshift({ type: TEXT_MESSAGE, value: textMessage });
+
+  // Result array structure:
+  // [ text(1), command(*), mention(*), ... ]
   return messages;
 }
 
