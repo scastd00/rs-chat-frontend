@@ -1,7 +1,14 @@
 import React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
-import { INFO_MESSAGE, MAINTENANCE_MESSAGE, RESTART_MESSAGE, USER_JOINED, USER_LEFT } from '../net/ws/MessageTypes';
+import {
+  COMMAND_RESPONSE,
+  INFO_MESSAGE,
+  MAINTENANCE_MESSAGE,
+  RESTART_MESSAGE,
+  USER_JOINED,
+  USER_LEFT,
+} from '../net/ws/MessageTypes';
 import ErrorChatCard from './cards/ErrorChatCard';
 import UserEventChatCard from './cards/UserEventChatCard';
 import TextChatCard from './cards/TextChatCard';
@@ -10,6 +17,7 @@ function ServerMessage({ message }) {
   function messageColor(type) {
     switch (type) {
       case INFO_MESSAGE:
+      case COMMAND_RESPONSE:
         return 'message.info';
       case MAINTENANCE_MESSAGE:
         return 'message.warning';
@@ -46,6 +54,7 @@ function ServerMessage({ message }) {
               case MAINTENANCE_MESSAGE:
               case RESTART_MESSAGE:
               case INFO_MESSAGE:
+              case COMMAND_RESPONSE:
                 return <TextChatCard text={message.body.content} customColor={messageColor(message.headers.type)} />;
 
               default:
