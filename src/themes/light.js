@@ -55,6 +55,8 @@ export default createTheme({
       joined: '#00be1f',
       left: '#f44336',
       info: '#03a9f4',
+      error: '#f44336',
+      warning: '#ffa726',
     },
     spinner: {
       main: '#29b6f6',

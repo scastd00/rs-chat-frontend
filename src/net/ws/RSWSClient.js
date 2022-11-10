@@ -12,6 +12,7 @@ import {
 } from './MessageTypes';
 import { createMessage, isActivityMessage } from '../../utils';
 import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
+import { createMessagesForString } from '../../utils/MessageTokenizer';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
@@ -52,26 +53,36 @@ RSWSClient.prototype.setToken = function(__token__) {
  * Sends a messageContent to the connected server (string or JSON).
  *
  * @param {string|object} messageContent messageContent to send.
- * @param {string} type
+ * @param {string} type type of the message to send.
+ * @param {boolean} parse whether the messageContent should be parsed or not.
  */
-RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
+RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE, parse = false) {
   if (this.socket.readyState !== WebSocket.OPEN || !this.connected) {
     return false; // Do not send anything
   }
 
-  let msgToSend;
-
-  if (typeof messageContent === 'string') {
-    msgToSend = JSON.stringify(this.prepareMessage(messageContent, type));
-  } else if (typeof messageContent === 'object') {
-    msgToSend = JSON.stringify(messageContent);
+  if (parse) {
+    const messages = createMessagesForString(messageContent);
+    messages.forEach(message => {
+      const messageToSend = this.prepareMessage(message.value, message.type);
+      this.socket.send(JSON.stringify(messageToSend));
+    });
   } else {
-    alert('Could not send messageContent (type must be a string or an object)');
+    let msgToSend;
 
-    return false;
+    if (typeof messageContent === 'string') {
+      msgToSend = JSON.stringify(this.prepareMessage(messageContent, type));
+    } else if (typeof messageContent === 'object') {
+      msgToSend = JSON.stringify(messageContent);
+    } else {
+      alert('Could not send messageContent (type must be a string or an object)');
+
+      return false;
+    }
+
+    this.socket.send(msgToSend);
   }
 
-  this.socket.send(msgToSend);
   return true;
 };
 
@@ -159,25 +170,36 @@ RSWSClient.prototype.onMessage = function(
     const parsedMessage = JSON.parse(message.data);
     const { headers, body } = parsedMessage;
 
-    if (headers.type === ERROR_MESSAGE) {
-      errorCallback();
-    } else if (headers.type === ACTIVE_USERS_MESSAGE) {
-      // String containing an array of usernames
-      activeUsersCallback(JSON.parse(body.content));
-    } else if (headers.type === GET_HISTORY_MESSAGE) {
-      const messages = JSON.parse(body.content);
-      historyCallback(messages);
-    } else if (headers.type === PONG_MESSAGE) {
-      // Do nothing
-    } else {
-      displayCallback(parsedMessage);
-      playSoundOnMessage();
+    switch (headers.type) {
+      case ERROR_MESSAGE:
+        errorCallback();
+        break;
 
-      // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
-      // to the server to get the updated list of active users.
-      if (isActivityMessage(headers.type)) {
-        this.send('', ACTIVE_USERS_MESSAGE);
-      }
+      case ACTIVE_USERS_MESSAGE:
+        // String containing an array of usernames
+        activeUsersCallback(JSON.parse(body.content));
+        break;
+
+      case GET_HISTORY_MESSAGE:
+        historyCallback(JSON.parse(body.content));
+        break;
+
+      case PING_MESSAGE:
+      case PONG_MESSAGE:
+      case USER_CONNECTED:
+      case USER_DISCONNECTED:
+        // No-op
+        break;
+
+      default:
+        displayCallback(parsedMessage);
+        playSoundOnMessage();
+
+        // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
+        // to the server to get the updated list of active users.
+        if (isActivityMessage(headers.type)) {
+          this.send('', ACTIVE_USERS_MESSAGE);
+        }
     }
   };
 };

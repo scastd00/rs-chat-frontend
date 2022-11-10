@@ -28,6 +28,13 @@ function App(props) {
     setDarkTheme(props.theme.isDarkTheme);
   }, [props.theme.isDarkTheme]);
 
+  useEffect(() => {
+    window.addEventListener('unload', () => {
+      client.disconnect();
+    });
+  }, []);
+
+
   return (
     <ThemeProvider theme={darkTheme ? dark : light}>
       <div className='App'>

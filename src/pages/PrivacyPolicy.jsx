@@ -27,7 +27,6 @@ function PrivacyPolicy() {
         information collected offline or via channels other than this website. Our Privacy Policy was created with the
         help of the <a href='src/main/react/src/pages/PrivacyPolicy'>Free Privacy Policy Generator</a>.
       </p>
-      {/*Todo: DELETE CREATED WITH THE HELP OF...*/}
 
       <h2>Consent</h2>
 
@@ -67,7 +66,6 @@ function PrivacyPolicy() {
         <li>Find and prevent fraud</li>
       </ul>
 
-      {/*Todo: Esto lo aplicamos???*/}
       <h2>Log Files</h2>
 
       <p>

@@ -63,7 +63,7 @@ function EmojiSelector({ anchorEl, open, onClose, addEmojiToTextBox }) {
       disableEnforceFocus={true}
       disableAutoFocus={true}
       onClose={() => onClose()}
-      sx={{ mt: -0.5 }}
+      sx={{ mt: -1 }}
       anchorOrigin={{
         vertical: 'top',
         horizontal: 'left',

@@ -1,6 +1,7 @@
 import { logOut } from '../actions';
 import { USER_JOINED, USER_LEFT, USER_MESSAGES } from '../net/ws/MessageTypes';
 import dateFormat from 'dateformat';
+import dayjs from 'dayjs';
 
 export function headers(__token__) {
   return {
@@ -18,8 +19,14 @@ export function prettyDate(date) {
   return dateFormat(date, 'HH:MM');
 }
 
-export function parseDateForInput(date) {
-  return dateFormat(date, 'isoDate');
+/**
+ * Formats the date with ISO 8601 format.
+ *
+ * @param {dayjs.Dayjs} dayjs - The date to format.
+ * @returns {string} The formatted date.
+ */
+export function isoDate(dayjs) {
+  return dayjs.format();
 }
 
 /**
@@ -62,7 +69,7 @@ export function createMessage(username, chatId, sessionId, type, token, content)
       chatId,
       sessionId,
       type,
-      date: Date.now(),
+      date: dayjs().valueOf(),
       token: `Bearer ${token}`,
     },
     body: {
