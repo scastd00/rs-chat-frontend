@@ -30,9 +30,6 @@ function RSWSClient(username, chatId, sessionId, __token__) {
 
   this.socket.onerror = (error) => {
     console.error('WebSocket error:', error);
-    console.error('WebSocket error:', error.message);
-    console.error('WebSocket error:', error.type);
-    console.error('WebSocket error:', error.target);
   };
 
   this.socket.onopen = () => {
