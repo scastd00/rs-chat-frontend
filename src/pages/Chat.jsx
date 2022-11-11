@@ -63,7 +63,7 @@ function Chat() {
   };
 
   function fetchChatInfo() {
-    ChatService
+    const chatInfo = ChatService
       .getChatInfo(chatId, userState.token)
       .then(res => {
         setChatInfo({
@@ -75,7 +75,7 @@ function Chat() {
         checkResponse(err, navigate, dispatch);
       });
 
-    ChatService
+    const allUsers = ChatService
       .getAllUsersOfChat(chatId, userState.token)
       .then(res => {
         setAllUsers(res.data.users);
@@ -83,6 +83,8 @@ function Chat() {
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
       });
+
+    return Promise.all([chatInfo, allUsers]);
   }
 
   useEffect(() => {
@@ -99,14 +101,15 @@ function Chat() {
           return;
         }
 
-        client.setUsername(userState.user.username);
-        client.setChatId(id);
-        client.setSessionId(userState.sessionId);
-        client.setToken(userState.token);
-        client.connect(); // If not connected (due to page refresh), we connect to the chat
-        client.connectToChat();
-        setShowPage(true);
-        fetchChatInfo();
+        // We connect to the chat
+        fetchChatInfo().then(() => {
+          client.setUsername(userState.user.username);
+          client.setChatId(id);
+          client.setSessionId(userState.sessionId);
+          client.setToken(userState.token);
+          client.connectToChat();
+          setShowPage(true);
+        });
       })
       .catch(err => {
         client.disconnectFromChat();
