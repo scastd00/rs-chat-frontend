@@ -17,8 +17,10 @@ import { useDispatch } from 'react-redux';
 import { setAvailableChats, setSessionId, setToken, setUser } from '../actions';
 import { PuffLoader } from 'react-spinners';
 import { useTheme } from '@mui/material';
+import ErrorAlert from '../components/ErrorAlert';
 
 function Login() {
+  const [loginError, setLoginError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
@@ -44,12 +46,13 @@ function Login() {
         password: data.get('password'),
         remember,
       })
-      .then((res) => {
+      .then(res => {
         setStateOfStore(res.data);
         navigate('/home');
       })
-      .catch(() => {
+      .catch(e => {
         setShowLoadingSpinner(false);
+        setLoginError(e.response.data.error);
       });
   };
 
@@ -84,6 +87,7 @@ function Login() {
             name='username'
             autoComplete='username'
             autoFocus
+            onChange={() => setLoginError('')}
           />
 
           <TextField
@@ -96,18 +100,23 @@ function Login() {
             type='password'
             id='password'
             autoComplete='current-password'
+            onChange={() => setLoginError('')}
           />
 
           <FormControlLabel
             control={<Checkbox value='remember' color='primary' onChange={() => setRemember(!remember)} />}
             label='Remember me'
+            sx={{ mb: 1 }}
           />
+
+          {/* Show loginError when it is received from the server */}
+          {loginError.length > 0 && <ErrorAlert content={loginError} />}
 
           <Button
             type='submit'
             fullWidth
             variant='contained'
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ my: 2 }}
           >
             Sign In
           </Button>
