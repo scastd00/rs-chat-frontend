@@ -51,7 +51,7 @@ function Profile() {
         navigate('/createPassword');
       })
       .catch(e => {
-        console.log('Error in forgot password', e.response.data.message);
+        console.log('Error in forgot password', e.response.data.error);
       });
   }
 
@@ -73,7 +73,7 @@ function Profile() {
       })
       .catch(err => {
         setChatCode('');
-        showInvitationCodeAlert('error', err.response.data.message);
+        showInvitationCodeAlert('error', err.response.data.error);
       });
   }
 
