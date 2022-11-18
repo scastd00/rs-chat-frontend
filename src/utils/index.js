@@ -37,7 +37,6 @@ export function isoDate(dayjs) {
  */
 export function checkResponse(error, navigate, dispatch) {
   const { response } = error;
-  console.log(response.data);
 
   if (response.status === 403) {
     // FORBIDDEN

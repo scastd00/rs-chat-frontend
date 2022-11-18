@@ -17,8 +17,13 @@ function ClickableUsername({ username }) {
       .getIdByUsername(username, userState.token)
       .then(res => {
         const users = `${userState.user.id}_${res.data.id}`;
-        client.setChatId(res.data.id); // Disconnect from current chat
-        navigate(`/chat/user-${users}`);
+        client.disconnectFromChat(); // Disconnect from current chat
+        //? Instead of using navigate, we can use the location object
+        //? to change the path and simulate a navigation. This allows to remove the previous chat history
+        //? and load the new one.
+        // Todo: this can be done in chat view with useEffect over the id param and connect
+        //  to the new chat (maybe).
+        location.assign(`/chat/user-${users}`); // Reload page to connect to new chat
       })
       .catch(error => checkResponse(error, navigate, dispatch));
   }

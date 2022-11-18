@@ -28,7 +28,6 @@ import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
   const { id } = useParams();
-  const [, chatId] = id.split('-'); // Todo: change usages to id. Also change backend related functionality
   const [navigate, dispatch] = useNavDis();
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
   const [showPage, setShowPage] = useState(false);
@@ -63,7 +62,7 @@ function Chat() {
 
   function fetchChatInfo() {
     const chatInfo = ChatService
-      .getChatInfo(chatId, userState.token)
+      .getChatInfo(id, userState.token)
       .then(res => {
         setChatInfo({
           name: res.data.name,
@@ -75,7 +74,7 @@ function Chat() {
       });
 
     const allUsers = ChatService
-      .getAllUsersOfChat(chatId, userState.token)
+      .getAllUsersOfChat(id, userState.token)
       .then(res => {
         setAllUsers(res.data.users);
       })
@@ -172,7 +171,7 @@ function Chat() {
 
   function handleLeaveChat() {
     ChatService
-      .leaveChat(chatId, userState.user.id, userState.token)
+      .leaveChat(id, userState.user.id, userState.token)
       .then(() => {
         client.disconnectFromChat();
         navigate('/home');
