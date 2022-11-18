@@ -1,13 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Container, Divider, Grid, Link, Popover, Typography } from '@mui/material';
+import UserService from '../services/UserService';
+import { useStore } from 'react-redux';
+import { useNavDis } from '../hooks/useNavDis';
+import { WebSocketContext } from '../utils/constants';
+import { checkResponse } from '../utils';
 
 function ClickableUsername({ username }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const userState = useStore().getState().user;
+  const [navigate, dispatch] = useNavDis();
+  const client = useContext(WebSocketContext);
+
+  function handleSendPrivateMessage() {
+    UserService
+      .getIdByUsername(username, userState.token)
+      .then(res => {
+        const users = `${userState.user.id}_${res.data.id}`;
+        client.setChatId(res.data.id); // Disconnect from current chat
+        navigate(`/chat/user-${users}`);
+      })
+      .catch(error => checkResponse(error, navigate, dispatch));
+  }
 
   const userActions = [
     { name: 'View profile', action: () => console.log('View profile'), color: 'info' },
     { name: 'Add friend', action: () => console.log('Add friend'), color: 'success' },
-    { name: 'Send message', action: () => console.log('Send message'), color: 'success' },
+    { name: 'Send message', action: handleSendPrivateMessage, color: 'success' },
     { name: 'Block user', action: () => console.log('Block user'), color: 'error' },
     { name: 'Report user', action: () => console.log('Report user'), color: 'error' },
   ];

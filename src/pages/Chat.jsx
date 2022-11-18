@@ -14,8 +14,7 @@ import {
 } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useStore } from 'react-redux';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
@@ -25,12 +24,12 @@ import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
 import { WebSocketContext } from '../utils/constants';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
   const { id } = useParams();
-  const [, chatId] = id.split('-');
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const [, chatId] = id.split('-'); // Todo: change usages to id. Also change backend related functionality
+  const [navigate, dispatch] = useNavDis();
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
@@ -93,9 +92,9 @@ function Chat() {
     // We check here to prevent a user who doesn't have access to the chat to access it
     // by changing the url.
     ChatService
-      .userCanConnect(chatId, userState.user.id, userState.token)
+      .connectTo(id, userState.user.id, userState.token)
       .then(response => {
-        if (!response.data.canConnect) {
+        if (!response.data.connect) {
           client.disconnectFromChat();
           navigate('/home');
           return;

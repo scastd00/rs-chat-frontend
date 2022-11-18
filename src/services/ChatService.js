@@ -10,8 +10,8 @@ export default {
     return Api.get(`/chats/${username}`, headers(__token__));
   },
 
-  userCanConnect(chatId, userId, __token__) {
-    return Api.post(`/chat/connect/${chatId}`, { userId }, headers(__token__));
+  connectTo(chatKey, userId, __token__) {
+    return Api.post(`/chat/connect/${chatKey}`, { userId }, headers(__token__));
   },
 
   getAllUsersOfChat(chatId, __token__) {
