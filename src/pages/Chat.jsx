@@ -15,7 +15,7 @@ import {
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useStore } from 'react-redux';
-import { logOut } from '../actions';
+import { logOut, setChatKey } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
 import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
@@ -85,41 +85,55 @@ function Chat() {
     return Promise.all([chatInfo, allUsers]);
   }
 
-  useEffect(() => {
-    // On component mount
-
-    // We check here to prevent a user who doesn't have access to the chat to access it
-    // by changing the url.
+  function initConnection() {
     ChatService
       .connectTo(id, userState.user.id, userState.token)
       .then(response => {
+        // We check access here to prevent a user who doesn't have access to the chat to access it
+        // by changing the url.
         if (!response.data.connect) {
           client.disconnectFromChat();
+          dispatch(setChatKey(''));
           navigate('/home');
           return;
         }
 
-        // We connect to the chat
-        fetchChatInfo().then(() => {
-          client.setUsername(userState.user.username);
-          client.setChatId(id);
-          client.setSessionId(userState.sessionId);
-          client.setToken(userState.token);
-          client.connectToChat();
-          setShowPage(true);
-        });
+        // We connect to the chat after getting the information of the chat
+        fetchChatInfo()
+          .then(() => {
+            client.setUsername(userState.user.username);
+            client.setChatId(id);
+            client.setSessionId(userState.sessionId);
+            client.setToken(userState.token);
+            client.connectToChat();
+            setShowPage(true);
+          });
       })
       .catch(err => {
         client.disconnectFromChat();
+        dispatch(setChatKey(''));
         checkResponse(err, navigate, dispatch);
       });
+  }
 
-    window.addEventListener('beforeunload', function() {
-      client.disconnectFromChat(); // Executed when the page is reloaded
-    });
+  // Effect to execute every time the chat id changes (when user changes chat)
+  useEffect(() => {
+    // Restart all the chain for connecting the client to the server
+    // when the id of the URL changes.
 
-    // This is executed before any message is sent to the server
-    // So we can execute them immediately after the socket is connected to
+    // Disconnect from previous chat (if connected), to avoid multiple connections or exceptions in backend.
+    client.disconnectFromChat();
+    dispatch(setChatKey(id));
+    setShowPage(false);
+    initConnection();
+  }, [id]);
+
+  // Setup effect to prepare functions to be called by the client when receiving messages or quitting the chat.
+  useEffect(() => {
+    // On component mount
+
+    // This is executed before any message is sent to the server,
+    // so we can execute them immediately after the socket is connected to
     // speed up the process of getting the data.
     client.onMessage(
       addMessageToQueue,
@@ -130,8 +144,9 @@ function Chat() {
     );
 
     return () => {
-      // On component unmount (executed when the page is changed)
+      // On component unmount (executed when the page is changed or reloaded, not needed event listener)
       client.disconnectFromChat();
+      dispatch(setChatKey(''));
     };
   }, []);
 
@@ -174,6 +189,7 @@ function Chat() {
       .leaveChat(id, userState.user.id, userState.token)
       .then(() => {
         client.disconnectFromChat();
+        dispatch(setChatKey(''));
         navigate('/home');
       })
       .catch(err => checkResponse(err, navigate, dispatch));

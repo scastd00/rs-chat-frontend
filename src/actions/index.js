@@ -29,6 +29,10 @@ export const logOut = createAction(LOG_OUT);
 
 export const changeTheme = createAction(CHANGE_THEME);
 
+/**
+ * @param {string} chatKey
+ * @type {PayloadActionCreator<ReturnType<function(string): {payload: string}>['payload'], "setChatKey", function(string): {payload: string}>}
+ */
 export const setChatKey = createAction(SET_CHAT_KEY, key => {
   return { payload: key };
 });
