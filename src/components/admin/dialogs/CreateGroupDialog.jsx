@@ -2,14 +2,13 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import React, { useState } from 'react';
 import GroupService from '../../../services/GroupService';
 import { checkResponse } from '../../../utils';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useStore } from 'react-redux';
+import { useNavDis } from '../../../hooks/useNavDis';
 
 function CreateGroupDialog({ open, onClose, addToVisibleList }) {
   const [groupProps, setGroupProps] = useState({ name: '' });
   const userState = useStore().getState().user;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
 
   const handleGroupCreation = () => {
     if (groupProps.name.trim().length === 0)

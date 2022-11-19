@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import { themeReducer } from './themeReducer';
 import { userReducer } from './userReducer';
-import { chatReducer } from './chatReducer';
+import { historyReducer } from './historyReducer';
 
 const rootReducer = combineReducers({
   user: userReducer,
   theme: themeReducer,
-  chat: chatReducer,
+  history: historyReducer,
 });
 
 export default rootReducer;

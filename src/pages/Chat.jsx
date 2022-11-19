@@ -14,7 +14,7 @@ import {
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
 import { useStore } from 'react-redux';
-import { logOut, setChatKey } from '../actions';
+import { addHistory, logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
 import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
@@ -27,7 +27,7 @@ import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
   const state = useStore().getState();
-  const id = state.chat.present;
+  const id = state.history.present;
   const userState = state.user;
 
   const [navigate, dispatch] = useNavDis();
@@ -99,7 +99,7 @@ function Chat() {
         // by changing the url.
         if (!response.data.connect) {
           client.disconnectFromChat();
-          dispatch(setChatKey(''));
+          dispatch(addHistory(''));
           navigate('/home');
           return;
         }
@@ -128,12 +128,12 @@ function Chat() {
 
     // Disconnect from previous chat (if connected), to avoid multiple connections or exceptions in backend.
     client.disconnectFromChat();
-    console.log('past', state.chat.past[state.chat.past.length - 1]);
-    console.log('present', state.chat.present);
-    console.log('future', state.chat.future[0]);
+    console.log('past', state.history.past[state.history.past.length - 1]);
+    console.log('present', state.history.present);
+    console.log('future', state.history.future[0]);
     setShowPage(false);
     initConnection();
-  }, [state.chat.present]);
+  }, [state.history.present]);
 
   // Setup effect to prepare functions to be called by the client when receiving messages or quitting the chat.
   useEffect(() => {
@@ -153,7 +153,7 @@ function Chat() {
     return () => {
       // On component unmount (executed when the page is changed or reloaded, not needed event listener)
       client.disconnectFromChat();
-      dispatch(setChatKey(''));
+      dispatch(addHistory(''));
     };
   }, []);
 
@@ -196,7 +196,7 @@ function Chat() {
       .leaveChat(id, userState.user.id, userState.token)
       .then(() => {
         client.disconnectFromChat();
-        dispatch(setChatKey(''));
+        dispatch(addHistory(''));
         navigate('/home');
       })
       .catch(err => checkResponse(err, navigate, dispatch));

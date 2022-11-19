@@ -1,14 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import DegreeService from '../../../services/DegreeService';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useStore } from 'react-redux';
 import { checkResponse } from '../../../utils';
+import { useNavDis } from '../../../hooks/useNavDis';
 
 function CreateDegreeDialog({ open, onClose, addToVisibleList }) {
   const userState = useStore().getState().user;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
   const [degreeProps, setDegreeProps] = useState({ name: '' });
 
   const handleDegreeCreation = () => {

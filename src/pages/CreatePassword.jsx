@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import AuthService from '../services/AuthService';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
+import { useNavDis } from '../hooks/useNavDis';
 
 function CreatePassword() {
-  const navigate = useNavigate();
+  const [navigate] = useNavDis();
   const url = useLocation();
   const [formFields, setFormFields] = useState({ code: '', newPassword: '', confirmPassword: '' });
 

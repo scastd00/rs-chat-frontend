@@ -1,11 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
 import {
+  ADD_HISTORY,
   CHANGE_THEME,
-  GO_BACK_CHAT,
-  GO_FORWARD_CHAT,
+  GO_BACK_HISTORY,
+  GO_FORWARD_HISTORY,
   LOG_OUT,
   SET_AVAILABLE_CHATS,
-  SET_CHAT_KEY,
   SET_SESSION_ID,
   SET_USER,
   SET_USER_TOKEN,
@@ -31,9 +31,9 @@ export const logOut = createAction(LOG_OUT);
 
 export const changeTheme = createAction(CHANGE_THEME);
 
-export const setChatKey = createAction(SET_CHAT_KEY, key => {
+export const addHistory = createAction(ADD_HISTORY, key => {
   return { payload: key };
 });
 
-export const goBackChat = createAction(GO_BACK_CHAT);
-export const goForwardChat = createAction(GO_FORWARD_CHAT);
+export const goBackHistory = createAction(GO_BACK_HISTORY);
+export const goForwardHistory = createAction(GO_FORWARD_HISTORY);

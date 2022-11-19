@@ -2,15 +2,15 @@ import React from 'react';
 import { Grid, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { goBackChat, goForwardChat } from '../actions';
+import { goBackHistory, goForwardHistory } from '../actions';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useNavDis } from '../hooks/useNavDis';
 
 function UndoRedoButtons(props) {
-  const navigate = useNavigate();
+  const [navigate] = useNavDis();
 
   function handleUndo() {
-    const element = props.chat.past.slice(-1)[0];
+    const element = props.history.past.slice(-1)[0];
     console.log(element);
     navigate('/chat');
     props.onUndo();
@@ -34,17 +34,17 @@ function UndoRedoButtons(props) {
 
 const mapStateToProps = state => {
   return {
-    chat: state.chat,
+    history: state.history,
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onUndo: () => {
-      dispatch(goBackChat());
+      dispatch(goBackHistory());
     },
     onRedo: () => {
-      dispatch(goForwardChat());
+      dispatch(goForwardHistory());
     },
   };
 };

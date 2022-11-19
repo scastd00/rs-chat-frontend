@@ -4,7 +4,7 @@ import UserService from '../services/UserService';
 import { useStore } from 'react-redux';
 import { useNavDis } from '../hooks/useNavDis';
 import { checkResponse } from '../utils';
-import { setChatKey } from '../actions';
+import { addHistory } from '../actions';
 
 function ClickableUsername({ username }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -15,7 +15,7 @@ function ClickableUsername({ username }) {
     UserService
       .getIdByUsername(username, userState.token)
       .then(res => {
-        dispatch(setChatKey(`user-${userState.user.id}_${res.data.id}`));
+        dispatch(addHistory(`user-${userState.user.id}_${res.data.id}`));
         // We already are '/chat' route, so we don't need to navigate
         navigate(`/chat`); // This allows to reload the chat component (not entire website)
       })

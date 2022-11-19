@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { goBackChat, goForwardChat, setChatKey } from '../actions';
+import { addHistory, goBackHistory, goForwardHistory } from '../actions';
 
 const initialState = {
   past: [],
@@ -7,9 +7,9 @@ const initialState = {
   future: [],
 };
 
-export const chatReducer = createReducer(initialState, builder => {
+export const historyReducer = createReducer(initialState, builder => {
   builder
-    .addCase(setChatKey, (state, action) => {
+    .addCase(addHistory, (state, action) => {
       // Add the new chat key to the present
       // if (state.present === action.payload) {
       //   return state;
@@ -22,7 +22,7 @@ export const chatReducer = createReducer(initialState, builder => {
         future: [],
       };
     })
-    .addCase(goBackChat, state => {
+    .addCase(goBackHistory, state => {
       // Go back to the previous chat
       if (state.past.length === 0) {
         return state;
@@ -34,7 +34,7 @@ export const chatReducer = createReducer(initialState, builder => {
         future: [state.present, ...state.future],
       };
     })
-    .addCase(goForwardChat, state => {
+    .addCase(goForwardHistory, state => {
       // Go forward to the next chat
       if (state.future.length === 0) {
         return state;

@@ -2,8 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Te
 import React, { useState } from 'react';
 import SubjectService from '../../../services/SubjectService';
 import { checkResponse } from '../../../utils';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useStore } from 'react-redux';
+import { useNavDis } from '../../../hooks/useNavDis';
 
 function CreateSubjectDialog({ open, onClose, addToVisibleList, allDegrees }) {
   const defaultValues = {
@@ -17,8 +17,7 @@ function CreateSubjectDialog({ open, onClose, addToVisibleList, allDegrees }) {
   const [subjectProps, setSubjectProps] = useState(defaultValues);
 
   const userState = useStore().getState().user;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
 
   const handleSubjectCreation = () => {
     if (subjectProps.name.trim().length === 0 || subjectProps.degree.trim().length === 0)

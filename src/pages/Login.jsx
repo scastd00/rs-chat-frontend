@@ -11,18 +11,16 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
-import { useDispatch } from 'react-redux';
 import { setAvailableChats, setSessionId, setToken, setUser } from '../actions';
 import { PuffLoader } from 'react-spinners';
 import { useTheme } from '@mui/material';
 import ErrorAlert from '../components/ErrorAlert';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Login() {
   const [loginError, setLoginError] = useState('');
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [navigate, dispatch] = useNavDis();
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const [remember, setRemember] = useState(false);
   const theme = useTheme();

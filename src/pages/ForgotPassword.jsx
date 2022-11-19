@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Container, CssBaseline, Grid, TextField, Typography } from '@mui/material';
 import Link from '@mui/material/Link';
-import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
+import { useNavDis } from '../hooks/useNavDis';
 
 function ForgotPassword() {
-  const navigate = useNavigate();
+  const [navigate] = useNavDis();
 
   const [email, setEmail] = useState('');
 
