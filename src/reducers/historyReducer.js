@@ -3,7 +3,7 @@ import { addHistory, goBackHistory, goForwardHistory } from '../actions';
 
 const initialState = {
   past: [],
-  present: '',
+  present: '/home',
   future: [],
 };
 

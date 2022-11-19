@@ -7,30 +7,33 @@ import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 function UndoRedoButtons(props) {
+  //! ----------------------------
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  //! ----------------------------
+
   function handleUndo() {
-    const element = props.history.past.slice(-1)[0];
-    navigate(element);
+    const lastHistoryPath = props.history.past.slice(-1)[0];
+    navigate(lastHistoryPath);
     dispatch(goBackHistory());
   }
 
   function handleRedo() {
-    const element = props.history.future[0];
-    navigate(element);
+    const nextHistoryPath = props.history.future[0];
+    navigate(nextHistoryPath);
     dispatch(goForwardHistory());
   }
 
   return (
     <Grid container spacing={1}>
       <Grid item>
-        <IconButton onClick={handleUndo}>
+        <IconButton onClick={handleUndo} disabled={!props.canUndo}>
           <ArrowBackIcon />
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton onClick={handleRedo}>
+        <IconButton onClick={handleRedo} disabled={!props.canRedo}>
           <ArrowForwardIcon />
         </IconButton>
       </Grid>
@@ -41,6 +44,8 @@ function UndoRedoButtons(props) {
 const mapStateToProps = state => {
   return {
     history: state.history,
+    canUndo: state.history.past.length > 0,
+    canRedo: state.history.future.length > 0,
   };
 };
 

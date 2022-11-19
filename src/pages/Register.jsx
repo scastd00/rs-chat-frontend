@@ -22,10 +22,14 @@ import AuthService from '../services/AuthService';
 import ErrorAlert from '../components/ErrorAlert';
 import SnackAlert from '../components/SnackAlert';
 import { PuffLoader } from 'react-spinners';
-import { useNavDis } from '../hooks/useNavDis';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
 function Register() {
-  const [navigate, dispatch] = useNavDis();
+  //! ----------------------------
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  //! ----------------------------
 
   const [registerError, setRegisterError] = useState('');
   const [password, setPassword] = useState('');
