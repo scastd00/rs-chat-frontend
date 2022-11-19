@@ -4,13 +4,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { goBackChat, goForwardChat } from '../actions';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 function UndoRedoButtons(props) {
+  const navigate = useNavigate();
+
   function handleUndo() {
+    const element = props.chat.past.slice(-1)[0];
+    console.log(element);
+    navigate('/chat');
     props.onUndo();
-    setTimeout(() => {
-      console.log(props.chat.present.present);
-    }, 200);
   }
 
   return (

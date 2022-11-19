@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { goBackChat, goForwardChat, setChatKey } from '../actions';
-import undoable from 'redux-undo';
 
 const initialState = {
   past: [],
@@ -8,7 +7,7 @@ const initialState = {
   future: [],
 };
 
-const chatReducer = createReducer(initialState, builder => {
+export const chatReducer = createReducer(initialState, builder => {
   builder
     .addCase(setChatKey, (state, action) => {
       // Add the new chat key to the present
@@ -48,9 +47,3 @@ const chatReducer = createReducer(initialState, builder => {
       };
     });
 });
-
-const undoableChatReducer = undoable(chatReducer, {
-  limit: 15,
-});
-
-export default undoableChatReducer;

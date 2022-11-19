@@ -27,7 +27,7 @@ import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
   const state = useStore().getState();
-  const id = state.chat.present.present;
+  const id = state.chat.present;
   const userState = state.user;
 
   const [navigate, dispatch] = useNavDis();
@@ -87,6 +87,11 @@ function Chat() {
   }
 
   function initConnection() {
+    if (id.length === 0) {
+      navigate('/home');
+      return;
+    }
+
     ChatService
       .connectTo(id, userState.user.id, userState.token)
       .then(response => {
@@ -112,7 +117,6 @@ function Chat() {
       })
       .catch(err => {
         client.disconnectFromChat();
-        dispatch(setChatKey(''));
         checkResponse(err, navigate, dispatch);
       });
   }
@@ -124,7 +128,9 @@ function Chat() {
 
     // Disconnect from previous chat (if connected), to avoid multiple connections or exceptions in backend.
     client.disconnectFromChat();
-    console.log(state.chat.present);
+    console.log('past', state.chat.past[state.chat.past.length - 1]);
+    console.log('present', state.chat.present);
+    console.log('future', state.chat.future[0]);
     setShowPage(false);
     initConnection();
   }, [state.chat.present]);
