@@ -12,6 +12,7 @@ import { ADMINISTRATION_ROUTES, PRIVATE_ROUTES, PUBLIC_ROUTES } from './routes/a
 import { pdfjs } from 'react-pdf';
 import RSWSClient from './net/ws/RSWSClient';
 import { WebSocketContext } from './utils/constants';
+import { goBackChat, goForwardChat } from './actions';
 
 // Config for global use
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.js'; // Options prop does not work, this solves the errors
@@ -32,8 +33,20 @@ function App(props) {
     window.addEventListener('unload', () => {
       client.disconnect();
     });
-  }, []);
 
+    window.addEventListener('mousedown', function(event) {
+      event.preventDefault();
+
+      //! We suppose that the buttons' layout is "left to right"
+      if (event.button === 3) {
+        console.log('undo');
+        props.onUndo();
+      } else if (event.button === 4) {
+        console.log('redo');
+        props.onRedo();
+      }
+    });
+  }, []);
 
   return (
     <ThemeProvider theme={darkTheme ? dark : light}>
@@ -89,4 +102,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => {
+  return {
+    onUndo: () => dispatch(goBackChat()),
+    onRedo: () => dispatch(goForwardChat()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -4,6 +4,7 @@ import UserService from '../services/UserService';
 import { useStore } from 'react-redux';
 import { useNavDis } from '../hooks/useNavDis';
 import { checkResponse } from '../utils';
+import { setChatKey } from '../actions';
 
 function ClickableUsername({ username }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -14,7 +15,8 @@ function ClickableUsername({ username }) {
     UserService
       .getIdByUsername(username, userState.token)
       .then(res => {
-        navigate(`/chat/user-${userState.user.id}_${res.data.id}`);
+        dispatch(setChatKey(`user-${userState.user.id}_${res.data.id}`));
+        navigate(`/chat`);
       })
       .catch(error => checkResponse(error, navigate, dispatch));
   }

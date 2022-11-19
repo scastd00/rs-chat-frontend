@@ -4,7 +4,7 @@ import { useStore } from 'react-redux';
 import DropDown from '../components/DropDown';
 import { capitalizeFirstLetter, checkResponse } from '../utils';
 import ChatService from '../services/ChatService';
-import { setAvailableChats } from '../actions';
+import { setAvailableChats, setChatKey } from '../actions';
 import { useNavDis } from '../hooks/useNavDis';
 
 function Home() {
@@ -55,7 +55,10 @@ function Home() {
                                 variant='contained'
                                 disableElevation
                                 color='secondary'
-                                onClick={() => navigate(`/chat/${key}`)}
+                                onClick={() => {
+                                  dispatch(setChatKey(key));
+                                  navigate(`/chat`);
+                                }}
                               >
                                 {name}
                               </Button>

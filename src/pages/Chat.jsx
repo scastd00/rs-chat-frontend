@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -27,13 +26,15 @@ import { WebSocketContext } from '../utils/constants';
 import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
-  const { id } = useParams();
+  const state = useStore().getState();
+  const id = state.chat.present.present;
+  const userState = state.user;
+
   const [navigate, dispatch] = useNavDis();
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const userState = useStore().getState().user;
   const [queue, setQueue] = useState([]);
   const [chatInfo, setChatInfo] = useState({
     name: '',
@@ -126,7 +127,7 @@ function Chat() {
     dispatch(setChatKey(id));
     setShowPage(false);
     initConnection();
-  }, [id]);
+  }, [state.chat.present.present]);
 
   // Setup effect to prepare functions to be called by the client when receiving messages or quitting the chat.
   useEffect(() => {

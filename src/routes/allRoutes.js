@@ -34,7 +34,7 @@ export const PUBLIC_ROUTES = [
 export const PRIVATE_ROUTES = [
   { path: '/home', component: Home },
   { path: '/profile', component: Profile },
-  { path: '/chat/:id', component: Chat },
+  { path: '/chat', component: Chat },
   { path: '/logout', component: Logout },
 ];
 
