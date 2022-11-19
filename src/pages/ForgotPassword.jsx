@@ -5,9 +5,7 @@ import AuthService from '../services/AuthService';
 import { useNavigate } from 'react-router';
 
 function ForgotPassword() {
-  //! ----------------------------
   const navigate = useNavigate();
-  //! ----------------------------
 
   const [email, setEmail] = useState('');
 

@@ -7,33 +7,38 @@ import { connect, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 function UndoRedoButtons(props) {
-  //! ----------------------------
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  //! ----------------------------
-
   function handleUndo() {
+    if (!props.canUndo) {
+      return;
+    }
+
     const lastHistoryPath = props.history.past.slice(-1)[0];
-    navigate(lastHistoryPath);
+    navigate(lastHistoryPath.split('#')[0]);
     dispatch(goBackHistory());
   }
 
   function handleRedo() {
+    if (!props.canRedo) {
+      return;
+    }
+
     const nextHistoryPath = props.history.future[0];
-    navigate(nextHistoryPath);
+    navigate(nextHistoryPath.split('#')[0]);
     dispatch(goForwardHistory());
   }
 
   return (
     <Grid container spacing={1}>
       <Grid item>
-        <IconButton onClick={handleUndo} disabled={!props.canUndo}>
+        <IconButton id='goBackButton' onClick={handleUndo} disabled={!props.canUndo}>
           <ArrowBackIcon />
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton onClick={handleRedo} disabled={!props.canRedo}>
+        <IconButton id='goForwardButton' onClick={handleRedo} disabled={!props.canRedo}>
           <ArrowForwardIcon />
         </IconButton>
       </Grid>

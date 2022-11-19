@@ -26,10 +26,8 @@ import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 
 function Register() {
-  //! ----------------------------
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //! ----------------------------
 
   const [registerError, setRegisterError] = useState('');
   const [password, setPassword] = useState('');

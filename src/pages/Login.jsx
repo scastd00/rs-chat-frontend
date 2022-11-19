@@ -21,10 +21,8 @@ import { useDispatch } from 'react-redux';
 
 function Login() {
   const [loginError, setLoginError] = useState('');
-  //! ----------------------------
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  //! ----------------------------
   const [showLoadingSpinner, setShowLoadingSpinner] = useState(false);
   const [remember, setRemember] = useState(false);
   const theme = useTheme();

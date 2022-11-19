@@ -5,9 +5,7 @@ import AuthService from '../services/AuthService';
 import { useLocation, useNavigate } from 'react-router';
 
 function CreatePassword() {
-  //! ----------------------------
   const navigate = useNavigate();
-  //! ----------------------------
   const url = useLocation();
   const [formFields, setFormFields] = useState({ code: '', newPassword: '', confirmPassword: '' });
 
