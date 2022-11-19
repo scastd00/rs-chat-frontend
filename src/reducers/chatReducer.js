@@ -15,6 +15,7 @@ const chatReducer = createReducer(initialState, builder => {
       // if (state.present === action.payload) {
       //   return state;
       // }
+      // console.log(action.payload);
 
       return {
         past: [...state.past, state.present],

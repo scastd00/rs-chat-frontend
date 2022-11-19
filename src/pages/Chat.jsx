@@ -124,10 +124,10 @@ function Chat() {
 
     // Disconnect from previous chat (if connected), to avoid multiple connections or exceptions in backend.
     client.disconnectFromChat();
-    dispatch(setChatKey(id));
+    console.log(state.chat.present);
     setShowPage(false);
     initConnection();
-  }, [state.chat.present.present]);
+  }, [state.chat.present]);
 
   // Setup effect to prepare functions to be called by the client when receiving messages or quitting the chat.
   useEffect(() => {

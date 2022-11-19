@@ -13,6 +13,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
 import { useNavDis } from '../hooks/useNavDis';
 import SocketStatus from '../components/SocketStatus';
+import UndoRedoButtons from '../components/UndoRedoButtons';
 
 function ToolBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -54,6 +55,14 @@ function ToolBar(props) {
         <Grid container justifyContent='space-between' alignItems='center'>
           <Grid item>
             <Grid container spacing={2} alignItems='center'>
+              {
+                loggedIn && (
+                  <Grid item>
+                    <UndoRedoButtons />
+                  </Grid>
+                )
+              }
+
               <Grid item>
                 <Button variant='text' disabled={!loggedIn} color='secondary' onClick={() => navigate('/home')}>
                   <HomeTwoToneIcon sx={{ mr: 1 }} fontSize='medium' />

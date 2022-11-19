@@ -16,7 +16,8 @@ function ClickableUsername({ username }) {
       .getIdByUsername(username, userState.token)
       .then(res => {
         dispatch(setChatKey(`user-${userState.user.id}_${res.data.id}`));
-        navigate(`/chat`);
+        // We already are '/chat' route, so we don't need to navigate
+        navigate(`/chat`); // This allows to reload the chat component (not entire website)
       })
       .catch(error => checkResponse(error, navigate, dispatch));
   }
