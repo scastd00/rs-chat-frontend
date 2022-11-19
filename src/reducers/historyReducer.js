@@ -11,10 +11,9 @@ export const historyReducer = createReducer(initialState, builder => {
   builder
     .addCase(addHistory, (state, action) => {
       // Add the new chat key to the present
-      // if (state.present === action.payload) {
-      //   return state;
-      // }
-      // console.log(action.payload);
+      if (state.present === action.payload) {
+        return state;
+      }
 
       return {
         past: [...state.past, state.present],

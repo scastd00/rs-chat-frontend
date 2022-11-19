@@ -3,17 +3,23 @@ import { Grid, IconButton } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { goBackHistory, goForwardHistory } from '../actions';
-import { connect } from 'react-redux';
-import { useNavDis } from '../hooks/useNavDis';
+import { connect, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 function UndoRedoButtons(props) {
-  const [navigate] = useNavDis();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   function handleUndo() {
     const element = props.history.past.slice(-1)[0];
-    console.log(element);
-    navigate('/chat');
-    props.onUndo();
+    navigate(element);
+    dispatch(goBackHistory());
+  }
+
+  function handleRedo() {
+    const element = props.history.future[0];
+    navigate(element);
+    dispatch(goForwardHistory());
   }
 
   return (
@@ -24,7 +30,7 @@ function UndoRedoButtons(props) {
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton onClick={props.onRedo}>
+        <IconButton onClick={handleRedo}>
           <ArrowForwardIcon />
         </IconButton>
       </Grid>
@@ -38,15 +44,4 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onUndo: () => {
-      dispatch(goBackHistory());
-    },
-    onRedo: () => {
-      dispatch(goForwardHistory());
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UndoRedoButtons);
+export default connect(mapStateToProps)(UndoRedoButtons);

@@ -8,8 +8,9 @@ export function useNavDis() {
   const dispatch = useDispatch();
 
   const navigateFn = (path) => {
-    navigate(path);
-    dispatch(addHistory(path));
+    const split = path.split('#');
+    navigate(split[0]); // Navigate to the path (first part of the string)
+    dispatch(addHistory(path)); // Add the path to the history (complete string)
   };
 
   return [navigateFn, dispatch];

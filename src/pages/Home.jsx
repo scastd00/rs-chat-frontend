@@ -4,7 +4,7 @@ import { useStore } from 'react-redux';
 import DropDown from '../components/DropDown';
 import { capitalizeFirstLetter, checkResponse } from '../utils';
 import ChatService from '../services/ChatService';
-import { addHistory, setAvailableChats } from '../actions';
+import { setAvailableChats } from '../actions';
 import { useNavDis } from '../hooks/useNavDis';
 
 function Home() {
@@ -56,8 +56,7 @@ function Home() {
                                 disableElevation
                                 color='secondary'
                                 onClick={() => {
-                                  dispatch(addHistory(key));
-                                  navigate(`/chat`);
+                                  navigate(`/chat#${key}`);
                                 }}
                               >
                                 {name}
