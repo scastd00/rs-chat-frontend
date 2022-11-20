@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardActionArea, CardContent, Grid, Popover, Typography } from '@mui/material';
 import { COMMANDS } from '../utils/constants';
 
-function CommandPopover({ open, anchorEl, onClose, onCommandClick }) {
+function CommandPopover({ open, anchorEl, onClose, onCommandClick, currentText }) {
+  function showPossibleAutoCompletableCommands() {
+    return COMMANDS.filter(command => command.name.startsWith(currentText));
+  }
+
+  const [commandsToShow, setCommandsToShow] = useState([]);
+
   function handleCommandSelection(commandName) {
     onClose();
     onCommandClick(commandName);
   }
+
+  useEffect(() => {
+    // Adapts the list of commands to show based on the current text
+    setCommandsToShow(showPossibleAutoCompletableCommands());
+  }, [currentText]);
 
   return (
     <Popover
@@ -26,7 +37,7 @@ function CommandPopover({ open, anchorEl, onClose, onCommandClick }) {
     >
       <Grid container direction='column'>
         {
-          COMMANDS.map((command) => (
+          commandsToShow.map((command) => (
             <Grid item key={command.name}>
               <Card sx={{ borderRadius: 0 }} onClick={() => handleCommandSelection(command.name)}>
                 <CardActionArea>
@@ -34,7 +45,7 @@ function CommandPopover({ open, anchorEl, onClose, onCommandClick }) {
                     <Typography variant='body1'>
                       /{command.name}
                     </Typography>
-                    <Typography variant='caption'>
+                    <Typography variant='caption' color={'text.disabled'}>
                       {command.description}
                     </Typography>
                   </CardContent>
