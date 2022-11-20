@@ -49,6 +49,85 @@ function ToolBar(props) {
     }
   }, [props.data.user]);
 
+  const userNotLoggedInUserButtons = (
+    <div>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/login');
+        }}
+      >
+        <LoginTwoToneIcon sx={{ mr: 1 }} />
+        LogIn
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/register');
+        }}
+      >
+        <HowToRegTwoToneIcon sx={{ mr: 1 }} />
+        Register
+      </MenuItem>
+    </div>
+  );
+
+  const userLoggedInButtons = (
+    <div>
+      {
+        (() => {
+          switch (userState.user.role) {
+            case 'ADMINISTRATOR':
+              return (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    navigate('/administration');
+                  }}
+                >
+                  <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
+                  Administration
+                </MenuItem>
+              );
+            case 'TEACHER':
+              return (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    navigate('/teacher');
+                  }}
+                >
+                  <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
+                  Dashboard
+                </MenuItem>
+              );
+            default:
+              return '';
+          }
+        })()
+      }
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/profile');
+        }}
+      >
+        <SupervisorAccountTwoToneIcon sx={{ mr: 1 }} />
+        View Profile
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/logout');
+        }}
+      >
+        <LogoutTwoToneIcon sx={{ mr: 1 }} />
+        LogOut
+      </MenuItem>
+    </div>
+  );
+
   return (
     <AppBar position='relative'>
       <Toolbar>
@@ -98,62 +177,7 @@ function ToolBar(props) {
             </IconButton>
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              {loggedIn ? (
-                <div>
-                  {userState.user.role === 'ADMINISTRATOR' ? (
-                    <MenuItem
-                      onClick={() => {
-                        setAnchorEl(null);
-                        navigate('/administration');
-                      }}
-                    >
-                      <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
-                      Administration
-                    </MenuItem>
-                  ) : (
-                    ''
-                  )}
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/profile');
-                    }}
-                  >
-                    <SupervisorAccountTwoToneIcon sx={{ mr: 1 }} />
-                    View Profile
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/logout');
-                    }}
-                  >
-                    <LogoutTwoToneIcon sx={{ mr: 1 }} />
-                    LogOut
-                  </MenuItem>
-                </div>
-              ) : (
-                <div>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/login');
-                    }}
-                  >
-                    <LoginTwoToneIcon sx={{ mr: 1 }} />
-                    LogIn
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/register');
-                    }}
-                  >
-                    <HowToRegTwoToneIcon sx={{ mr: 1 }} />
-                    Register
-                  </MenuItem>
-                </div>
-              )}
+              {loggedIn ? userLoggedInButtons : userNotLoggedInUserButtons}
             </Menu>
           </Grid>
         </Grid>

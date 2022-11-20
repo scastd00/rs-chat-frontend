@@ -22,6 +22,7 @@ import EditGroup from '../pages/administration/groups/EditGroup';
 import Logout from '../pages/Logout';
 import GlobalInfoSender from '../pages/administration/GlobalInfoSender';
 import UserProfile from '../pages/UserProfile';
+import TeacherDashboard from '../pages/TeacherDashboard';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -38,6 +39,10 @@ export const PRIVATE_ROUTES = [
   { path: '/chat', component: Chat },
   { path: '/logout', component: Logout },
   { path: '/user/:username', component: UserProfile },
+];
+
+export const TEACHER_ROUTES = [
+  { path: '/teacher', component: TeacherDashboard },
 ];
 
 export const ADMINISTRATION_ROUTES = [
