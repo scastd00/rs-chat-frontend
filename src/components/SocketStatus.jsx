@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Divider, Grid, Icon, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import StatusDot from '../icons/StatusDot';
 import { WebSocketContext } from '../utils/constants';
 
@@ -25,45 +25,15 @@ function SocketStatus() {
   }, []);
 
   return (
-    <Grid container spacing={2} alignItems='center'>
-      <Grid item>
+    <Grid container spacing={0.5} direction='column'>
+      <Grid item display='flex'>
         <Typography>Server status</Typography>
-
-        <Grid container alignItems='center' sx={{ color: client.connected ? 'status.online' : 'status.offline' }}>
-          <Grid item>
-            <Icon>
-              <StatusDot />
-            </Icon>
-          </Grid>
-
-          <Grid item>
-            <Typography>
-              {client.connected ? 'Connected' : 'Disconnected'}
-            </Typography>
-          </Grid>
-        </Grid>
+        <StatusDot sx={{ color: client.connected ? 'status.online' : 'status.offline' }} />
       </Grid>
 
-      <Grid item>
-        <Divider orientation='vertical' />
-      </Grid>
-
-      <Grid item>
+      <Grid item display='flex'>
         <Typography>Chat status</Typography>
-
-        <Grid container alignItems='center' sx={{ color: client.connectedToChat ? 'status.online' : 'status.offline' }}>
-          <Grid item>
-            <Icon>
-              <StatusDot />
-            </Icon>
-          </Grid>
-
-          <Grid item>
-            <Typography>
-              {client.connectedToChat ? 'Connected' : 'Disconnected'}
-            </Typography>
-          </Grid>
-        </Grid>
+        <StatusDot sx={{ color: client.connectedToChat ? 'status.online' : 'status.offline' }} />
       </Grid>
     </Grid>
   );

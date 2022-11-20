@@ -47,7 +47,7 @@ function Home() {
                   {/* 4 columns -> 12 places : 3 places/column = 4 */}
                   <Grid container spacing={0}>
                     {
-                      chatList.map(({ name, id: chatId }, idx2) => {
+                      chatList.map(({ name, key }, idx2) => {
                         return (
                           <Grid item container xs={12} md={4} xl={2} key={idx2} sx={{ p: 1 }} justifyContent='center'>
                             <Link style={{ display: 'block' }} underline='none'>
@@ -55,7 +55,9 @@ function Home() {
                                 variant='contained'
                                 disableElevation
                                 color='secondary'
-                                onClick={() => navigate(`/chat/${chatType}-${chatId}`)}
+                                onClick={() => {
+                                  navigate(`/chat#${key}`);
+                                }}
                               >
                                 {name}
                               </Button>

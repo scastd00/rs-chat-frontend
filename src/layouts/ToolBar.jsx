@@ -13,6 +13,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SupervisorAccountTwoToneIcon from '@mui/icons-material/SupervisorAccountTwoTone';
 import { useNavDis } from '../hooks/useNavDis';
 import SocketStatus from '../components/SocketStatus';
+import UndoRedoButtons from '../components/UndoRedoButtons';
 
 function ToolBar(props) {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -48,12 +49,99 @@ function ToolBar(props) {
     }
   }, [props.data.user]);
 
+  const userNotLoggedInUserButtons = (
+    <div>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/login');
+        }}
+      >
+        <LoginTwoToneIcon sx={{ mr: 1 }} />
+        LogIn
+      </MenuItem>
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/register');
+        }}
+      >
+        <HowToRegTwoToneIcon sx={{ mr: 1 }} />
+        Register
+      </MenuItem>
+    </div>
+  );
+
+  const userLoggedInButtons = (
+    <div>
+      {
+        (() => {
+          switch (userState.user.role) {
+            case 'ADMINISTRATOR':
+              return (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    navigate('/administration');
+                  }}
+                >
+                  <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
+                  Administration
+                </MenuItem>
+              );
+            case 'TEACHER':
+              return (
+                <MenuItem
+                  onClick={() => {
+                    setAnchorEl(null);
+                    navigate('/teacher');
+                  }}
+                >
+                  <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
+                  Dashboard
+                </MenuItem>
+              );
+            default:
+              return '';
+          }
+        })()
+      }
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/profile');
+        }}
+      >
+        <SupervisorAccountTwoToneIcon sx={{ mr: 1 }} />
+        View Profile
+      </MenuItem>
+
+      <MenuItem
+        onClick={() => {
+          setAnchorEl(null);
+          navigate('/logout');
+        }}
+      >
+        <LogoutTwoToneIcon sx={{ mr: 1 }} />
+        LogOut
+      </MenuItem>
+    </div>
+  );
+
   return (
     <AppBar position='relative'>
       <Toolbar>
         <Grid container justifyContent='space-between' alignItems='center'>
           <Grid item>
             <Grid container spacing={2} alignItems='center'>
+              {
+                loggedIn && (
+                  <Grid item>
+                    <UndoRedoButtons />
+                  </Grid>
+                )
+              }
+
               <Grid item>
                 <Button variant='text' disabled={!loggedIn} color='secondary' onClick={() => navigate('/home')}>
                   <HomeTwoToneIcon sx={{ mr: 1 }} fontSize='medium' />
@@ -89,62 +177,7 @@ function ToolBar(props) {
             </IconButton>
 
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-              {loggedIn ? (
-                <div>
-                  {userState.user.role === 'ADMINISTRATOR' ? (
-                    <MenuItem
-                      onClick={() => {
-                        setAnchorEl(null);
-                        navigate('/administration');
-                      }}
-                    >
-                      <AccountCircleTwoToneIcon sx={{ mr: 1 }} />
-                      Administration
-                    </MenuItem>
-                  ) : (
-                    ''
-                  )}
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/profile');
-                    }}
-                  >
-                    <SupervisorAccountTwoToneIcon sx={{ mr: 1 }} />
-                    View Profile
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/logout');
-                    }}
-                  >
-                    <LogoutTwoToneIcon sx={{ mr: 1 }} />
-                    LogOut
-                  </MenuItem>
-                </div>
-              ) : (
-                <div>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/login');
-                    }}
-                  >
-                    <LoginTwoToneIcon sx={{ mr: 1 }} />
-                    LogIn
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      setAnchorEl(null);
-                      navigate('/register');
-                    }}
-                  >
-                    <HowToRegTwoToneIcon sx={{ mr: 1 }} />
-                    Register
-                  </MenuItem>
-                </div>
-              )}
+              {loggedIn ? userLoggedInButtons : userNotLoggedInUserButtons}
             </Menu>
           </Grid>
         </Grid>

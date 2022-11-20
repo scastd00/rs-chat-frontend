@@ -49,6 +49,19 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
   const updateSelectionStart = () => setSelectionStart(inputRef.current.selectionStart);
 
   useEffect(() => {
+    // When pressing escape, close the emoji selector and the command popover
+    function handleEscape(event) {
+      if (event.key === 'Escape') {
+        setSelectingEmoji(false);
+        setInsertingCommand(false);
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, []);
+
+  useEffect(() => {
     setSelectedFiles(acceptedFiles.map(file => file));
   }, [acceptedFiles]);
 
@@ -92,6 +105,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
     setAttachedFiles([]);
     setSelectedFiles([]);
     setSelectingEmoji(false);
+    setInsertingCommand(false);
   }
 
   function performMessageSend() {
@@ -174,16 +188,22 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
 
   function onCommandClick(command) {
     const firstPart = message.substring(0, selectionStart);
+    const lastSlashIndex = firstPart.lastIndexOf('/');
+    const newFirstPart = firstPart.substring(0, lastSlashIndex + 1);
     const secondPart = message.substring(selectionStart, message.length);
 
-    setMessage(firstPart + command + secondPart);
+    setMessage(newFirstPart + command + secondPart);
     setInsertingCommand(false);
   }
 
-  return (
-    <>
-      <CssBaseline />
+  function currentCommandText() {
+    const firstPart = message.substring(0, selectionStart);
+    const lastSlashIndex = firstPart.lastIndexOf('/');
+    return firstPart.substring(lastSlashIndex + 1, firstPart.length);
+  }
 
+  return (
+    <CssBaseline>
       <EmojiSelector
         anchorEl={emojiAnchorEl}
         onClose={() => setSelectingEmoji(false)}
@@ -197,6 +217,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
         anchorEl={commandAnchorEl}
         onClose={() => setInsertingCommand(false)}
         onCommandClick={onCommandClick}
+        currentText={currentCommandText()}
       />
 
       <Grid container alignItems='center' justifyContent='center' spacing={1} sx={{ mt: 1 }}>
@@ -210,7 +231,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
           <TextField
             fullWidth
             size='small'
-            id='TextBox'
+            id='inputMessage'
             label='Text'
             name='text'
             color='secondary'
@@ -278,7 +299,7 @@ function ChatTextBar({ sendTextMessage, sendFiles }) {
           <Button color='success' onClick={attachFiles}>Attach</Button>
         </DialogActions>
       </Dialog>
-    </>
+    </CssBaseline>
   );
 }
 

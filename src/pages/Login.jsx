@@ -11,13 +11,13 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { useNavigate } from 'react-router';
 import AuthService from '../services/AuthService';
-import { useDispatch } from 'react-redux';
 import { setAvailableChats, setSessionId, setToken, setUser } from '../actions';
 import { PuffLoader } from 'react-spinners';
 import { useTheme } from '@mui/material';
 import ErrorAlert from '../components/ErrorAlert';
+import { useNavigate } from 'react-router';
+import { useDispatch } from 'react-redux';
 
 function Login() {
   const [loginError, setLoginError] = useState('');

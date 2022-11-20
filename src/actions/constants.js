@@ -4,3 +4,6 @@ export const SET_USER_TOKEN = 'setUserToken';
 export const SET_AVAILABLE_CHATS = 'setAvailableChats';
 export const LOG_OUT = 'logOut';
 export const CHANGE_THEME = 'changeTheme';
+export const ADD_HISTORY = 'addHistory';
+export const GO_BACK_HISTORY = 'goBackHistory';
+export const GO_FORWARD_HISTORY = 'goForwardHistory';

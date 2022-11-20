@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import {
   Button,
   Container,
@@ -14,8 +13,7 @@ import {
 } from '@mui/material';
 import ChatTextBar from '../components/ChatTextBar';
 import ChatBox from '../components/ChatBox';
-import { useDispatch, useStore } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useStore } from 'react-redux';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
@@ -25,17 +23,18 @@ import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
 import { WebSocketContext } from '../utils/constants';
+import { useNavDis } from '../hooks/useNavDis';
 
 function Chat() {
-  const { id } = useParams();
-  const [, chatId] = id.split('-');
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const state = useStore().getState();
+  const id = state.history.present.split('#')[1];
+  const userState = state.user;
+
+  const [navigate, dispatch] = useNavDis();
   const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
-  const userState = useStore().getState().user;
   const [queue, setQueue] = useState([]);
   const [chatInfo, setChatInfo] = useState({
     name: '',
@@ -64,7 +63,7 @@ function Chat() {
 
   function fetchChatInfo() {
     const chatInfo = ChatService
-      .getChatInfo(chatId, userState.token)
+      .getChatInfo(id, userState.token)
       .then(res => {
         setChatInfo({
           name: res.data.name,
@@ -76,7 +75,7 @@ function Chat() {
       });
 
     const allUsers = ChatService
-      .getAllUsersOfChat(chatId, userState.token)
+      .getAllUsersOfChat(id, userState.token)
       .then(res => {
         setAllUsers(res.data.users);
       })
@@ -87,41 +86,57 @@ function Chat() {
     return Promise.all([chatInfo, allUsers]);
   }
 
-  useEffect(() => {
-    // On component mount
+  function initConnection() {
+    if (id.length === 0) {
+      navigate('/home');
+      return;
+    }
 
-    // We check here to prevent a user who doesn't have access to the chat to access it
-    // by changing the url.
     ChatService
-      .userCanConnect(chatId, userState.user.id, userState.token)
+      .connectTo(id, userState.user.id, userState.token)
       .then(response => {
-        if (!response.data.canConnect) {
+        // We check access here to prevent a user who doesn't have access to the chat to access it
+        // by changing the url.
+        if (!response.data.connect) {
           client.disconnectFromChat();
           navigate('/home');
           return;
         }
 
-        // We connect to the chat
-        fetchChatInfo().then(() => {
-          client.setUsername(userState.user.username);
-          client.setChatId(id);
-          client.setSessionId(userState.sessionId);
-          client.setToken(userState.token);
-          client.connectToChat();
-          setShowPage(true);
-        });
+        // We connect to the chat after getting the information of the chat
+        fetchChatInfo()
+          .then(() => {
+            client.setUsername(userState.user.username);
+            client.setChatId(id);
+            client.setSessionId(userState.sessionId);
+            client.setToken(userState.token);
+            client.connectToChat();
+            setShowPage(true);
+          });
       })
       .catch(err => {
         client.disconnectFromChat();
         checkResponse(err, navigate, dispatch);
       });
+  }
 
-    window.addEventListener('beforeunload', function() {
-      client.disconnectFromChat(); // Executed when the page is reloaded
-    });
+  // Effect to execute every time the chat id changes (when user changes chat)
+  useEffect(() => {
+    // Restart all the chain for connecting the client to the server
+    // when the id of the URL changes.
 
-    // This is executed before any message is sent to the server
-    // So we can execute them immediately after the socket is connected to
+    // Disconnect from previous chat (if connected), to avoid multiple connections or exceptions in backend.
+    client.disconnectFromChat();
+    setShowPage(false);
+    initConnection();
+  }, [state.history.present]);
+
+  // Setup effect to prepare functions to be called by the client when receiving messages or quitting the chat.
+  useEffect(() => {
+    // On component mount
+
+    // This is executed before any message is sent to the server,
+    // so we can execute them immediately after the socket is connected to
     // speed up the process of getting the data.
     client.onMessage(
       addMessageToQueue,
@@ -132,7 +147,7 @@ function Chat() {
     );
 
     return () => {
-      // On component unmount (executed when the page is changed)
+      // On component unmount (executed when the page is changed or reloaded, not needed event listener)
       client.disconnectFromChat();
     };
   }, []);
@@ -173,7 +188,7 @@ function Chat() {
 
   function handleLeaveChat() {
     ChatService
-      .leaveChat(chatId, userState.user.id, userState.token)
+      .leaveChat(id, userState.user.id, userState.token)
       .then(() => {
         client.disconnectFromChat();
         navigate('/home');

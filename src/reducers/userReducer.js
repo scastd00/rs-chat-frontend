@@ -8,7 +8,7 @@ const initialState = {
   chats: {},
 };
 
-export const userReducer = createReducer(initialState, (builder) => {
+export const userReducer = createReducer(initialState, builder => {
   builder
     .addCase(setUser, (state, action) => {
       state.user = action.payload; // Set the new user
@@ -22,7 +22,7 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase(setAvailableChats, (state, action) => {
       state.chats = action.payload; // Set the chats the user can access
     })
-    .addCase(logOut, (state, _action) => {
+    .addCase(logOut, state => {
       state.user = {};
       state.token = '';
       state.sessionId = -1;

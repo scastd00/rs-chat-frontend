@@ -19,6 +19,7 @@ import SnackAlert from '../../../components/SnackAlert';
 
 function AddUser() {
   const userState = useStore().getState().user;
+  const [openAlert, setOpenAlert] = useState(false);
   const [navigate, dispatch] = useNavDis();
   const [formData, setFormData] = useState({
     email: '',
@@ -44,11 +45,18 @@ function AddUser() {
           role: '',
           agreeTerms: true,
         });
+        setOpenAlert(true);
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);
-        setErrorMessage(err.response.data.message);
+        setErrorMessage(err.response.data.error);
+        setOpenAlert(true);
       });
+  }
+
+  function handleChange(evt) {
+    setFormData({ ...formData, [evt.target.name]: evt.target.value });
+    setOpenAlert(false);
   }
 
   return (
@@ -73,7 +81,7 @@ function AddUser() {
             variant='standard'
             color='secondary'
             value={formData.email}
-            onChange={(evt) => setFormData({ ...formData, email: evt.target.value })}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -89,7 +97,7 @@ function AddUser() {
             variant='standard'
             color='secondary'
             value={formData.username}
-            onChange={(evt) => setFormData({ ...formData, username: evt.target.value })}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -104,7 +112,7 @@ function AddUser() {
             variant='standard'
             color='secondary'
             value={formData.fullName}
-            onChange={(evt) => setFormData({ ...formData, fullName: evt.target.value })}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -121,7 +129,7 @@ function AddUser() {
             variant='standard'
             color='secondary'
             value={formData.password}
-            onChange={(evt) => setFormData({ ...formData, password: evt.target.value })}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -137,7 +145,7 @@ function AddUser() {
             variant='standard'
             color='secondary'
             value={formData.confirmPassword}
-            onChange={(evt) => setFormData({ ...formData, confirmPassword: evt.target.value })}
+            onChange={handleChange}
           />
         </Grid>
 
@@ -147,11 +155,12 @@ function AddUser() {
             value={formData.role}
             required
             fullWidth
+            name='role'
             size='small'
             id='role'
             label='Role'
             margin='dense'
-            onChange={(evt) => setFormData({ ...formData, role: evt.target.value })}
+            onChange={handleChange}
           >
             <MenuItem value='STUDENT'>Student</MenuItem>
             <MenuItem value='TEACHER'>Teacher</MenuItem>
@@ -189,7 +198,7 @@ function AddUser() {
         </Grid>
       </Grid>
 
-      <SnackAlert open={errorMessage.length !== 0} severity='error'>
+      <SnackAlert open={openAlert} severity='error'>
         <Typography>{errorMessage}</Typography>
       </SnackAlert>
     </Container>

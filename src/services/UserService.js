@@ -17,4 +17,8 @@ export default {
   getAll(__token__) {
     return Api.get('/users', headers(__token__));
   },
+
+  getIdByUsername(username, __token__) {
+    return Api.get(`/user/id/${username}`, headers(__token__));
+  },
 };
