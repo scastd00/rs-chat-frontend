@@ -21,6 +21,7 @@ import EditSubject from '../pages/administration/subjects/EditSubject';
 import EditGroup from '../pages/administration/groups/EditGroup';
 import Logout from '../pages/Logout';
 import GlobalInfoSender from '../pages/administration/GlobalInfoSender';
+import UserProfile from '../pages/UserProfile';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -36,6 +37,7 @@ export const PRIVATE_ROUTES = [
   { path: '/profile', component: Profile },
   { path: '/chat', component: Chat },
   { path: '/logout', component: Logout },
+  { path: '/user/:username', component: UserProfile },
 ];
 
 export const ADMINISTRATION_ROUTES = [

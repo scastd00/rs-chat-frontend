@@ -19,8 +19,12 @@ function ClickableUsername({ username }) {
       .catch(error => checkResponse(error, navigate, dispatch));
   }
 
+  function handleViewProfile() {
+    navigate(`/user/${username}`);
+  }
+
   const userActions = [
-    { name: 'View profile', action: () => console.log('View profile'), color: 'info' },
+    { name: 'View profile', action: handleViewProfile, color: 'info' },
     { name: 'Add friend', action: () => console.log('Add friend'), color: 'success' },
     { name: 'Send message', action: handleSendPrivateMessage, color: 'success' },
     { name: 'Block user', action: () => console.log('Block user'), color: 'error' },

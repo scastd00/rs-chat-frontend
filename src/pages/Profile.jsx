@@ -87,7 +87,7 @@ function Profile() {
   }
 
   return (
-    <Container sx={{ pt: 2 }}>
+    <Container sx={{ my: 2 }}>
       <CssBaseline />
 
       <Grid container direction='column'>
