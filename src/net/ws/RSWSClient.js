@@ -17,7 +17,7 @@ import { createMessagesForString } from '../../utils/MessageTokenizer';
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
     ? `wss://${PROD_HOST}/ws/rschat`
-    : `wss://${DEV_HOST}/ws/rschat`;
+    : `ws://${DEV_HOST}/ws/rschat`;
 
   this.socket = new WebSocket(url);
   this.username = username;
