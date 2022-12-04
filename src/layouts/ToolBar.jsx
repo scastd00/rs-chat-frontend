@@ -153,9 +153,13 @@ function ToolBar(props) {
                 <Divider orientation='vertical' />
               </Grid>
 
-              <Grid item>
-                <SocketStatus />
-              </Grid>
+              {
+                loggedIn && (
+                  <Grid item>
+                    <SocketStatus />
+                  </Grid>
+                )
+              }
             </Grid>
           </Grid>
 

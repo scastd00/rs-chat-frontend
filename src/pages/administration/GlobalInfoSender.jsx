@@ -37,7 +37,7 @@ function GlobalInfoSender() {
     }
 
     if (scheduled) {
-      client.send(message + ' Scheduled:' + isoDate(scheduledTime), messageType);
+      client.send(message + '#SCHEDULE#' + isoDate(scheduledTime), messageType);
     } else {
       client.send(message, messageType);
     }
