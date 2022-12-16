@@ -155,7 +155,7 @@ function Chat() {
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
 
-    if (client.send(textMessage, TEXT_MESSAGE, true)) { // Send the message to other clients
+    if (client.send(message)) { // Send the message to other clients
       addMessageToQueue(message); // Add the message to my queue
     }
   }
