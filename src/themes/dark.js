@@ -67,5 +67,9 @@ export default createTheme({
       busy: '#f44336',
       offline: '#bdbdbd',
     },
+    mention: {
+      self: '#66bb6a',
+      other: '#29b6f6',
+    },
   },
 });
