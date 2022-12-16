@@ -31,7 +31,8 @@ function Chat() {
   const userState = state.user;
 
   const [navigate, dispatch] = useNavDis();
-  const [, toggle] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
+  const [, toggleMsgNotification] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Notification.mp3');
+  const [, toggleMentionNotification] = useAudio('https://rs-chat-bucket.s3.eu-west-3.amazonaws.com/audio/Mention.mp3');
   const [showPage, setShowPage] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
@@ -143,7 +144,8 @@ function Chat() {
       handleError,
       displayActiveUsers,
       handleHistory,
-      toggle,
+      toggleMsgNotification,
+      toggleMentionNotification
     );
 
     return () => {

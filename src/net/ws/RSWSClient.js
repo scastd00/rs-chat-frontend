@@ -2,6 +2,7 @@ import {
   ACTIVE_USERS_MESSAGE,
   ERROR_MESSAGE,
   GET_HISTORY_MESSAGE,
+  MENTION_MESSAGE,
   PING_MESSAGE,
   PONG_MESSAGE,
   TEXT_MESSAGE,
@@ -150,9 +151,11 @@ RSWSClient.prototype.disconnectFromChat = function() {
  * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
  * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
  * @param {function(): void} playSoundOnMessage function to execute when a message is received.
+ * @param {function(): void} playSoundOnMention function to execute when a mention is received.
  */
 RSWSClient.prototype.onMessage = function(
-  displayCallback, errorCallback, activeUsersCallback, historyCallback, playSoundOnMessage,
+  displayCallback, errorCallback, activeUsersCallback,
+  historyCallback, playSoundOnMessage, playSoundOnMention,
 ) {
   this.socket.onmessage = (message) => {
     if (!this.connected) {
@@ -184,8 +187,12 @@ RSWSClient.prototype.onMessage = function(
         break;
 
       default:
-        displayCallback(parsedMessage);
-        playSoundOnMessage();
+        if (headers.type === MENTION_MESSAGE) {
+          playSoundOnMention();
+        } else {
+          displayCallback(parsedMessage);
+          playSoundOnMessage();
+        }
 
         // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
         // to the server to get the updated list of active users.
