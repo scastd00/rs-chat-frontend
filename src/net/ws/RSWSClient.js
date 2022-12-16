@@ -2,6 +2,7 @@ import {
   ACTIVE_USERS_MESSAGE,
   ERROR_MESSAGE,
   GET_HISTORY_MESSAGE,
+  MENTION_MESSAGE,
   PING_MESSAGE,
   PONG_MESSAGE,
   TEXT_MESSAGE,
@@ -12,7 +13,6 @@ import {
 } from './MessageTypes';
 import { createMessage, isActivityMessage } from '../../utils';
 import { DEV_HOST, PING_INTERVAL, PROD_HOST } from '../../utils/constants';
-import { createMessagesForString } from '../../utils/MessageTokenizer';
 
 function RSWSClient(username, chatId, sessionId, __token__) {
   const url = import.meta.env.PROD
@@ -58,35 +58,24 @@ RSWSClient.prototype.setToken = function(__token__) {
  *
  * @param {string|object} messageContent messageContent to send.
  * @param {string} type type of the message to send.
- * @param {boolean} parse whether the messageContent should be parsed or not.
  */
-RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE, parse = false) {
+RSWSClient.prototype.send = function(messageContent, type = TEXT_MESSAGE) {
   if (this.socket.readyState !== WebSocket.OPEN || !this.connected) {
     return false; // Do not send anything
   }
 
-  if (parse) {
-    const messages = createMessagesForString(messageContent);
-    messages.forEach(message => {
-      const messageToSend = this.prepareMessage(message.value, message.type);
-      this.socket.send(JSON.stringify(messageToSend));
-    });
+  let msgToSend;
+
+  if (typeof messageContent === 'string') {
+    msgToSend = JSON.stringify(this.prepareMessage(messageContent, type));
+  } else if (typeof messageContent === 'object') {
+    msgToSend = JSON.stringify(messageContent);
   } else {
-    let msgToSend;
-
-    if (typeof messageContent === 'string') {
-      msgToSend = JSON.stringify(this.prepareMessage(messageContent, type));
-    } else if (typeof messageContent === 'object') {
-      msgToSend = JSON.stringify(messageContent);
-    } else {
-      alert('Could not send messageContent (type must be a string or an object)');
-
-      return false;
-    }
-
-    this.socket.send(msgToSend);
+    alert('Could not send messageContent (type must be a string or an object)');
+    return false;
   }
 
+  this.socket.send(msgToSend);
   return true;
 };
 
@@ -162,9 +151,11 @@ RSWSClient.prototype.disconnectFromChat = function() {
  * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
  * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
  * @param {function(): void} playSoundOnMessage function to execute when a message is received.
+ * @param {function(): void} playSoundOnMention function to execute when a mention is received.
  */
 RSWSClient.prototype.onMessage = function(
-  displayCallback, errorCallback, activeUsersCallback, historyCallback, playSoundOnMessage,
+  displayCallback, errorCallback, activeUsersCallback,
+  historyCallback, playSoundOnMessage, playSoundOnMention,
 ) {
   this.socket.onmessage = (message) => {
     if (!this.connected) {
@@ -196,8 +187,12 @@ RSWSClient.prototype.onMessage = function(
         break;
 
       default:
-        displayCallback(parsedMessage);
-        playSoundOnMessage();
+        if (headers.type === MENTION_MESSAGE) {
+          playSoundOnMention();
+        } else {
+          displayCallback(parsedMessage);
+          playSoundOnMessage();
+        }
 
         // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
         // to the server to get the updated list of active users.
