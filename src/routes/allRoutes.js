@@ -24,6 +24,7 @@ import GlobalInfoSender from '../pages/administration/GlobalInfoSender';
 import UserProfile from '../pages/UserProfile';
 import TeacherDashboard from '../pages/teacher/TeacherDashboard';
 import Error from '../pages/Error';
+import AddTeacherToSubject from '../pages/administration/users/AddTeacherToSubject';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -61,4 +62,5 @@ export const ADMINISTRATION_ROUTES = [
   { path: '/administration/users/list', component: ListUsers },
   { path: '/administration/statistics', component: AdministrationStatistics },
   { path: '/administration/message', component: GlobalInfoSender },
+  { path: '/administration/users/addTeacherToSubject', component: AddTeacherToSubject },
 ];
