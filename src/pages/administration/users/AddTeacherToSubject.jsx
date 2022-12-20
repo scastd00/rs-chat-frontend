@@ -21,13 +21,13 @@ function AddTeacherToSubject() {
 
   useEffect(() => {
     setFilteredTeachers(
-      teachers.filter(teacher => teacher.fullName.toLowerCase().startsWith(searchTeacher.toLowerCase())),
+      teachers.filter(teacher => teacher.fullName.toLowerCase().includes(searchTeacher.toLowerCase())),
     );
   }, [searchTeacher]);
 
   useEffect(() => {
     setFilteredSubjects(
-      subjects.filter(subject => subject.name.toLowerCase().startsWith(searchSubject.toLowerCase())),
+      subjects.filter(subject => subject.name.toLowerCase().includes(searchSubject.toLowerCase())),
     );
   }, [searchSubject]);
 
