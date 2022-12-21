@@ -54,16 +54,8 @@ function ServerMessage({ message }) {
               case MAINTENANCE_MESSAGE:
               case RESTART_MESSAGE:
               case INFO_MESSAGE:
-                return <TextChatCard text={message.body.content} customColor={messageColor(message.headers.type)} />;
-
               case COMMAND_RESPONSE:
-                const allCommands = message.body.content.split('##').map((text, index) => (
-                  <React.Fragment key={index}>
-                    {text}
-                    <br />
-                  </React.Fragment>
-                ));
-                return <TextChatCard text={allCommands} customColor={messageColor(message.headers.type)} />;
+                return <TextChatCard text={message.body.content} customColor={messageColor(message.headers.type)} />;
 
               default:
                 return <ErrorChatCard />;

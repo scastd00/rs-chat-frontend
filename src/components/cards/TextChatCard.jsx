@@ -10,8 +10,18 @@ function TextChatCard({ text, customColor }) {
     return username === userState.user.username;
   }
 
-  const markMentions = (text) => {
-    return text.split(' ').map((word, idx) => {
+  const displayMessage = (textToMark) => {
+    // console.log(textToMark);
+    // if (textToMark.includes('##')) {
+    //   return textToMark.body.content.split('##').map((text, index) => (
+    //     <React.Fragment key={index}>
+    //       {text}
+    //       <br />
+    //     </React.Fragment>
+    //   ));
+    // }
+
+    return textToMark.split(' ').map((word, idx) => {
       if (word.startsWith('@')) {
         // Split word into three parts: @ (ignored), username (word), symbols
         const [, username, ...symbols] = word.split(/(\w+)/);
@@ -40,7 +50,7 @@ function TextChatCard({ text, customColor }) {
           style={{ overflowWrap: 'break-word', wordBreak: 'break-word' }}
           sx={customColor ? { color: customColor } : {}}
         >
-          {markMentions(text)}
+          {displayMessage(text)}
         </Typography>
       </Grid>
     </Grid>
