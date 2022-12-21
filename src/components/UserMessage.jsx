@@ -40,7 +40,7 @@ function UserMessage({ message }) {
           {(() => {
             switch (message.headers.type) {
               case TEXT_MESSAGE:
-                return <TextChatCard text={message.body.content} />;
+                return <TextChatCard text={message.body.content} type={TEXT_MESSAGE} />;
 
               case IMAGE_MESSAGE:
                 return <ImageChatCard data={message.body.content} />;
