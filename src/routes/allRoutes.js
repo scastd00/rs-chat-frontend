@@ -22,7 +22,9 @@ import EditGroup from '../pages/administration/groups/EditGroup';
 import Logout from '../pages/Logout';
 import GlobalInfoSender from '../pages/administration/GlobalInfoSender';
 import UserProfile from '../pages/UserProfile';
-import TeacherDashboard from '../pages/TeacherDashboard';
+import TeacherDashboard from '../pages/teacher/TeacherDashboard';
+import Error from '../pages/Error';
+import AddTeacherToSubject from '../pages/administration/users/AddTeacherToSubject';
 
 export const PUBLIC_ROUTES = [
   { path: '/login', component: Login, restricted: true },
@@ -31,6 +33,7 @@ export const PUBLIC_ROUTES = [
   { path: '/terms', component: TermsAndConditions, restricted: false },
   { path: '/forgotPassword', component: ForgotPassword, restricted: true },
   { path: '/createPassword', component: CreatePassword, restricted: false },
+  { path: '/error', component: Error, restricted: false },
 ];
 
 export const PRIVATE_ROUTES = [
@@ -59,4 +62,5 @@ export const ADMINISTRATION_ROUTES = [
   { path: '/administration/users/list', component: ListUsers },
   { path: '/administration/statistics', component: AdministrationStatistics },
   { path: '/administration/message', component: GlobalInfoSender },
+  { path: '/administration/users/addTeacherToSubject', component: AddTeacherToSubject },
 ];

@@ -12,6 +12,7 @@ function AdministrationUsers() {
   const userFunctionalities = {
     add: 'Add user',
     list: 'List all users',
+    addTeacherToSubject: 'Add teacher to subject',
   };
 
   return (

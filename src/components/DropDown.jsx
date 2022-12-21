@@ -3,7 +3,7 @@ import { CssBaseline, Grid, IconButton, Typography } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
-function DropDown({ title, children, drop, button }) {
+function DropDown({ title, children, drop }) {
   const [dropped, setDropped] = useState(drop);
 
   const childrenToRender =
@@ -23,7 +23,7 @@ function DropDown({ title, children, drop, button }) {
         <IconButton sx={{ mr: 1 }} onClick={() => setDropped(!dropped)}>
           {dropped ? <ArrowDropDownIcon /> : <ArrowRightIcon />}
         </IconButton>
-        {title} {button}
+        {title}
       </Typography>
 
       {!dropped ? (

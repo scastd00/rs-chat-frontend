@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, CssBaseline, Grid, Link, Typography } from '@mui/material';
+import { Button, Container, CssBaseline, Grid, Typography } from '@mui/material';
 import { useStore } from 'react-redux';
 import DropDown from '../components/DropDown';
 import { capitalizeFirstLetter, checkResponse } from '../utils';
@@ -50,18 +50,18 @@ function Home() {
                       chatList.map(({ name, key }, idx2) => {
                         return (
                           <Grid item container xs={12} md={4} xl={2} key={idx2} sx={{ p: 1 }} justifyContent='center'>
-                            <Link style={{ display: 'block' }} underline='none'>
-                              <Button
-                                variant='contained'
-                                disableElevation
-                                color='secondary'
-                                onClick={() => {
-                                  navigate(`/chat#${key}`);
-                                }}
-                              >
-                                {name}
-                              </Button>
-                            </Link>
+                            <Button
+                              variant='contained'
+                              disableElevation
+                              fullWidth
+                              size='small'
+                              color='secondary'
+                              onClick={() => {
+                                navigate(`/chat#${key}`);
+                              }}
+                            >
+                              {name}
+                            </Button>
                           </Grid>
                         );
                       })
