@@ -6,6 +6,7 @@ import { checkResponse } from '../../../utils';
 import { useNavDis } from '../../../hooks/useNavDis';
 import SubjectService from '../../../services/SubjectService';
 import ClickableListItem from '../../../components/ClickableListItem';
+import SnackAlert from '../../../components/SnackAlert';
 
 function AddTeacherToSubject() {
   const userState = useStore().getState().user;
@@ -18,6 +19,9 @@ function AddTeacherToSubject() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [searchTeacher, setSearchTeacher] = useState('');
   const [searchSubject, setSearchSubject] = useState('');
+  const [errorSnack, setErrorSnack] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
 
   useEffect(() => {
     setFilteredTeachers(
@@ -75,6 +79,33 @@ function AddTeacherToSubject() {
     }
   }
 
+  function closeSnackbar() {
+    setTimeout(() => {
+      setOpenSnackBar(false);
+    }, 3000);
+  }
+
+  function handleAddTeacherToSubject() {
+    TeacherService
+      .addTeacherToSubject(selectedTeacher, selectedSubject, userState.token)
+      .then(_ => {
+        setErrorSnack(false);
+        setOpenSnackBar(true);
+        closeSnackbar();
+
+        setSelectedTeacher(-1);
+        setSelectedSubject(-1);
+      })
+      .catch(err => {
+        setErrorSnack(true);
+        setSnackMessage(err.response.data.error);
+        setOpenSnackBar(true);
+        closeSnackbar();
+
+        checkResponse(err, navigate, dispatch);
+      });
+  }
+
   return (
     <Container component='main' sx={{ py: 1 }}>
       <CssBaseline />
@@ -107,7 +138,14 @@ function AddTeacherToSubject() {
       {
         selectedTeacher !== -1 && selectedSubject !== -1 && (
           <Typography variant='body1' sx={{ my: 2 }}>
-            <Button color='success' fullWidth variant='outlined'>Confirm</Button>
+            <Button
+              color='success'
+              fullWidth
+              variant='outlined'
+              onClick={handleAddTeacherToSubject}
+            >
+              Confirm
+            </Button>
           </Typography>
         )
       }
@@ -181,6 +219,12 @@ function AddTeacherToSubject() {
           </Grid>
         </Grid>
       </Grid>
+
+      <SnackAlert open={openSnackBar} severity={errorSnack ? 'error' : 'success'}>
+        <Typography variant='body1'>
+          {errorSnack ? 'Error while adding the teacher: ' + snackMessage : 'Operation completed successfully'}
+        </Typography>
+      </SnackAlert>
     </Container>
   );
 }

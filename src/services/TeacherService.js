@@ -12,5 +12,9 @@ export default {
 
   getTeacherSubjects(id, __token__) {
     return Api.get(`/teacher/subjects/${id}`, headers(__token__));
+  },
+
+  addTeacherToSubject(teacherId, subjectId, __token__) {
+    return Api.post('/teacher/subject/add', { teacherId, subjectId }, headers(__token__));
   }
 }
