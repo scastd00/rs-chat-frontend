@@ -14,9 +14,16 @@ function ListUsers() {
   useEffect(() => {
     UserService
       .getAll(userState.token)
-      .then(res => setUsers(res.data.data))
+      .then(res => setUsers(res.data))
       .catch(err => checkResponse(err, dispatch, navigate));
   }, []);
+
+  function handleDeleteUser(id) {
+    UserService
+      .deleteUser(id, userState.token)
+      .then(() => setUsers(users.filter(user => user.id !== id)))
+      .catch(err => checkResponse(err, dispatch, navigate));
+  }
 
   return (
     <Container sx={{ py: 3 }} component='main'>
@@ -36,7 +43,7 @@ function ListUsers() {
                 name={user.username}
                 description={'Email: ' + user.email}
                 invitationCode={user.username}
-                // deleteFn={() => handleDeleteDegree(user.id)}
+                deleteFn={() => handleDeleteUser(user.id)}
               />
             </Grid>
           ))

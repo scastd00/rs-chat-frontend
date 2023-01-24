@@ -20,7 +20,7 @@ function AdministrationDegrees() {
     DegreeService
       .getAllDegrees(userState.token)
       .then(res => {
-        setAllDegrees(JSON.parse(res.data.degrees));
+        setAllDegrees(JSON.parse(res.data));
       })
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);

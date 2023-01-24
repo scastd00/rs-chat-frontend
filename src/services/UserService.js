@@ -21,4 +21,8 @@ export default {
   getIdByUsername(username, __token__) {
     return Api.get(`/user/id/${username}`, headers(__token__));
   },
+
+  deleteUser(id, __token__) {
+    return Api.delete(`/user/delete/${id}`, headers(__token__));
+  }
 };

@@ -19,7 +19,7 @@ function AdministrationGroups() {
   useEffect(() => {
     GroupService
       .getAllGroups(userState.token)
-      .then(res => setAllGroups(JSON.parse(res.data.groups)))
+      .then(res => setAllGroups(JSON.parse(res.data)))
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 

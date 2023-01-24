@@ -37,7 +37,7 @@ function Profile() {
     UserService
       .openedSessions(userState.user.username, userState.token)
       .then((res) => {
-        setSessions(res.data.sessions);
+        setSessions(res.data);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -51,7 +51,7 @@ function Profile() {
         navigate('/createPassword');
       })
       .catch(e => {
-        console.log('Error in forgot password', e.response.data.error);
+        console.log('Error in forgot password', e.response.data);
       });
   }
 
@@ -60,12 +60,12 @@ function Profile() {
       .joinToChat(userState.user.id, chatCode, userState.token)
       .then(res => {
         setChatCode('');
-        showInvitationCodeAlert('success', 'Joined to chat ' + res.data.name);
+        showInvitationCodeAlert('success', 'Joined to chat ' + res.data);
 
         ChatService
           .getAllChatsOfUser(userState.user.username, userState.token)
           .then(chatsRes => {
-            dispatch(setAvailableChats(chatsRes.data.chats));
+            dispatch(setAvailableChats(chatsRes.data));
           })
           .catch(err => {
             console.error(err);
@@ -73,7 +73,7 @@ function Profile() {
       })
       .catch(err => {
         setChatCode('');
-        showInvitationCodeAlert('error', err.response.data.error);
+        showInvitationCodeAlert('error', err.response.data);
       });
   }
 

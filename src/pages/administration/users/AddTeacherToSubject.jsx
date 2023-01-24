@@ -39,7 +39,7 @@ function AddTeacherToSubject() {
     TeacherService
       .getAllTeachers(userState.token)
       .then(res => {
-        const teachers = res.data.data;
+        const teachers = res.data;
         setTeachers(teachers);
         setFilteredTeachers(teachers);
       })
@@ -50,7 +50,7 @@ function AddTeacherToSubject() {
     SubjectService
       .getAllSubjects(userState.token)
       .then(res => {
-        const subjects = JSON.parse(res.data.subjects);
+        const subjects = JSON.parse(res.data);
         setSubjects(subjects);
         setFilteredSubjects(subjects);
       })
@@ -88,7 +88,7 @@ function AddTeacherToSubject() {
   function handleAddTeacherToSubject() {
     TeacherService
       .addTeacherToSubject(selectedTeacher, selectedSubject, userState.token)
-      .then(_ => {
+      .then(() => {
         setErrorSnack(false);
         setOpenSnackBar(true);
         closeSnackbar();
@@ -98,7 +98,7 @@ function AddTeacherToSubject() {
       })
       .catch(err => {
         setErrorSnack(true);
-        setSnackMessage(err.response.data.error);
+        setSnackMessage(err.response.data);
         setOpenSnackBar(true);
         closeSnackbar();
 

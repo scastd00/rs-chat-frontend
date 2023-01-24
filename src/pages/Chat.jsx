@@ -67,8 +67,8 @@ function Chat() {
       .getChatInfo(id, userState.token)
       .then(res => {
         setChatInfo({
-          name: res.data.chat.name,
-          metadata: JSON.parse(res.data.chat.metadata),
+          name: res.data.name,
+          metadata: JSON.parse(res.data.metadata),
         });
       })
       .catch((err) => {
@@ -78,7 +78,7 @@ function Chat() {
     const allUsers = ChatService
       .getAllUsersOfChat(id, userState.token)
       .then(res => {
-        setAllUsers(res.data.users);
+        setAllUsers(res.data);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -98,7 +98,7 @@ function Chat() {
       .then(response => {
         // We check access here to prevent a user who doesn't have access to the chat to access it
         // by changing the url.
-        if (!response.data.connect) {
+        if (!response.data) {
           client.disconnectFromChat();
           navigate('/home');
           return;
@@ -175,8 +175,8 @@ function Chat() {
       .all(uploadPromises)
       .then(uploadedFiles => {
         uploadedFiles.forEach(file => {
-          file.data.file.metadata = JSON.parse(file.data.file.metadata); // Parse the string that is received from the server to not cause problems
-          const message = client.prepareMessage(file.data.file, file.data.file.metadata.messageType);
+          file.data.metadata = JSON.parse(file.data.metadata); // Parse the string that is received from the server to not cause problems
+          const message = client.prepareMessage(file.data, file.data.metadata.messageType);
 
           if (client.send(message)) {
             addMessageToQueue(message);

@@ -15,19 +15,19 @@ function TeacherDashboard() {
   useEffect(() => {
     TeacherService
       .getTeacherDegrees(userState.user.id, userState.token)
-      .then((res) => {
-        setTeacherDegrees(res.data.data);
+      .then(res => {
+        setTeacherDegrees(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         checkResponse(err, navigate, dispatch);
       });
 
     TeacherService
       .getTeacherSubjects(userState.user.id, userState.token)
-      .then((res) => {
-        setTeacherSubjects(res.data.data);
+      .then(res => {
+        setTeacherSubjects(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         checkResponse(err, navigate, dispatch);
       });
   }, []);
