@@ -14,7 +14,7 @@ function ClickableUsername({ username }) {
     UserService
       .getIdByUsername(username, userState.token)
       .then(res => {
-        navigate(`/chat#user-${userState.user.id}_${res.data.id}`);
+        navigate(`/chat#user-${userState.user.id}_${res.data}`);
       })
       .catch(error => checkResponse(error, navigate, dispatch));
   }

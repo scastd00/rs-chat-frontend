@@ -6,6 +6,7 @@ import { checkResponse } from '../../../utils';
 import { useNavDis } from '../../../hooks/useNavDis';
 import SubjectService from '../../../services/SubjectService';
 import ClickableListItem from '../../../components/ClickableListItem';
+import SnackAlert from '../../../components/SnackAlert';
 
 function AddTeacherToSubject() {
   const userState = useStore().getState().user;
@@ -18,6 +19,9 @@ function AddTeacherToSubject() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
   const [searchTeacher, setSearchTeacher] = useState('');
   const [searchSubject, setSearchSubject] = useState('');
+  const [errorSnack, setErrorSnack] = useState(false);
+  const [openSnackBar, setOpenSnackBar] = useState(false);
+  const [snackMessage, setSnackMessage] = useState('');
 
   useEffect(() => {
     setFilteredTeachers(
@@ -35,7 +39,7 @@ function AddTeacherToSubject() {
     TeacherService
       .getAllTeachers(userState.token)
       .then(res => {
-        const teachers = res.data.data;
+        const teachers = res.data;
         setTeachers(teachers);
         setFilteredTeachers(teachers);
       })
@@ -46,7 +50,7 @@ function AddTeacherToSubject() {
     SubjectService
       .getAllSubjects(userState.token)
       .then(res => {
-        const subjects = JSON.parse(res.data.subjects);
+        const subjects = JSON.parse(res.data);
         setSubjects(subjects);
         setFilteredSubjects(subjects);
       })
@@ -73,6 +77,33 @@ function AddTeacherToSubject() {
     if (id === selectedSubject) {
       setSelectedSubject(-1);
     }
+  }
+
+  function closeSnackbar() {
+    setTimeout(() => {
+      setOpenSnackBar(false);
+    }, 3000);
+  }
+
+  function handleAddTeacherToSubject() {
+    TeacherService
+      .addTeacherToSubject(selectedTeacher, selectedSubject, userState.token)
+      .then(() => {
+        setErrorSnack(false);
+        setOpenSnackBar(true);
+        closeSnackbar();
+
+        setSelectedTeacher(-1);
+        setSelectedSubject(-1);
+      })
+      .catch(err => {
+        setErrorSnack(true);
+        setSnackMessage(err.response.data);
+        setOpenSnackBar(true);
+        closeSnackbar();
+
+        checkResponse(err, navigate, dispatch);
+      });
   }
 
   return (
@@ -107,7 +138,14 @@ function AddTeacherToSubject() {
       {
         selectedTeacher !== -1 && selectedSubject !== -1 && (
           <Typography variant='body1' sx={{ my: 2 }}>
-            <Button color='success' fullWidth variant='outlined'>Confirm</Button>
+            <Button
+              color='success'
+              fullWidth
+              variant='outlined'
+              onClick={handleAddTeacherToSubject}
+            >
+              Confirm
+            </Button>
           </Typography>
         )
       }
@@ -181,6 +219,12 @@ function AddTeacherToSubject() {
           </Grid>
         </Grid>
       </Grid>
+
+      <SnackAlert open={openSnackBar} severity={errorSnack ? 'error' : 'success'}>
+        <Typography variant='body1'>
+          {errorSnack ? 'Error while adding the teacher: ' + snackMessage : 'Operation completed successfully'}
+        </Typography>
+      </SnackAlert>
     </Container>
   );
 }

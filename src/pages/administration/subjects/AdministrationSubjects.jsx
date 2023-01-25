@@ -21,12 +21,12 @@ function AdministrationSubjects() {
   useEffect(() => {
     SubjectService
       .getAllSubjects(userState.token)
-      .then(res => setAllSubjects(JSON.parse(res.data.subjects)))
+      .then(res => setAllSubjects(JSON.parse(res.data)))
       .catch(err => checkResponse(err, navigate, dispatch));
 
     DegreeService
       .getAllDegrees(userState.token)
-      .then(res => setAllDegrees(JSON.parse(res.data.degrees)))
+      .then(res => setAllDegrees(JSON.parse(res.data)))
       .catch(err => checkResponse(err, navigate, dispatch));
   }, []);
 

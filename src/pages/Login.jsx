@@ -52,7 +52,7 @@ function Login() {
       })
       .catch(e => {
         setShowLoadingSpinner(false);
-        setLoginError(e.response.data.error);
+        setLoginError(e.response.data);
       });
   };
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import { Grid, Typography, useTheme } from '@mui/material';
 import { useStore } from 'react-redux';
+import { COMMAND_RESPONSE } from '../../net/ws/MessageTypes';
 
-function TextChatCard({ text, customColor }) {
+function TextChatCard({ text, customColor, type }) {
   const userState = useStore().getState().user;
   const theme = useTheme();
 
@@ -11,15 +12,14 @@ function TextChatCard({ text, customColor }) {
   }
 
   const displayMessage = (textToMark) => {
-    // console.log(textToMark);
-    // if (textToMark.includes('##')) {
-    //   return textToMark.body.content.split('##').map((text, index) => (
-    //     <React.Fragment key={index}>
-    //       {text}
-    //       <br />
-    //     </React.Fragment>
-    //   ));
-    // }
+    if (type === COMMAND_RESPONSE && textToMark.includes('##')) {
+      return textToMark.split('##').map((text, index) => (
+        <React.Fragment key={index}>
+          {text}
+          <br />
+        </React.Fragment>
+      ));
+    }
 
     return textToMark.split(' ').map((word, idx) => {
       if (word.startsWith('@')) {

@@ -12,7 +12,7 @@ import AdministrationDegrees from '../pages/administration/degrees/Administratio
 import AdministrationSubjects from '../pages/administration/subjects/AdministrationSubjects';
 import AdministrationGroups from '../pages/administration/groups/AdministrationGroups';
 import AdministrationUsers from '../pages/administration/users/AdministrationUsers';
-import AdministrationStatistics from '../pages/administration/statistics/AdministrationStatistics';
+import AdministrationAnalytics from '../pages/administration/analytics/AdministrationAnalytics';
 import AddUser from '../pages/administration/users/AddUser';
 import EditUser from '../pages/administration/users/EditUser';
 import ListUsers from '../pages/administration/users/ListUsers';
@@ -60,7 +60,7 @@ export const ADMINISTRATION_ROUTES = [
   { path: '/administration/users/add', component: AddUser },
   { path: '/administration/users/edit/:id', component: EditUser },
   { path: '/administration/users/list', component: ListUsers },
-  { path: '/administration/statistics', component: AdministrationStatistics },
+  { path: '/administration/analytics', component: AdministrationAnalytics },
   { path: '/administration/message', component: GlobalInfoSender },
   { path: '/administration/users/addTeacherToSubject', component: AddTeacherToSubject },
 ];

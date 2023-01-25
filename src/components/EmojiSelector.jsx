@@ -39,10 +39,10 @@ function EmojiSelector({ anchorEl, open, onClose, addEmojiToTextBox }) {
     EmojiService
       .getEmojisGroupedByCategory(userState.token)
       .then(res => {
-        setAllEmojisByCategory(res.data.emojis);
+        setAllEmojisByCategory(res.data);
         setCurrentEmojis({
           category: categories[tabPosition],
-          emojis: res.data.emojis[categories[tabPosition]],
+          emojis: res.data[categories[tabPosition]],
         });
       })
       .catch(err => checkResponse(err, navigate, dispatch));

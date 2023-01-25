@@ -55,7 +55,11 @@ function ServerMessage({ message }) {
               case RESTART_MESSAGE:
               case INFO_MESSAGE:
               case COMMAND_RESPONSE:
-                return <TextChatCard text={message.body.content} customColor={messageColor(message.headers.type)} />;
+                return <TextChatCard
+                  text={message.body.content}
+                  customColor={messageColor(message.headers.type)}
+                  type={message.headers.type}
+                />;
 
               default:
                 return <ErrorChatCard />;

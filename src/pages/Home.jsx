@@ -16,8 +16,8 @@ function Home() {
     ChatService
       .getAllChatsOfUser(userState.user.username, userState.token)
       .then(chatsRes => {
-        setChats(chatsRes.data.chats);
-        dispatch(setAvailableChats(chatsRes.data.chats));
+        setChats(chatsRes.data);
+        dispatch(setAvailableChats(chatsRes.data));
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);

@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from 'react-router';
 function CreatePassword() {
   const navigate = useNavigate();
   const url = useLocation();
-  const [formFields, setFormFields] = useState({ code: '', newPassword: '', confirmPassword: '' });
+  const [formFields, setFormFields] = useState({ code: '', password: '', confirmPassword: '' });
 
   function handleSubmit() {
     AuthService
@@ -68,7 +68,7 @@ function CreatePassword() {
             label='New password'
             type='password'
             id='newPassword'
-            onChange={(e) => setFormFields({ ...formFields, newPassword: e.target.value })}
+            onChange={(e) => setFormFields({ ...formFields, password: e.target.value })}
           />
 
           <TextField

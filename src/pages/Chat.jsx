@@ -78,7 +78,7 @@ function Chat() {
     const allUsers = ChatService
       .getAllUsersOfChat(id, userState.token)
       .then(res => {
-        setAllUsers(res.data.users);
+        setAllUsers(res.data);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);
@@ -98,7 +98,7 @@ function Chat() {
       .then(response => {
         // We check access here to prevent a user who doesn't have access to the chat to access it
         // by changing the url.
-        if (!response.data.connect) {
+        if (!response.data) {
           client.disconnectFromChat();
           navigate('/home');
           return;

@@ -79,7 +79,7 @@ function Register() {
       })
       .catch((e) => {
         setShowLoadingSpinner(false);
-        setRegisterError(e.response.data.error);
+        setRegisterError(e.response.data);
       });
   };
 

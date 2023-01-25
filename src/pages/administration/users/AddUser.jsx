@@ -35,7 +35,7 @@ function AddUser() {
   function handleConfirm() {
     UserService
       .createUser(formData, userState.token)
-      .then(_ => {
+      .then(() => {
         setFormData({
           email: '',
           username: '',
@@ -45,12 +45,14 @@ function AddUser() {
           role: '',
           agreeTerms: true,
         });
-        setOpenAlert(true);
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);
-        setErrorMessage(err.response.data.error);
+        setErrorMessage(err.response.data);
         setOpenAlert(true);
+        setTimeout(() => {
+          setOpenAlert(false);
+        }, 3000);
       });
   }
 
