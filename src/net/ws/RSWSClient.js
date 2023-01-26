@@ -122,7 +122,7 @@ RSWSClient.prototype.connectToChat = function() {
   this.connectedToChat = true;
 
   this.send('', USER_JOINED);
-  this.send('', GET_HISTORY_MESSAGE);
+  this.send('0', GET_HISTORY_MESSAGE);
   this.send('', ACTIVE_USERS_MESSAGE);
 };
 
