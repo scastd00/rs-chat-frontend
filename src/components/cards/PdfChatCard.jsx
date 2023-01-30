@@ -15,7 +15,7 @@ function PdfChatCard({ data }) {
       </Grid>
 
       <Dialog open={showPdf} onClose={() => setShowPdf(false)} maxWidth='md'>
-        <PdfViewer pdfUrl={data.uri} />
+        <PdfViewer pdfUrl={data.path} />
       </Dialog>
     </Grid>
   );

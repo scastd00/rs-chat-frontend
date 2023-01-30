@@ -88,7 +88,7 @@ RSWSClient.prototype.connect = function() {
   }
 
   this.connected = true;
-  this.send('', USER_CONNECTED);
+  this.send('Connection', USER_CONNECTED);
 
   this.pingInterval = setInterval(() => {
     this.send('I am a ping message', PING_MESSAGE);

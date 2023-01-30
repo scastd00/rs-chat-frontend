@@ -26,7 +26,7 @@ function VideoChatCard({ data }) {
         maxWidth='xs'
       >
         <video controls>
-          <source src={data.uri} type='video/mp4' />
+          <source src={data.path} type='video/mp4' />
         </video>
       </Dialog>
     </>

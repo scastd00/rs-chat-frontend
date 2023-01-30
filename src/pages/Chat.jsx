@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
   Container,
@@ -184,7 +184,7 @@ function Chat() {
         });
       })
       .catch(err => {
-        console.log('err', err);
+        console.log('Error when uploading files', err.response.data);
       });
   }
 
