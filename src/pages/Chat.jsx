@@ -17,7 +17,7 @@ import { useStore } from 'react-redux';
 import { logOut } from '../actions';
 import ChatService from '../services/ChatService';
 import { checkResponse } from '../utils';
-import { TEXT_MESSAGE } from '../net/ws/MessageTypes';
+import { GET_HISTORY_MESSAGE, TEXT_MESSAGE } from '../net/ws/MessageTypes';
 import UsersList from '../components/UsersList';
 import FileService from '../services/FileService';
 import { useAudio } from '../hooks/useAudio';
@@ -59,7 +59,7 @@ function Chat() {
   };
 
   const handleHistory = (messages) => {
-    setQueue(messages);
+    setQueue(prevState => [...prevState, ...messages.reverse()]);
   };
 
   function fetchChatInfo() {
@@ -107,10 +107,10 @@ function Chat() {
         // We connect to the chat after getting the information of the chat
         fetchChatInfo()
           .then(() => {
-            client.setUsername(userState.user.username);
+            client.setUsername(userState.user.username); // Needed??
             client.setChatId(id);
-            client.setSessionId(userState.sessionId);
-            client.setToken(userState.token);
+            client.setSessionId(userState.sessionId); // Needed??
+            client.setToken(userState.token); // Needed??
             client.connectToChat();
             setShowPage(true);
           });
@@ -145,7 +145,7 @@ function Chat() {
       displayActiveUsers,
       handleHistory,
       toggleMsgNotification,
-      toggleMentionNotification
+      toggleMentionNotification,
     );
 
     return () => {
@@ -184,7 +184,7 @@ function Chat() {
         });
       })
       .catch(err => {
-        console.log('err', err);
+        console.log('Error when uploading files', err.response.data);
       });
   }
 
@@ -196,6 +196,10 @@ function Chat() {
         navigate('/home');
       })
       .catch(err => checkResponse(err, navigate, dispatch));
+  }
+
+  function loadMore() {
+    client.send(`${queue.length}`, GET_HISTORY_MESSAGE);
   }
 
   return (
@@ -222,7 +226,7 @@ function Chat() {
                 </Grid>
 
                 <Grid item>
-                  <ChatBox messages={queue} />
+                  <ChatBox messages={queue} handleLoadMore={loadMore} />
                 </Grid>
 
                 <Grid item>

@@ -12,7 +12,7 @@ function ImageChatCard({ data }) {
             sx={{ filter: 'blur(5px)' }}
             component='img'
             height='400'
-            image={data.uri}
+            image={data.path}
             alt={data.name}
             onClick={() => setImageDialogOpen(true)}
           />
@@ -25,7 +25,7 @@ function ImageChatCard({ data }) {
         fullWidth
         maxWidth={data.metadata.maxWidth}
       >
-        <img src={data.uri} alt={data.name} />
+        <img src={data.path} alt={data.name} />
       </Dialog>
     </>
   );

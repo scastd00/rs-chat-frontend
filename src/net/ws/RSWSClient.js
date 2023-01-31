@@ -88,7 +88,7 @@ RSWSClient.prototype.connect = function() {
   }
 
   this.connected = true;
-  this.send('', USER_CONNECTED);
+  this.send('Connection', USER_CONNECTED);
 
   this.pingInterval = setInterval(() => {
     this.send('I am a ping message', PING_MESSAGE);
@@ -122,7 +122,7 @@ RSWSClient.prototype.connectToChat = function() {
   this.connectedToChat = true;
 
   this.send('', USER_JOINED);
-  this.send('', GET_HISTORY_MESSAGE);
+  this.send('0', GET_HISTORY_MESSAGE);
   this.send('', ACTIVE_USERS_MESSAGE);
 };
 

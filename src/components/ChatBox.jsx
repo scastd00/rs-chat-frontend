@@ -1,16 +1,16 @@
 import React, { useEffect, useRef } from 'react';
-import { Container, Grid } from '@mui/material';
+import { Button, Container, Grid } from '@mui/material';
 import UserMessage from './UserMessage';
 import ServerMessage from './ServerMessage';
 import { isUserMessage } from '../utils';
 import { getWindowSize } from '../utils/constants';
 
-function ChatBox({ messages }) {
+function ChatBox({ messages, handleLoadMore }) {
   const divRef = useRef(null);
 
   useEffect(() => {
     divRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  });
+  }, [messages]);
 
   return (
     <Container
@@ -26,6 +26,14 @@ function ChatBox({ messages }) {
       }}
       style={{ overflow: 'scroll' }}
     >
+      <Grid container>
+        <Grid item xs={12} sx={{ textAlign: 'center', py: 3 }}>
+          <Button variant='contained' color='primary' onClick={handleLoadMore}>
+            Load more
+          </Button>
+        </Grid>
+      </Grid>
+
       <Grid
         container
         direction='column-reverse'
