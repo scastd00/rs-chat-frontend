@@ -6,6 +6,7 @@ import {
   PING_MESSAGE,
   PONG_MESSAGE,
   TEXT_MESSAGE,
+  TOO_FAST_MESSAGE,
   USER_CONNECTED,
   USER_DISCONNECTED,
   USER_JOINED,
@@ -150,12 +151,13 @@ RSWSClient.prototype.disconnectFromChat = function() {
  * @param {function(): void} errorCallback function to execute when an error message is received.
  * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
  * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
+ * @param {function(): void} tooFastMessagesCallback function to execute when the user is sending messages too fast.
  * @param {function(): void} playSoundOnMessage function to execute when a message is received.
  * @param {function(): void} playSoundOnMention function to execute when a mention is received.
  */
 RSWSClient.prototype.onMessage = function(
   displayCallback, errorCallback, activeUsersCallback,
-  historyCallback, playSoundOnMessage, playSoundOnMention,
+  historyCallback, tooFastMessagesCallback, playSoundOnMessage, playSoundOnMention,
 ) {
   this.socket.onmessage = (message) => {
     if (!this.connected) {
@@ -177,6 +179,10 @@ RSWSClient.prototype.onMessage = function(
 
       case GET_HISTORY_MESSAGE:
         historyCallback(JSON.parse(body.content));
+        break;
+
+      case TOO_FAST_MESSAGE:
+        tooFastMessagesCallback();
         break;
 
       case PING_MESSAGE:

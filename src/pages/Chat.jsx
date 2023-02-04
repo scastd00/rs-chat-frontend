@@ -144,6 +144,7 @@ function Chat() {
       handleError,
       displayActiveUsers,
       handleHistory,
+      handleTooFastMessage,
       toggleMsgNotification,
       toggleMentionNotification,
     );
@@ -153,6 +154,17 @@ function Chat() {
       client.disconnectFromChat();
     };
   }, []);
+
+  function handleTooFastMessage() {
+    // Search the last message that this user sent and remove it from the queue
+    setQueue(prevState => {
+      const index = prevState.findIndex(message => message.headers.username === userState.user.username);
+
+      const newState = [...prevState];
+      newState.splice(index, 1);
+      return newState;
+    });
+  }
 
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
@@ -199,6 +211,7 @@ function Chat() {
   }
 
   function loadMore() {
+    // We want to request the messages prior to this offset
     client.send(`${queue.length}`, GET_HISTORY_MESSAGE);
   }
 

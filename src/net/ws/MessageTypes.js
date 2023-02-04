@@ -24,6 +24,7 @@ export const PING_MESSAGE = 'PING';
 export const PONG_MESSAGE = 'PONG';
 export const RESTART_MESSAGE = 'RESTART';
 export const MAINTENANCE_MESSAGE = 'MAINTENANCE';
+export const TOO_FAST_MESSAGE = 'TOO_FAST';
 
 export const USER_MESSAGES = [
   TEXT_MESSAGE, IMAGE_MESSAGE, AUDIO_MESSAGE,
