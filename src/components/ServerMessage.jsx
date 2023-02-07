@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Paper, Typography } from '@mui/material';
 import { prettyDate } from '../utils';
 import {
+  BADGE_EARNED_MESSAGE,
   COMMAND_RESPONSE,
   INFO_MESSAGE,
   MAINTENANCE_MESSAGE,
@@ -18,6 +19,7 @@ function ServerMessage({ message }) {
     switch (type) {
       case INFO_MESSAGE:
       case COMMAND_RESPONSE:
+      case BADGE_EARNED_MESSAGE:
         return 'message.info';
       case MAINTENANCE_MESSAGE:
         return 'message.warning';
@@ -55,6 +57,7 @@ function ServerMessage({ message }) {
               case RESTART_MESSAGE:
               case INFO_MESSAGE:
               case COMMAND_RESPONSE:
+              case BADGE_EARNED_MESSAGE:
                 return <TextChatCard
                   text={message.body.content}
                   customColor={messageColor(message.headers.type)}

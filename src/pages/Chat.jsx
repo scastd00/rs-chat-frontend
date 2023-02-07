@@ -107,10 +107,10 @@ function Chat() {
         // We connect to the chat after getting the information of the chat
         fetchChatInfo()
           .then(() => {
-            client.setUsername(userState.user.username); // Needed??
+            client.setUsername(userState.user.username);
             client.setChatId(id);
-            client.setSessionId(userState.sessionId); // Needed??
-            client.setToken(userState.token); // Needed??
+            client.setSessionId(userState.sessionId);
+            client.setToken(userState.token);
             client.connectToChat();
             setShowPage(true);
           });
