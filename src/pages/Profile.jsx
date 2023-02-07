@@ -33,6 +33,7 @@ function Profile() {
 
   const [sessions, setSessions] = useState([]);
   const [badges, setBadges] = useState([]);
+  const [stats, setStats] = useState([]);
   const [chatCode, setChatCode] = useState('');
   const [joinAlert, setJoinAlert] = useState({ open: false, type: 'success', message: '' });
 
@@ -50,6 +51,15 @@ function Profile() {
       .getBadges(userState.user.id, userState.token)
       .then(res => {
         setBadges(res.data);
+      })
+      .catch(err => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    UserService
+      .getStats(userState.user.username, userState.token)
+      .then(res => {
+        setStats(JSON.parse(res.data));
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);
@@ -188,6 +198,25 @@ function Profile() {
                     <ListItemText primary={session} />
                   </ListItem>,
                 )
+              ))
+            }
+          </List>
+        </DropDown>
+
+        <Divider sx={dividerSx} />
+
+        <DropDown title='Stats'>
+          <List>
+            {
+              Object.entries(stats).map(([key, value]) => (
+                <ListItem key={key} sx={{ height: 30, ml: 6 }}>
+                  <ListItemIcon sx={{ mr: -2 }}>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {key}: {value}
+                  </ListItemText>
+                </ListItem>
               ))
             }
           </List>
