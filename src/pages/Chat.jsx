@@ -68,7 +68,7 @@ function Chat() {
       .then(res => {
         setChatInfo({
           name: res.data.name,
-          metadata: JSON.parse(res.data.metadata),
+          metadata: res.data.metadata,
         });
       })
       .catch((err) => {
@@ -187,7 +187,6 @@ function Chat() {
       .all(uploadPromises)
       .then(uploadedFiles => {
         uploadedFiles.forEach(file => {
-          file.data.metadata = JSON.parse(file.data.metadata); // Parse the string that is received from the server to not cause problems
           const message = client.prepareMessage(file.data, file.data.metadata.messageType);
 
           if (client.send(message)) {

@@ -59,7 +59,7 @@ function Profile() {
     UserService
       .getStats(userState.user.username, userState.token)
       .then(res => {
-        setStats(JSON.parse(res.data));
+        setStats(res.data);
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);
