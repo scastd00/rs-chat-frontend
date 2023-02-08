@@ -24,5 +24,9 @@ export default {
 
   deleteUser(id, __token__) {
     return Api.delete(`/user/delete/${id}`, headers(__token__));
-  }
+  },
+
+  getStats(username, __token__) {
+    return Api.get(`/user/stats/${username}`, headers(__token__));
+  },
 };

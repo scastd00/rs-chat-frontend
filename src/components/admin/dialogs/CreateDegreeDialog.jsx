@@ -17,7 +17,7 @@ function CreateDegreeDialog({ open, onClose, addToVisibleList }) {
     DegreeService
       .addDegree({ name: degreeProps.name }, userState.token)
       .then(res => {
-        addToVisibleList(JSON.parse(res.data));
+        addToVisibleList(res.data);
       })
       .catch(err => {
         checkResponse(err, navigate, dispatch);

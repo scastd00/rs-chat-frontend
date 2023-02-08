@@ -30,7 +30,7 @@ function App(props) {
 
   useEffect(() => {
     window.addEventListener('unload', () => {
-      client.disconnect();
+      client.disconnectFromServer();
     });
   }, []);
 

@@ -128,6 +128,7 @@ function ToolBar(props) {
     </div>
   );
 
+  // Todo: adapt the toolbar to fit mobile devices
   return (
     <AppBar position='relative'>
       <Toolbar>

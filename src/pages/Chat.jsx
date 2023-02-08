@@ -68,7 +68,7 @@ function Chat() {
       .then(res => {
         setChatInfo({
           name: res.data.name,
-          metadata: JSON.parse(res.data.metadata),
+          metadata: res.data.metadata,
         });
       })
       .catch((err) => {
@@ -107,10 +107,10 @@ function Chat() {
         // We connect to the chat after getting the information of the chat
         fetchChatInfo()
           .then(() => {
-            client.setUsername(userState.user.username); // Needed??
+            client.setUsername(userState.user.username);
             client.setChatId(id);
-            client.setSessionId(userState.sessionId); // Needed??
-            client.setToken(userState.token); // Needed??
+            client.setSessionId(userState.sessionId);
+            client.setToken(userState.token);
             client.connectToChat();
             setShowPage(true);
           });
@@ -144,6 +144,7 @@ function Chat() {
       handleError,
       displayActiveUsers,
       handleHistory,
+      handleTooFastMessage,
       toggleMsgNotification,
       toggleMentionNotification,
     );
@@ -153,6 +154,17 @@ function Chat() {
       client.disconnectFromChat();
     };
   }, []);
+
+  function handleTooFastMessage() {
+    // Search the last message that this user sent and remove it from the queue
+    setQueue(prevState => {
+      const index = prevState.findIndex(message => message.headers.username === userState.user.username);
+
+      const newState = [...prevState];
+      newState.splice(index, 1);
+      return newState;
+    });
+  }
 
   function sendTextMessage(textMessage) {
     const message = client.prepareMessage(textMessage, TEXT_MESSAGE);
@@ -175,7 +187,6 @@ function Chat() {
       .all(uploadPromises)
       .then(uploadedFiles => {
         uploadedFiles.forEach(file => {
-          file.data.metadata = JSON.parse(file.data.metadata); // Parse the string that is received from the server to not cause problems
           const message = client.prepareMessage(file.data, file.data.metadata.messageType);
 
           if (client.send(message)) {
@@ -199,6 +210,7 @@ function Chat() {
   }
 
   function loadMore() {
+    // We want to request the messages prior to this offset
     client.send(`${queue.length}`, GET_HISTORY_MESSAGE);
   }
 

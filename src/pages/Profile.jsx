@@ -22,6 +22,8 @@ import AuthService from '../services/AuthService';
 import ChatService from '../services/ChatService';
 import { setAvailableChats } from '../actions';
 import { useNavDis } from '../hooks/useNavDis';
+import BadgeService from '../services/BadgeService';
+import BadgeItem from '../components/BadgeItem';
 
 function Profile() {
   const [navigate, dispatch] = useNavDis();
@@ -30,6 +32,8 @@ function Profile() {
   const dividerSx = { my: 2, opacity: 1 };
 
   const [sessions, setSessions] = useState([]);
+  const [badges, setBadges] = useState([]);
+  const [stats, setStats] = useState([]);
   const [chatCode, setChatCode] = useState('');
   const [joinAlert, setJoinAlert] = useState({ open: false, type: 'success', message: '' });
 
@@ -40,6 +44,24 @@ function Profile() {
         setSessions(res.data);
       })
       .catch((err) => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    BadgeService
+      .getBadges(userState.user.id, userState.token)
+      .then(res => {
+        setBadges(res.data);
+      })
+      .catch(err => {
+        checkResponse(err, navigate, dispatch);
+      });
+
+    UserService
+      .getStats(userState.user.username, userState.token)
+      .then(res => {
+        setStats(res.data);
+      })
+      .catch(err => {
         checkResponse(err, navigate, dispatch);
       });
   }, []);
@@ -179,6 +201,39 @@ function Profile() {
               ))
             }
           </List>
+        </DropDown>
+
+        <Divider sx={dividerSx} />
+
+        <DropDown title='Stats'>
+          <List>
+            {
+              Object.entries(stats).map(([key, value]) => (
+                <ListItem key={key} sx={{ height: 30, ml: 6 }}>
+                  <ListItemIcon sx={{ mr: -2 }}>
+                    <ArrowRightIcon />
+                  </ListItemIcon>
+                  <ListItemText>
+                    {key}: {value}
+                  </ListItemText>
+                </ListItem>
+              ))
+            }
+          </List>
+        </DropDown>
+
+        <Divider sx={dividerSx} />
+
+        <DropDown title='Badges'>
+          <Grid container direction='row' spacing={5} sx={{ pt: 2 }}>
+            {
+              badges.map(badge => (
+                <Grid item key={badge.id} xs={2}>
+                  <BadgeItem title={badge.title} description={badge.description} icon={badge.icon} />
+                </Grid>
+              ))
+            }
+          </Grid>
         </DropDown>
 
         <SnackAlert open={joinAlert.open} severity={joinAlert.type}>

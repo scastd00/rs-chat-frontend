@@ -15,9 +15,9 @@ function CreateGroupDialog({ open, onClose, addToVisibleList }) {
       return;
 
     GroupService
-      .addGroup(groupProps, userState.token)
+      .saveGroup(groupProps, userState.token)
       .then(res => {
-        addToVisibleList(JSON.parse(res.data));
+        addToVisibleList(res.data);
       })
       .catch((err) => {
         checkResponse(err, navigate, dispatch);

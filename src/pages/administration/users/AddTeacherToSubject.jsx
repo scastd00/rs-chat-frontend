@@ -50,7 +50,7 @@ function AddTeacherToSubject() {
     SubjectService
       .getAllSubjects(userState.token)
       .then(res => {
-        const subjects = JSON.parse(res.data);
+        const subjects = res.data;
         setSubjects(subjects);
         setFilteredSubjects(subjects);
       })

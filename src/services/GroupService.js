@@ -6,7 +6,7 @@ export default {
     return Api.get('/groups', headers(__token__));
   },
 
-  addGroup(data, __token__) {
+  saveGroup(data, __token__) {
     return Api.post('/group/save', data, headers(__token__));
   },
 
