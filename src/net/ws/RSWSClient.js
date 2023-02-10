@@ -193,13 +193,13 @@ RSWSClient.prototype.onMessage = function(
         // No-op
         break;
 
+      case MENTION_MESSAGE:
+        playSoundOnMention();
+        break;
+
       default:
-        if (headers.type === MENTION_MESSAGE) {
-          playSoundOnMention();
-        } else {
-          displayCallback(parsedMessage);
-          playSoundOnMessage();
-        }
+        displayCallback(parsedMessage);
+        playSoundOnMessage();
 
         // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
         // to the server to get the updated list of active users.

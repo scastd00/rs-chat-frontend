@@ -54,8 +54,12 @@ function Chat() {
     navigate('/login');
   };
 
+  /**
+   * Displays the active users in the chat.
+   * @param usernames {string[]} The usernames of the active users.
+   */
   const displayActiveUsers = (usernames) => {
-    setActiveUsers(usernames);
+    setActiveUsers(usernames.filter(username => username !== userState.user.username));
   };
 
   const handleHistory = (messages) => {
