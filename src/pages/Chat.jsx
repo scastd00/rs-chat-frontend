@@ -185,22 +185,22 @@ function Chat() {
    * @param files The files to be sent.
    */
   function uploadFiles(files) {
+    /** @type Promise<*>[] */
     const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.token));
 
     Promise
-      .all(uploadPromises)
-      .then(uploadedFiles => {
-        uploadedFiles.forEach(file => {
-          const message = client.prepareMessage(file.data, file.data.metadata.messageType);
+      .allSettled(uploadPromises) // This allows to perform actions even if some promises fail.
+      .then(uploadedFilesPromises =>
+        uploadedFilesPromises
+          .filter(promise => promise.status === "fulfilled")
+          .forEach(promise => {
+            const { data } = promise.value;
+            const message = client.prepareMessage(data, data.metadata.messageType);
 
-          if (client.send(message)) {
-            addMessageToQueue(message);
-          }
-        });
-      })
-      .catch(err => {
-        console.log('Error when uploading files', err.response.data);
-      });
+            if (client.send(message)) {
+              addMessageToQueue(message);
+            }
+          }));
   }
 
   function handleLeaveChat() {
