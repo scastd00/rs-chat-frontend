@@ -29,4 +29,8 @@ export default {
   getStats(username, __token__) {
     return Api.get(`/user/stats/${username}`, headers(__token__));
   },
+
+  friendSwitch(username, friendUsername, __token__) {
+    return Api.post(`/user/friend`, { username, friendUsername }, headers(__token__));
+  }
 };
