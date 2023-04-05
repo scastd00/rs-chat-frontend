@@ -149,6 +149,7 @@ function Chat() {
       displayActiveUsers,
       handleHistory,
       handleTooFastMessage,
+      handleKickMessage,
       toggleMsgNotification,
       toggleMentionNotification,
     );
@@ -158,6 +159,12 @@ function Chat() {
       client.disconnectFromChat();
     };
   }, []);
+
+  function handleKickMessage(message) {
+    client.disconnectFromServer();
+    alert(message);
+    dispatch(logOut());
+  }
 
   function handleTooFastMessage() {
     // Search the last message that this user sent and remove it from the queue
@@ -223,19 +230,19 @@ function Chat() {
       {showPage && (
         <Grid container direction={direction}>
           <Grid item xs>
-            <Container component='main' sx={{ pt: 1 }}>
+            <Container component="main" sx={{ pt: 1 }}>
               <CssBaseline />
 
-              <Grid container direction='column' spacing={1}>
-                <Grid item container direction='row' justifyContent='space-between' alignItems='center'>
+              <Grid container direction="column" spacing={1}>
+                <Grid item container direction="row" justifyContent="space-between" alignItems="center">
                   <Grid item>
-                    <Typography variant='h5'>
+                    <Typography variant="h5">
                       Current chat: {chatInfo.name}
                     </Typography>
                   </Grid>
 
                   <Grid item>
-                    <Button color='error' onClick={() => setLeaveChatDialog(true)}>
+                    <Button color="error" onClick={() => setLeaveChatDialog(true)}>
                       Leave chat
                     </Button>
                   </Grid>
@@ -266,8 +273,8 @@ function Chat() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color='success' onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
-          <Button color='error' onClick={handleLeaveChat}>Leave</Button>
+          <Button color="success" onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
+          <Button color="error" onClick={handleLeaveChat}>Leave</Button>
         </DialogActions>
       </Dialog>
     </CssBaseline>
