@@ -54,8 +54,12 @@ function Chat() {
     navigate('/login');
   };
 
+  /**
+   * Displays the active users in the chat.
+   * @param usernames {string[]} The usernames of the active users.
+   */
   const displayActiveUsers = (usernames) => {
-    setActiveUsers(usernames);
+    setActiveUsers(usernames.filter(username => username !== userState.user.username));
   };
 
   const handleHistory = (messages) => {
@@ -145,6 +149,7 @@ function Chat() {
       displayActiveUsers,
       handleHistory,
       handleTooFastMessage,
+      handleKickMessage,
       toggleMsgNotification,
       toggleMentionNotification,
     );
@@ -154,6 +159,12 @@ function Chat() {
       client.disconnectFromChat();
     };
   }, []);
+
+  function handleKickMessage(message) {
+    client.disconnectFromServer();
+    alert(message);
+    dispatch(logOut());
+  }
 
   function handleTooFastMessage() {
     // Search the last message that this user sent and remove it from the queue
@@ -181,22 +192,22 @@ function Chat() {
    * @param files The files to be sent.
    */
   function uploadFiles(files) {
+    /** @type Promise<*>[] */
     const uploadPromises = files.map(file => FileService.uploadFile(file, userState.user.id, userState.token));
 
     Promise
-      .all(uploadPromises)
-      .then(uploadedFiles => {
-        uploadedFiles.forEach(file => {
-          const message = client.prepareMessage(file.data, file.data.metadata.messageType);
+      .allSettled(uploadPromises) // This allows to perform actions even if some promises fail.
+      .then(uploadedFilesPromises =>
+        uploadedFilesPromises
+          .filter(promise => promise.status === "fulfilled")
+          .forEach(promise => {
+            const { data } = promise.value;
+            const message = client.prepareMessage(data, data.metadata.messageType);
 
-          if (client.send(message)) {
-            addMessageToQueue(message);
-          }
-        });
-      })
-      .catch(err => {
-        console.log('Error when uploading files', err.response.data);
-      });
+            if (client.send(message)) {
+              addMessageToQueue(message);
+            }
+          }));
   }
 
   function handleLeaveChat() {
@@ -219,19 +230,19 @@ function Chat() {
       {showPage && (
         <Grid container direction={direction}>
           <Grid item xs>
-            <Container component='main' sx={{ pt: 1 }}>
+            <Container component="main" sx={{ pt: 1 }}>
               <CssBaseline />
 
-              <Grid container direction='column' spacing={1}>
-                <Grid item container direction='row' justifyContent='space-between' alignItems='center'>
+              <Grid container direction="column" spacing={1}>
+                <Grid item container direction="row" justifyContent="space-between" alignItems="center">
                   <Grid item>
-                    <Typography variant='h5'>
+                    <Typography variant="h5">
                       Current chat: {chatInfo.name}
                     </Typography>
                   </Grid>
 
                   <Grid item>
-                    <Button color='error' onClick={() => setLeaveChatDialog(true)}>
+                    <Button color="error" onClick={() => setLeaveChatDialog(true)}>
                       Leave chat
                     </Button>
                   </Grid>
@@ -262,8 +273,8 @@ function Chat() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color='success' onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
-          <Button color='error' onClick={handleLeaveChat}>Leave</Button>
+          <Button color="success" onClick={() => setLeaveChatDialog(false)}>Cancel</Button>
+          <Button color="error" onClick={handleLeaveChat}>Leave</Button>
         </DialogActions>
       </Dialog>
     </CssBaseline>

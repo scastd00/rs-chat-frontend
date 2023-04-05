@@ -8,6 +8,7 @@ function BadgeItem({ title, description, icon }) {
         sx={{ height: 135 }}
         image={icon}
         title={title}
+        component='img'
       />
 
       <CardContent>

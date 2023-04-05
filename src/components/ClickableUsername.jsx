@@ -10,7 +10,11 @@ function ClickableUsername({ username }) {
   const userState = useStore().getState().user;
   const [navigate, dispatch] = useNavDis();
 
-  function handleSendPrivateMessage() {
+  function handleSendMessage() {
+    if (username === userState.user.username) {
+      return; // Don't allow users to send messages to themselves
+    }
+
     UserService
       .getIdByUsername(username, userState.token)
       .then(res => {
@@ -20,15 +24,41 @@ function ClickableUsername({ username }) {
   }
 
   function handleViewProfile() {
+    if (username === userState.user.username) {
+      navigate('/profile'); // Don't need to fetch the user's profile if they're viewing their own
+      return;
+    }
+
     navigate(`/user/${username}`);
+  }
+
+  function handleBlockUser() {
+
+  }
+
+  function handleReportUser() {
+
+  }
+
+  function handleAddFriend() {
+    if (username === userState.user.username) {
+      return; // Don't allow users to add themselves as friends
+    }
+
+    UserService
+      .friendSwitch(userState.user.username, username, userState.token)
+      .then(res => {
+        console.log(res.data); // Todo: Add a snackbar to show that the user was added/removed as a friend
+      })
+      .catch(error => checkResponse(error, navigate, dispatch));
   }
 
   const userActions = [
     { name: 'View profile', action: handleViewProfile, color: 'info' },
-    { name: 'Add friend', action: () => console.log('Add friend'), color: 'success' },
-    { name: 'Send message', action: handleSendPrivateMessage, color: 'success' },
-    { name: 'Block user', action: () => console.log('Block user'), color: 'error' },
-    { name: 'Report user', action: () => console.log('Report user'), color: 'error' },
+    { name: 'Add friend', action: handleAddFriend, color: 'success' },
+    { name: 'Send message', action: handleSendMessage, color: 'success' },
+    { name: 'Block user', action: handleBlockUser, color: 'error' },
+    { name: 'Report user', action: handleReportUser, color: 'error' },
   ];
 
   return (

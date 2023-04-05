@@ -2,6 +2,7 @@ import {
   ACTIVE_USERS_MESSAGE,
   ERROR_MESSAGE,
   GET_HISTORY_MESSAGE,
+  KICK_MESSAGE,
   MENTION_MESSAGE,
   PING_MESSAGE,
   PONG_MESSAGE,
@@ -153,12 +154,14 @@ RSWSClient.prototype.disconnectFromChat = function() {
  * @param {function(string[]): void} activeUsersCallback function to execute to show the active users.
  * @param {function(string[]): void} historyCallback function to send the history of the chat as parameter.
  * @param {function(): void} tooFastMessagesCallback function to execute when the user is sending messages too fast.
+ * @param {function(string): void} kickMessageCallback function to execute when the user is kicked from the chat.
  * @param {function(): void} playSoundOnMessage function to execute when a message is received.
  * @param {function(): void} playSoundOnMention function to execute when a mention is received.
  */
 RSWSClient.prototype.onMessage = function(
   displayCallback, errorCallback, activeUsersCallback,
-  historyCallback, tooFastMessagesCallback, playSoundOnMessage, playSoundOnMention,
+  historyCallback, tooFastMessagesCallback, kickMessageCallback,
+  playSoundOnMessage, playSoundOnMention,
 ) {
   this.socket.onmessage = (message) => {
     if (!this.connected) {
@@ -193,13 +196,17 @@ RSWSClient.prototype.onMessage = function(
         // No-op
         break;
 
+      case MENTION_MESSAGE:
+        playSoundOnMention();
+        break;
+
+      case KICK_MESSAGE:
+        kickMessageCallback(body.content);
+        break;
+
       default:
-        if (headers.type === MENTION_MESSAGE) {
-          playSoundOnMention();
-        } else {
-          displayCallback(parsedMessage);
-          playSoundOnMessage();
-        }
+        displayCallback(parsedMessage);
+        playSoundOnMessage();
 
         // If the message is an activity message (USER_JOINED | USER_LEFT), send a message
         // to the server to get the updated list of active users.
