@@ -19,6 +19,10 @@ export function prettyDate(date) {
   return dateFormat(date, 'HH:MM');
 }
 
+export function dateTime(date) {
+  return dateFormat(date, 'dd/mm/yyyy HH:MM:ss');
+}
+
 /**
  * Formats the date with ISO 8601 format.
  *
