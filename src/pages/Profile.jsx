@@ -108,20 +108,62 @@ function Profile() {
     }, 2500);
   }
 
+  function statsFullDropdownContent(entry) {
+    function val(name, value, depth) {
+      if (typeof value === 'object') {
+        return (
+          <React.Fragment key={value}>
+            <ListItem sx={{ height: 30, pl: 6 + (4 * depth) }}>
+              <ListItemIcon sx={{ mr: -2 }}>
+                <ArrowRightIcon />
+              </ListItemIcon>
+
+              <ListItemText primary={name} />
+            </ListItem>
+
+            <List>
+              {
+                Object.entries(value).map(([n1, v1]) => {
+                  return val(n1, v1, depth + 1);
+                })
+              }
+            </List>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          // The padding depends on the depth of the object
+          <ListItem key={name} sx={{ height: 30, pl: 6 + (4 * depth) }}>
+            <ListItemIcon sx={{ mr: -2 }}>
+              <ArrowRightIcon />
+            </ListItemIcon>
+
+            <ListItemText>
+              {name}: {value}
+            </ListItemText>
+          </ListItem>
+        );
+      }
+    }
+
+    const [name, value] = entry;
+    return val(name, value, 0);
+  }
+
   return (
     <Container sx={{ my: 2 }}>
       <CssBaseline />
 
-      <Grid container direction='column'>
+      <Grid container direction="column">
         <Grid item>
-          <Typography variant='h3'>My profile</Typography>
+          <Typography variant="h3">My profile</Typography>
         </Grid>
 
         <Divider sx={dividerSx} />
 
-        <Grid item container direction='row' alignItems='center' justifyContent='space-between' spacing={1.5}>
+        <Grid item container direction="row" alignItems="center" justifyContent="space-between" spacing={1.5}>
           <Grid item>
-            <Grid container direction='column'>
+            <Grid container direction="column">
               <Grid item>
                 <Typography sx={{ fontSize: 18 }}>
                   Username: {userState.user.username} ({userState.user.role})
@@ -144,7 +186,7 @@ function Profile() {
                 <Typography sx={{ fontSize: 18 }}>
                   Password: *****
                   <Button
-                    size='small'
+                    size="small"
                     sx={{ ml: 2 }}
                     onClick={handleResetPassword}
                   >
@@ -156,7 +198,7 @@ function Profile() {
           </Grid>
 
           <Grid item>
-            <Grid container direction='column' spacing={0.5}>
+            <Grid container direction="column" spacing={0.5}>
               <Grid item>
                 <Typography>
                   Join a chat
@@ -165,11 +207,11 @@ function Profile() {
 
               <Grid item>
                 <TextField
-                  size='small'
-                  margin='dense'
-                  id='chatCode'
-                  label='Chat code'
-                  name='chatCode'
+                  size="small"
+                  margin="dense"
+                  id="chatCode"
+                  label="Chat code"
+                  name="chatCode"
                   value={chatCode}
                   onChange={(e) => setChatCode(e.target.value)}
                 />
@@ -186,7 +228,7 @@ function Profile() {
 
         <Divider sx={dividerSx} />
 
-        <DropDown title='Opened sessions'>
+        <DropDown title="Opened sessions">
           <List>
             {
               sessions.map((session, index) => (
@@ -195,6 +237,7 @@ function Profile() {
                     <ListItemIcon sx={{ mr: -2 }}>
                       <ArrowRightIcon />
                     </ListItemIcon>
+
                     <ListItemText primary={session} />
                   </ListItem>,
                 )
@@ -205,27 +248,18 @@ function Profile() {
 
         <Divider sx={dividerSx} />
 
-        <DropDown title='Stats'>
+        <DropDown title="Stats">
           <List>
             {
-              Object.entries(stats).map(([key, value]) => (
-                <ListItem key={key} sx={{ height: 30, ml: 6 }}>
-                  <ListItemIcon sx={{ mr: -2 }}>
-                    <ArrowRightIcon />
-                  </ListItemIcon>
-                  <ListItemText>
-                    {key}: {value}
-                  </ListItemText>
-                </ListItem>
-              ))
+              Object.entries(stats).map(statsFullDropdownContent)
             }
           </List>
         </DropDown>
 
         <Divider sx={dividerSx} />
 
-        <DropDown title='Badges'>
-          <Grid container direction='row' spacing={5} sx={{ pt: 2 }}>
+        <DropDown title="Badges">
+          <Grid container direction="row" spacing={5} sx={{ pt: 2 }}>
             {
               badges.map(badge => (
                 <Grid item key={badge.id} xs={2}>
