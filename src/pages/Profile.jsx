@@ -15,7 +15,7 @@ import {
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { useStore } from 'react-redux';
 import UserService from '../services/UserService';
-import { checkResponse } from '../utils';
+import { checkResponse, dateTime } from '../utils';
 import DropDown from '../components/DropDown';
 import SnackAlert from '../components/SnackAlert';
 import AuthService from '../services/AuthService';
@@ -231,14 +231,16 @@ function Profile() {
         <DropDown title="Opened sessions">
           <List>
             {
-              sessions.map((session, index) => (
+              sessions.map(session => (
                 React.cloneElement(
-                  <ListItem key={index} sx={{ height: 30, ml: 6 }}>
+                  <ListItem key={session.id} sx={{ height: 30, ml: 6 }}>
                     <ListItemIcon sx={{ mr: -2 }}>
                       <ArrowRightIcon />
                     </ListItemIcon>
 
-                    <ListItemText primary={session} />
+                    <ListItemText>
+                      {session.srcIp} (session ends {dateTime(session.endDate)})
+                    </ListItemText>
                   </ListItem>,
                 )
               ))
