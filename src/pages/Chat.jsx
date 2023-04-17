@@ -24,6 +24,9 @@ import { useAudio } from '../hooks/useAudio';
 import useAdapt from '../hooks/useAdapt';
 import { WebSocketContext } from '../utils/constants';
 import { useNavDis } from '../hooks/useNavDis';
+import UserService from "../services/UserService";
+import TextField from "@mui/material/TextField";
+import SnackAlert from "../components/SnackAlert";
 
 function Chat() {
   const state = useStore().getState();
@@ -43,6 +46,12 @@ function Chat() {
   });
   const [leaveChatDialog, setLeaveChatDialog] = useState(false);
   const [direction] = useAdapt();
+  const [invitee, setInvitee] = useState('');
+  const [inviteDialog, setInviteDialog] = useState(false);
+  const [inviteError, setInviteError] = useState({
+    show: false,
+    message: '',
+  });
 
   // WebSocket client from context
   const client = useContext(WebSocketContext);
@@ -225,6 +234,31 @@ function Chat() {
     client.send(`${queue.length}`, GET_HISTORY_MESSAGE);
   }
 
+  function handleInvite() {
+    UserService
+      .inviteUserToChat(userState.user.username, invitee, id, userState.token)
+      .then(res => {
+        setInvitee('');
+      })
+      .catch(err => {
+        setInviteError({
+          show: true,
+          message: err.response.data
+        });
+
+        setTimeout(() => {
+          setInviteError(prevState => {
+            return {
+              ...prevState,
+              show: false,
+            };
+          });
+        }, 2500);
+
+        checkResponse(err, navigate, dispatch);
+      });
+  }
+
   return (
     <CssBaseline>
       {showPage && (
@@ -242,6 +276,9 @@ function Chat() {
                   </Grid>
 
                   <Grid item>
+                    <Button color="info" onClick={() => setInviteDialog(true)} sx={{ mr: 2 }}>
+                      Invite user
+                    </Button>
                     <Button color="error" onClick={() => setLeaveChatDialog(true)}>
                       Leave chat
                     </Button>
@@ -277,6 +314,34 @@ function Chat() {
           <Button color="error" onClick={handleLeaveChat}>Leave</Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog open={inviteDialog} onClose={() => setInviteDialog(false)}>
+        <DialogTitle>Invite user</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter the username of the user you want to invite to this chat.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="invitee"
+            label="Username"
+            type="text"
+            size="small"
+            fullWidth
+            value={invitee}
+            onChange={evt => setInvitee(evt.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button color="error" onClick={() => setInviteDialog(false)}>Cancel</Button>
+          <Button color="success" onClick={handleInvite}>Invite</Button>
+        </DialogActions>
+      </Dialog>
+
+      <SnackAlert open={inviteError.show} severity={"error"}>
+        {inviteError.message}
+      </SnackAlert>
     </CssBaseline>
   );
 }
