@@ -32,7 +32,6 @@ export const COMMANDS = [
   { name: 'leave', description: 'Leave a channel' },
   { name: 'msg', description: 'Send a private message to a user' },
   { name: 'whois', description: 'Get information about a user' },
-  { name: 'invite', description: 'Invite a user to a channel' },
   { name: 'kick', description: 'Kick a user from a channel' },
   { name: 'ban', description: 'Ban a user from a channel' },
   { name: 'unban', description: 'Unban a user from a channel' },

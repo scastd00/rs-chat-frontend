@@ -237,8 +237,9 @@ function Chat() {
   function handleInvite() {
     UserService
       .inviteUserToChat(userState.user.username, invitee, id, userState.token)
-      .then(res => {
+      .then(_ => {
         setInvitee('');
+        setInviteDialog(false);
       })
       .catch(err => {
         setInviteError({
