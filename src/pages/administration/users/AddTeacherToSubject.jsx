@@ -79,10 +79,10 @@ function AddTeacherToSubject() {
     }
   }
 
-  function closeSnackbar() {
+  function closeSnackbarAfterTimeout() {
     setTimeout(() => {
       setOpenSnackBar(false);
-    }, 3000);
+    }, 2500);
   }
 
   function handleAddTeacherToSubject() {
@@ -91,7 +91,7 @@ function AddTeacherToSubject() {
       .then(() => {
         setErrorSnack(false);
         setOpenSnackBar(true);
-        closeSnackbar();
+        closeSnackbarAfterTimeout();
 
         setSelectedTeacher(-1);
         setSelectedSubject(-1);
@@ -100,7 +100,7 @@ function AddTeacherToSubject() {
         setErrorSnack(true);
         setSnackMessage(err.response.data);
         setOpenSnackBar(true);
-        closeSnackbar();
+        closeSnackbarAfterTimeout();
 
         checkResponse(err, navigate, dispatch);
       });

@@ -52,7 +52,7 @@ function AddUser() {
         setOpenAlert(true);
         setTimeout(() => {
           setOpenAlert(false);
-        }, 3000);
+        }, 2500);
       });
   }
 

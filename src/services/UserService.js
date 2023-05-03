@@ -32,5 +32,9 @@ export default {
 
   friendSwitch(username, friendUsername, __token__) {
     return Api.post(`/user/friend`, { username, friendUsername }, headers(__token__));
+  },
+
+  inviteUserToChat(username, invitesTo, chatKey, __token__) {
+    return Api.post(`/user/invite`, { username, invitesTo, chatKey }, headers(__token__));
   }
 };
