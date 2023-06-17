@@ -40,12 +40,12 @@ function PrivacyPolicy() {
       </p>
       <p>
         If you contact us directly, we may receive additional information about you such as your name, email address,
-        phone number, the contents of the message and/or attachments you may send us, and any other information you may
+        the contents of the message and/or attachments you may send us, and any other information you may
         choose to provide.
       </p>
       <p>
-        When you register for an Account, we may ask for your contact information, including items such as name, company
-        name, address, email address, and telephone number.
+        When you register for an Account, we may ask for your contact information, including items such as name and
+        email address.
       </p>
 
       <h2>How we use your information</h2>
@@ -166,7 +166,7 @@ function PrivacyPolicy() {
 
       <p>
         RS Chat does not knowingly collect any Personal Identifiable Information from children under the age of
-        13. If you think that your child provided this kind of information on our website, we strongly encourage you to
+        18. If you think that your child provided this kind of information on our website, we strongly encourage you to
         contact us immediately and we will do our best efforts to promptly remove such information from our records.
       </p>
     </Container>

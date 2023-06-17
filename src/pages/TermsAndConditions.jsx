@@ -15,7 +15,7 @@ function TermsAndConditions() {
 
       <p>
         These terms and conditions outline the rules and regulations for the use of RS Chat's Website, located at{' '}
-        <a href='#'>https://rschat.vercel.app/</a>.
+        <a href="#">https://rschat.vercel.app/</a>.
       </p>
 
       <p>
@@ -30,24 +30,9 @@ function TermsAndConditions() {
         "Party", "Parties", or "Us", refers to both the Client and ourselves. All terms refer to the offer, acceptance
         and consideration of payment necessary to undertake the process of our assistance to the Client in the most
         appropriate manner for the express purpose of meeting the Client’s needs in respect of provision of the
-        Company’s stated services, in accordance with and subject to, prevailing law of Netherlands. Any use of the
+        Company’s stated services, in accordance with and subject to, prevailing law of Spain. Any use of the
         above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as
         interchangeable and therefore as referring to same.
-      </p>
-
-      <h3>
-        <strong>Cookies</strong>
-      </h3>
-
-      <p>
-        We employ the use of cookies. By accessing RS Chat, you agreed to use cookies in agreement with the
-        RS Chat's Privacy Policy.
-      </p>
-
-      <p>
-        Most interactive websites use cookies to let us retrieve the user’s details for each visit. Cookies are used by
-        our website to enable the functionality of certain areas to make it easier for people visiting our website. Some
-        of our affiliate/advertising partners may also use cookies.
       </p>
 
       <h3>
@@ -73,7 +58,7 @@ function TermsAndConditions() {
       <p>
         Parts of this website offer an opportunity for users to post and exchange opinions and information in certain
         areas of the website. RS Chat does not filter, edit, publish or review Comments prior to their presence
-        on the website. Comments do not reflect the views and opinions of RS Chat,its agents and/or affiliates.
+        on the website. Comments do not reflect the views and opinions of RS Chat, its agents and/or affiliates.
         Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted
         by applicable laws, RS Chat shall not be liable for the Comments or for any liability, damages or
         expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on
@@ -83,7 +68,7 @@ function TermsAndConditions() {
       <p>
         RS Chat reserves the right to monitor all Comments and to remove any Comments which can be considered
         inappropriate, offensive or causes breach of these Terms and Conditions. Our Terms and Conditions were created
-        with the help of the <a href='https://www.terms-conditions-generator.com'>Terms Conditions Generator</a>.
+        with the help of the <a href="https://www.terms-conditions-generator.com">Terms Conditions Generator</a>.
       </p>
 
       <p>You warrant and represent that:</p>
@@ -164,9 +149,10 @@ function TermsAndConditions() {
 
       <p>
         If you are one of the organizations listed in paragraph 2 above and are interested in linking to our website,
-        you must inform us by sending an e-mail to RS Chat. Please include your name, your organization name,
-        contact information as well as the URL of your site, a list of any URLs from which you intend to link to our
-        Website, and a list of the URLs on our site to which you would like to link. Wait 2-3 weeks for a response.
+        you must inform us by sending an e-mail to <a href="mailto:rschat.info@gmail.com">rschat.info@gmail.com</a>.
+        Please include your name, your organization name, contact information as well as the URL of your site, a list of
+        any URLs from which you intend to link to our Website, and a list of the URLs on our site to which you would
+        like to link. Wait 2-3 weeks for a response.
       </p>
 
       <p>Approved organizations may hyperlink to our Website as follows:</p>
@@ -209,7 +195,7 @@ function TermsAndConditions() {
         <strong>Your Privacy</strong>
       </h3>
 
-      <p>Please read Privacy Policy</p>
+      <p>Please read Privacy Policy <a href="privacy">here</a>.</p>
 
       <h3>
         <strong>Reservation of Rights</strong>
